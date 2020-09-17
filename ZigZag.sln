@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin1", "Plugins\Plugin1\Plugin1.csproj", "{6BCF9AE7-C9D3-470D-944B-884454DF2A93}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{B1D7058D-5EC2-49EB-B594-D013EE25182F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZigZag", "ZigZag\ZigZag.csproj", "{25E0B7A7-EE45-4313-8D8C-F91F90EA286B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZigZagEditor", "ZigZagEditor\ZigZagEditor.csproj", "{1194F3BD-33A4-4793-9625-3583E3E862BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6BCF9AE7-C9D3-470D-944B-884454DF2A93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BCF9AE7-C9D3-470D-944B-884454DF2A93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BCF9AE7-C9D3-470D-944B-884454DF2A93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BCF9AE7-C9D3-470D-944B-884454DF2A93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25E0B7A7-EE45-4313-8D8C-F91F90EA286B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25E0B7A7-EE45-4313-8D8C-F91F90EA286B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25E0B7A7-EE45-4313-8D8C-F91F90EA286B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25E0B7A7-EE45-4313-8D8C-F91F90EA286B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1194F3BD-33A4-4793-9625-3583E3E862BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1194F3BD-33A4-4793-9625-3583E3E862BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1194F3BD-33A4-4793-9625-3583E3E862BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1194F3BD-33A4-4793-9625-3583E3E862BB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6BCF9AE7-C9D3-470D-944B-884454DF2A93} = {B1D7058D-5EC2-49EB-B594-D013EE25182F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F4094803-0942-4F12-8BAF-51C05B46C2B5}
+	EndGlobalSection
+EndGlobal
