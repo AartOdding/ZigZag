@@ -1,11 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' " />
   <ItemGroup>
-    <ProjectReference Include="..\..\ZigZag\ZigZag.csproj" />
+    <ProjectReference Include="..\..\ZigZag\ZigZag.csproj">
+      <Private>False</Private>
+    </ProjectReference>
   </ItemGroup>
 
 </Project>

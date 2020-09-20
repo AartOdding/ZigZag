@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
 
-
 namespace ZigZag
 {
     public class Object
