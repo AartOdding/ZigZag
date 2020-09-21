@@ -5,19 +5,6 @@ namespace ZigZag
 {
     public class Object
     {
-        public Object()
-        {
-        }
-
-        public Object(Object parent)
-        {
-            if (parent != null)
-            {
-                m_parent = parent;
-                parent.m_children.Add(this);
-            }
-        }
-
         public void SetParent(Object parent)
         {
             if (m_parent != null)

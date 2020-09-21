@@ -10,4 +10,11 @@ namespace Plugin1
         public string woopie;
         public int woopieInt;
     }
+
+    public class AnotherPlugin : ZigZag.Object
+    {
+
+        public string woopie;
+        public int woopieInt;
+    }
 }
