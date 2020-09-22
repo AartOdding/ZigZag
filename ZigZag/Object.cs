@@ -5,6 +5,16 @@ namespace ZigZag
 {
     public class Object
     {
+        public virtual void Load()
+        {
+
+        }
+
+        public virtual void UnLoad()
+        {
+
+        }
+
         public void SetParent(Object parent)
         {
             if (m_parent != null)

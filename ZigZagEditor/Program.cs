@@ -1,15 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using System.Runtime.Loader;
+using System.Collections.Generic;
 
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 
+
 namespace ZigZagEditor
 {
     public class Window : GameWindow
     {
+        public ZigZag.Operator op;
+
         public Window() : base(new GameWindowSettings(), new NativeWindowSettings())
         {
             NativeWindowSettings n = new NativeWindowSettings();
@@ -23,12 +28,15 @@ namespace ZigZagEditor
         {
             VSync = VSyncMode.On;
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
+            op.Load();
+
             base.OnLoad();
         }
 
         protected override void OnClosed()
         {
-
+            op.UnLoad();
             base.OnClosed();
         }
 
@@ -37,6 +45,7 @@ namespace ZigZagEditor
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             //Code goes here.
+            op.Execute();
 
             Context.SwapBuffers();
             base.OnRenderFrame(e);
@@ -50,47 +59,59 @@ namespace ZigZagEditor
 
     }
 
-    class Program
+    internal class Plugin
     {
-        private static void inspectPlugin(string name, string path)
+        public Plugin(Assembly assembly)
         {
-            //PluginLoader pluginLoader = new PluginLoader(name, path);
-            //var plugin = pluginLoader.LoadFromAssemblyName(new AssemblyName(name));
-            var plugin = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+            m_assembly = assembly;
 
-            foreach (var t in plugin.GetTypes())
+            foreach (var t in assembly.GetTypes())
             {
                 if (t.IsSubclassOf(typeof(ZigZag.Object)))
                 {
-                    Console.WriteLine(t.FullName);
-                    Console.WriteLine(t.Name);
-                }
-                if (t.IsSubclassOf(typeof(ZigZag.DataSource)))
-                {
-                    var data = (ZigZag.DataSource)Activator.CreateInstance(t);
-                    Console.WriteLine(data.GetColor().r);
-                    Console.WriteLine(data.GetColor().g);
-                    Console.WriteLine(data.GetColor().b);
-                    Console.WriteLine(data.GetColor().a);
-                }
-                if (t.Name == "TestOp1")
-                {
-                    var data = (ZigZag.Object)Activator.CreateInstance(t);
+                    m_objects.Add(t);
 
-                    Console.WriteLine("woop[oe");
-                    
+                    if (t.IsSubclassOf(typeof(ZigZag.DataSource)))
+                    {
+                        m_dataSources.Add(t);
+                    }
+                    else if (t.IsSubclassOf(typeof(ZigZag.Operator)))
+                    {
+                        m_operators.Add(t);
+                    }
                 }
             }
         }
 
+        public readonly Assembly m_assembly;
+        public readonly List<Type> m_dataSources = new List<Type>();
+        public readonly List<Type> m_operators = new List<Type>();
+        public readonly List<Type> m_objects = new List<Type>();
+
+        static public Plugin Load(string path)
+        {
+            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+            return new Plugin(assembly);
+        }
+
+    }
+
+
+    class Program
+    {
         static void Main(string[] args)
         {
             Console.WriteLine(Directory.GetCurrentDirectory());
 
-            inspectPlugin("Plugin1", "C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\Plugin1\\bin\\Debug\\netstandard2.1\\Plugin1.dll");
-            inspectPlugin("TestDataSource", "C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestDataSource\\bin\\Debug\\netstandard2.1\\TestDataSource.dll");
-            inspectPlugin("TestOp1", "C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestOp1\\bin\\Debug\\netstandard2.1\\TestOp1.dll");
+            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\Plugin1\\bin\\Debug\\netstandard2.1\\Plugin1.dll");
+            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestDataSource\\bin\\Debug\\netstandard2.1\\TestDataSource.dll");
+            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestOp1\\bin\\Debug\\netstandard2.1\\TestOp1.dll");
+            var triangleOpPlugin = Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TriangleOperator\\bin\\Debug\\netcoreapp3.1\\TriangleOperator.dll");
+
+            var triangle = Activator.CreateInstance(triangleOpPlugin.m_operators[0]);
+
             Window w = new Window();
+            w.op = (ZigZag.Operator)triangle;
             w.Run();
         }
     }

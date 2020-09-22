@@ -5,7 +5,7 @@ using System.Runtime.Loader;
 
 namespace ZigZagEditor
 {
-    class PluginLoader : AssemblyLoadContext
+/*    class PluginLoader : AssemblyLoadContext
     {
         private AssemblyDependencyResolver _resolver;
         private string _path;
@@ -39,5 +39,5 @@ namespace ZigZagEditor
             }
             return IntPtr.Zero;
         }
-    }
+    }*/
 }

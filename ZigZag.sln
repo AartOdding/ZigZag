@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag", "ZigZag\ZigZag.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZagEditor", "ZigZagEditor\ZigZagEditor.csproj", "{1194F3BD-33A4-4793-9625-3583E3E862BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestDataSource", "Plugins\TestDataSource\TestDataSource.csproj", "{E337451A-85BE-4073-A758-B19C743273AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDataSource", "Plugins\TestDataSource\TestDataSource.csproj", "{E337451A-85BE-4073-A758-B19C743273AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestOp1", "Plugins\TestOp1\TestOp1.csproj", "{E37DADCE-89E8-4B2B-8691-5BC9F940CB32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOp1", "Plugins\TestOp1\TestOp1.csproj", "{E37DADCE-89E8-4B2B-8691-5BC9F940CB32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TriangleOperator", "Plugins\TriangleOperator\TriangleOperator.csproj", "{46E28E4B-C29E-4D35-A2F7-204BB40B5A8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{E37DADCE-89E8-4B2B-8691-5BC9F940CB32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E37DADCE-89E8-4B2B-8691-5BC9F940CB32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E37DADCE-89E8-4B2B-8691-5BC9F940CB32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46E28E4B-C29E-4D35-A2F7-204BB40B5A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E28E4B-C29E-4D35-A2F7-204BB40B5A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E28E4B-C29E-4D35-A2F7-204BB40B5A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E28E4B-C29E-4D35-A2F7-204BB40B5A8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{6BCF9AE7-C9D3-470D-944B-884454DF2A93} = {B1D7058D-5EC2-49EB-B594-D013EE25182F}
 		{E337451A-85BE-4073-A758-B19C743273AD} = {B1D7058D-5EC2-49EB-B594-D013EE25182F}
 		{E37DADCE-89E8-4B2B-8691-5BC9F940CB32} = {B1D7058D-5EC2-49EB-B594-D013EE25182F}
+		{46E28E4B-C29E-4D35-A2F7-204BB40B5A8C} = {B1D7058D-5EC2-49EB-B594-D013EE25182F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F4094803-0942-4F12-8BAF-51C05B46C2B5}
