@@ -15,15 +15,10 @@ namespace ZigZagEditor
     {
         public ZigZag.Operator op;
 
-        public Window() : base(new GameWindowSettings(), new NativeWindowSettings())
-        {
-            NativeWindowSettings n = new NativeWindowSettings();
-            
-            GameWindowSettings settings = new GameWindowSettings();
-            settings.UpdateFrequency = 60;
-            settings.RenderFrequency = 60;
-            settings.IsMultiThreaded = false;
-        }
+        public Window(GameWindowSettings windowSettings, NativeWindowSettings nativeSettings)
+            : base(windowSettings, nativeSettings)
+        { }
+
         protected override void OnLoad()
         {
             VSync = VSyncMode.On;
@@ -102,15 +97,32 @@ namespace ZigZagEditor
         static void Main(string[] args)
         {
             Console.WriteLine(Directory.GetCurrentDirectory());
+            var rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent;
+            var pluginDir = Path.Combine(rootDir.FullName, "plugins");
 
-            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\Plugin1\\bin\\Debug\\netcoreapp3.1\\Plugin1.dll");
-            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestDataSource\\bin\\Debug\\netcoreapp3.1\\TestDataSource.dll");
-            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestOp1\\bin\\Debug\\netcoreapp3.1\\TestOp1.dll");
-            var triangleOpPlugin = Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TriangleOperator\\bin\\Debug\\netcoreapp3.1\\TriangleOperator.dll");
+            var netCore31Debug = Path.Combine("bin", "Debug", "netcoreapp3.1");
 
-            var triangle = Activator.CreateInstance(triangleOpPlugin.m_operators[0]);
+            var pluginTextureRootDir = Path.Combine(pluginDir, "OpenGL", "Texture");
+            var pluginTextureDir = Path.Combine(pluginTextureRootDir, netCore31Debug, "Texture.dll");
+            var pluginTriangleDir = Path.Combine(pluginDir, "TriangleOperator", netCore31Debug, "TriangleOperator.dll");
 
-            Window w = new Window();
+            var pluginTexture = Plugin.Load(pluginTextureDir);
+            var pluginTriangle = Plugin.Load(pluginTriangleDir);
+
+            var triangle = Activator.CreateInstance(pluginTriangle.m_operators[0]);
+
+            GameWindowSettings gws = new GameWindowSettings();
+            gws.RenderFrequency = 60;
+            gws.UpdateFrequency = 60;
+            gws.IsMultiThreaded = false;
+
+            NativeWindowSettings nws = new NativeWindowSettings();
+            nws.API = ContextAPI.OpenGL;
+            nws.Profile = ContextProfile.Core;
+            nws.Flags = ContextFlags.ForwardCompatible;
+            nws.APIVersion = new Version(3, 3);
+
+            Window w = new Window(gws, nws);
             w.op = (ZigZag.Operator)triangle;
             w.Run();
         }
