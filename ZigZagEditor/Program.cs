@@ -103,9 +103,9 @@ namespace ZigZagEditor
         {
             Console.WriteLine(Directory.GetCurrentDirectory());
 
-            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\Plugin1\\bin\\Debug\\netstandard2.1\\Plugin1.dll");
-            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestDataSource\\bin\\Debug\\netstandard2.1\\TestDataSource.dll");
-            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestOp1\\bin\\Debug\\netstandard2.1\\TestOp1.dll");
+            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\Plugin1\\bin\\Debug\\netcoreapp3.1\\Plugin1.dll");
+            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestDataSource\\bin\\Debug\\netcoreapp3.1\\TestDataSource.dll");
+            Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TestOp1\\bin\\Debug\\netcoreapp3.1\\TestOp1.dll");
             var triangleOpPlugin = Plugin.Load("C:\\Users\\aart_\\Documents\\csharp\\ZigZag\\Plugins\\TriangleOperator\\bin\\Debug\\netcoreapp3.1\\TriangleOperator.dll");
 
             var triangle = Activator.CreateInstance(triangleOpPlugin.m_operators[0]);
