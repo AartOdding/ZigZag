@@ -22,7 +22,6 @@ namespace ZigZagEditor
         protected override void OnLoad()
         {
             VSync = VSyncMode.On;
-            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
             op.Load();
 
@@ -37,10 +36,15 @@ namespace ZigZagEditor
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             //Code goes here.
             op.Execute();
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
 
             Context.SwapBuffers();
             base.OnRenderFrame(e);

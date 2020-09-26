@@ -4,6 +4,8 @@ using System.IO;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
+using ZigZag.Plugins;
+
 namespace TriangleOperator
 {
     public class TriangleOperator : ZigZag.Operator
@@ -18,9 +20,18 @@ namespace TriangleOperator
         private int m_vao;
         private int m_shader;
 
+        private readonly ZigZag.Plugins.OpenGL.Texture m_outputTexture;
+
+        public TriangleOperator()
+        {
+            m_outputTexture = new ZigZag.Plugins.OpenGL.Texture();
+            m_outputTexture.SetParent(this);
+        }
 
         public override void Load()
         {
+            m_outputTexture.Load();
+
             m_vao = GL.GenVertexArray();
             GL.BindVertexArray(m_vao);
 
@@ -73,6 +84,11 @@ void main()
         public override void Execute()
         {
             //Console.WriteLine("hello");
+            m_outputTexture.BindFrameBuffer();
+
+            GL.ClearColor(0, 0, 0.5f, 1);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
             GL.UseProgram(m_shader);
             GL.BindVertexArray(m_vao);
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);

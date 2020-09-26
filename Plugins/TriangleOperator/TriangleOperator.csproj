@@ -9,6 +9,7 @@
     <ProjectReference Include="..\..\ZigZag\ZigZag.csproj">
       <Private>false</Private>
     </ProjectReference>
+    <ProjectReference Include="..\OpenGL\Texture\Texture.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.0.0-pre9.7" />
