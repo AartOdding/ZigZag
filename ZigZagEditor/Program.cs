@@ -11,7 +11,7 @@ using OpenTK.Windowing.Desktop;
 
 namespace ZigZagEditor
 {
-    public class Window : GameWindow
+/*    public class Window : GameWindow
     {
         public ZigZag.Operator op;
 
@@ -25,12 +25,17 @@ namespace ZigZagEditor
 
             op.Load();
 
+            NativeGui.initialize();
+
             base.OnLoad();
         }
 
         protected override void OnClosed()
         {
             op.UnLoad();
+
+            NativeGui.shutdown();
+
             base.OnClosed();
         }
 
@@ -47,6 +52,9 @@ namespace ZigZagEditor
 
 
             Context.SwapBuffers();
+
+            NativeGui.render();
+
             base.OnRenderFrame(e);
         }
 
@@ -56,7 +64,7 @@ namespace ZigZagEditor
             base.OnResize(e);
         }
 
-    }
+    }*/
 
     internal class Plugin
     {
@@ -96,10 +104,41 @@ namespace ZigZagEditor
     }
 
 
+    public class NativeGlfwBinding : OpenTK.IBindingsContext
+    {
+
+        public IntPtr GetProcAddress(string procName)
+        {
+            return ZigZagEditorNative.ZigZagGetProcAddress(procName);
+        }
+    }
+
+
+
     class Program
     {
         static void Main(string[] args)
         {
+            DllImportResolver.Install();
+
+            ZigZagEditorNative.initialize();
+
+            /*
+            What you want to do is call GL.LoadBindings with an IBindingsContext. 
+            Maybe the built in GLFWBindingsContext will work, otherwise it's pretty easy to implement
+            */
+            //OpenTK.Windowing.GraphicsLibraryFramework.GLFWBindingsContext c = new OpenTK.Windowing.GraphicsLibraryFramework.GLFWBindingsContext();
+            GL.LoadBindings(new NativeGlfwBinding());
+
+            var m_textureId = GL.GenTexture();
+            var m_textureId2 = GL.GenTexture();
+            var m_textureId3 = GL.GenTexture();
+            var m_textureId4 = GL.GenTexture();
+            var m_textureId5 = GL.GenTexture();
+            GL.ClearColor(1, 1, 1, 1);
+
+            //OpenTK.Windowing.GraphicsLibraryFramework.ContextApi.
+
             Console.WriteLine(Directory.GetCurrentDirectory());
             var rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent;
             var pluginDir = Path.Combine(rootDir.FullName, "plugins");
@@ -113,22 +152,43 @@ namespace ZigZagEditor
             var pluginTexture = Plugin.Load(pluginTextureDir);
             var pluginTriangle = Plugin.Load(pluginTriangleDir);
 
-            var triangle = Activator.CreateInstance(pluginTriangle.m_operators[0]);
+            var triangle = (ZigZag.Operator)Activator.CreateInstance(pluginTriangle.m_operators[0]);
 
-            GameWindowSettings gws = new GameWindowSettings();
-            gws.RenderFrequency = 60;
-            gws.UpdateFrequency = 60;
-            gws.IsMultiThreaded = false;
+            /*            GameWindowSettings gws = new GameWindowSettings();
+                        gws.RenderFrequency = 60;
+                        gws.UpdateFrequency = 60;
+                        gws.IsMultiThreaded = false;
 
-            NativeWindowSettings nws = new NativeWindowSettings();
-            nws.API = ContextAPI.OpenGL;
-            nws.Profile = ContextProfile.Core;
-            nws.Flags = ContextFlags.ForwardCompatible;
-            nws.APIVersion = new Version(3, 3);
+                        NativeWindowSettings nws = new NativeWindowSettings();
+                        nws.API = ContextAPI.OpenGL;
+                        nws.Profile = ContextProfile.Core;
+                        nws.Flags = ContextFlags.ForwardCompatible;
+                        nws.APIVersion = new Version(3, 3);*/
 
-            Window w = new Window(gws, nws);
-            w.op = (ZigZag.Operator)triangle;
-            w.Run();
+            triangle.Load();
+
+            while (true)
+            {
+                ZigZagEditorNative.render();
+
+                triangle.Execute();
+
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+                if (ZigZagEditorNative.shouldQuit())
+                {
+                    break;
+                }
+            }
+
+            triangle.UnLoad();
+
+            ZigZagEditorNative.shutdown();
+
+
+            //Window w = new Window(gws, nws);
+            //w.op = (ZigZag.Operator)triangle;
+            //w.Run();
         }
     }
 }
