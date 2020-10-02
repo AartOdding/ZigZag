@@ -1,0 +1,3 @@
+# this file only exists, to check if this resource directory is ZigZag's resource directory, instead 
+# of some other directory called resource on the user's computer. In case the directory is called 
+# resources, but this file does not exist, we shall not consider it ZigZag's resource directory.
