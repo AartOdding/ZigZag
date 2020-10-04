@@ -5,16 +5,16 @@ using System.Runtime.InteropServices;
 
 namespace ZigZagEditor
 {
-    static class DllImportResolver
+    static class ImportResolver
     {
         public static void Install()
         {
-            NativeLibrary.SetDllImportResolver(typeof(DllImportResolver).Assembly, ImportResolver);
+            NativeLibrary.SetDllImportResolver(typeof(ImportResolver).Assembly, Resolve);
         }
 
-        private static IntPtr ImportResolver(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
+        private static IntPtr Resolve(string libraryName, Assembly assembly, DllImportSearchPath? searchPath)
         {
-            if (libraryName == ZigZagEditorNative.LibraryName)
+            if (libraryName == ZigZagEditor.NativeInterop.MainloopInterop.LibraryName)
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {

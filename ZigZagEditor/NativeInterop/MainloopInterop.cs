@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 
-namespace ZigZagEditor
+namespace ZigZagEditor.NativeInterop
 {
-
-    static class ZigZagEditorNative
+    class MainloopInterop
     {
         public const string LibraryName = "ZigZagEditorNative";
 
@@ -27,6 +25,6 @@ namespace ZigZagEditor
 
 
         [DllImport(LibraryName)]
-        public static extern IntPtr ZigZagGetProcAddress(string s);
+        public static extern IntPtr ZigZagGetProcAddress(string procedure);
     }
 }

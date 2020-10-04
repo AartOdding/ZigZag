@@ -5,9 +5,8 @@ using System.Runtime.Loader;
 using System.Collections.Generic;
 
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
 
+using ZigZagEditor.NativeInterop;
 
 namespace ZigZagEditor
 {
@@ -109,7 +108,7 @@ namespace ZigZagEditor
 
         public IntPtr GetProcAddress(string procName)
         {
-            return ZigZagEditorNative.ZigZagGetProcAddress(procName);
+            return MainloopInterop.ZigZagGetProcAddress(procName);
         }
     }
 
@@ -119,9 +118,11 @@ namespace ZigZagEditor
     {
         static void Main(string[] args)
         {
-            DllImportResolver.Install();
+            ImportResolver.Install();
 
-            ZigZagEditorNative.initialize();
+            MainloopInterop.initialize();
+
+            ObjectInterop.onNewObjectTypeAdded("test", 100, ObjectTypeCategory.DataSource);
 
             /*
             What you want to do is call GL.LoadBindings with an IBindingsContext. 
@@ -169,13 +170,13 @@ namespace ZigZagEditor
 
             while (true)
             {
-                ZigZagEditorNative.render();
+                MainloopInterop.render();
 
                 triangle.Execute();
 
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
-                if (ZigZagEditorNative.shouldQuit())
+                if (MainloopInterop.shouldQuit())
                 {
                     break;
                 }
@@ -183,7 +184,7 @@ namespace ZigZagEditor
 
             triangle.UnLoad();
 
-            ZigZagEditorNative.shutdown();
+            MainloopInterop.shutdown();
 
 
             //Window w = new Window(gws, nws);
