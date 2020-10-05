@@ -1,10 +1,9 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 
 namespace ZigZagEditor.NativeInterop
 {
-    class ObjectInterop
+    static class ObjectInterop
     {
         public const string LibraryName = "ZigZagEditorNative";
 
@@ -12,7 +11,7 @@ namespace ZigZagEditor.NativeInterop
         public delegate bool RemoveObjectDelegate(ulong objectID);
 
         [DllImport(LibraryName)]
-        public static extern void registerObjectDelegates(AddObjectDelegate add, RemoveObjectDelegate remove);
+        public static extern void installObjectDelegates(AddObjectDelegate add, RemoveObjectDelegate remove);
 
         [DllImport(LibraryName)]
         public static extern void onNewObjectTypeAdded(string name, ulong id, ObjectTypeCategory category);

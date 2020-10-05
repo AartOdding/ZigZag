@@ -1,7 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Reflection;
-using System.Runtime.Loader;
 using System.Collections.Generic;
 
 using OpenTK.Graphics.OpenGL4;
@@ -10,119 +8,36 @@ using ZigZagEditor.NativeInterop;
 
 namespace ZigZagEditor
 {
-/*    public class Window : GameWindow
-    {
-        public ZigZag.Operator op;
-
-        public Window(GameWindowSettings windowSettings, NativeWindowSettings nativeSettings)
-            : base(windowSettings, nativeSettings)
-        { }
-
-        protected override void OnLoad()
-        {
-            VSync = VSyncMode.On;
-
-            op.Load();
-
-            NativeGui.initialize();
-
-            base.OnLoad();
-        }
-
-        protected override void OnClosed()
-        {
-            op.UnLoad();
-
-            NativeGui.shutdown();
-
-            base.OnClosed();
-        }
-
-        protected override void OnRenderFrame(FrameEventArgs e)
-        {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            GL.Clear(ClearBufferMask.ColorBufferBit);
-
-            //Code goes here.
-            op.Execute();
-
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
-
-
-            Context.SwapBuffers();
-
-            NativeGui.render();
-
-            base.OnRenderFrame(e);
-        }
-
-        protected override void OnResize(ResizeEventArgs e)
-        {
-            GL.Viewport(0, 0, e.Width, e.Height);
-            base.OnResize(e);
-        }
-
-    }*/
-
-    internal class Plugin
-    {
-        public Plugin(Assembly assembly)
-        {
-            m_assembly = assembly;
-
-            foreach (var t in assembly.GetTypes())
-            {
-                if (t.IsSubclassOf(typeof(ZigZag.Object)))
-                {
-                    m_objects.Add(t);
-
-                    if (t.IsSubclassOf(typeof(ZigZag.DataSource)))
-                    {
-                        m_dataSources.Add(t);
-                    }
-                    else if (t.IsSubclassOf(typeof(ZigZag.Operator)))
-                    {
-                        m_operators.Add(t);
-                    }
-                }
-            }
-        }
-
-        public readonly Assembly m_assembly;
-        public readonly List<Type> m_dataSources = new List<Type>();
-        public readonly List<Type> m_operators = new List<Type>();
-        public readonly List<Type> m_objects = new List<Type>();
-
-        static public Plugin Load(string path)
-        {
-            var assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
-            return new Plugin(assembly);
-        }
-
-    }
-
-
     public class NativeGlfwBinding : OpenTK.IBindingsContext
     {
-
         public IntPtr GetProcAddress(string procName)
         {
             return MainloopInterop.ZigZagGetProcAddress(procName);
         }
     }
 
-
-
     class Program
     {
+        static bool AddObject(ulong objectTypeID, ulong parentObjectID)
+        {
+            return false;
+        }
+
+        static bool RemoveObject(ulong objectID)
+        {
+            return false;
+        }
+
         static void Main(string[] args)
         {
+            ulong projectID = Identifier.Create();
+
             ImportResolver.Install();
 
             MainloopInterop.initialize();
-
-            ObjectInterop.onNewObjectTypeAdded("test", 100, ObjectTypeCategory.DataSource);
+            ObjectInterop.installObjectDelegates(AddObject, RemoveObject);
+            var str = "project";
+            ProjectInterop.onProjectCreated(str, projectID);
 
             /*
             What you want to do is call GL.LoadBindings with an IBindingsContext. 
@@ -140,7 +55,6 @@ namespace ZigZagEditor
 
             //OpenTK.Windowing.GraphicsLibraryFramework.ContextApi.
 
-            Console.WriteLine(Directory.GetCurrentDirectory());
             var rootDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.Parent;
             var pluginDir = Path.Combine(rootDir.FullName, "plugins");
 
@@ -150,10 +64,10 @@ namespace ZigZagEditor
             var pluginTextureDir = Path.Combine(pluginTextureRootDir, netCore31Debug, "Texture.dll");
             var pluginTriangleDir = Path.Combine(pluginDir, "TriangleOperator", netCore31Debug, "TriangleOperator.dll");
 
-            var pluginTexture = Plugin.Load(pluginTextureDir);
-            var pluginTriangle = Plugin.Load(pluginTriangleDir);
+            PluginLoader.Load(pluginTextureDir);
+            PluginLoader.Load(pluginTriangleDir);
 
-            var triangle = (ZigZag.Operator)Activator.CreateInstance(pluginTriangle.m_operators[0]);
+            //var triangle = (ZigZag.Operator)Activator.CreateInstance(pluginTriangle.m_operators[0]);
 
             /*            GameWindowSettings gws = new GameWindowSettings();
                         gws.RenderFrequency = 60;
@@ -166,13 +80,13 @@ namespace ZigZagEditor
                         nws.Flags = ContextFlags.ForwardCompatible;
                         nws.APIVersion = new Version(3, 3);*/
 
-            triangle.Load();
+            //triangle.Load();
 
             while (true)
             {
                 MainloopInterop.render();
 
-                triangle.Execute();
+                //triangle.Execute();
 
                 GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
@@ -182,7 +96,7 @@ namespace ZigZagEditor
                 }
             }
 
-            triangle.UnLoad();
+            //triangle.UnLoad();
 
             MainloopInterop.shutdown();
 
