@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin1", "Plugins\Plugin1\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{B1D7058D-5EC2-49EB-B594-D013EE25182F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag", "ZigZag\ZigZag.csproj", "{25E0B7A7-EE45-4313-8D8C-F91F90EA286B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZagPluginBase", "ZigZag\ZigZagPluginBase.csproj", "{25E0B7A7-EE45-4313-8D8C-F91F90EA286B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZagEditor", "ZigZagEditor\ZigZagEditor.csproj", "{1194F3BD-33A4-4793-9625-3583E3E862BB}"
 EndProject
@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestOp1", "Plugins\TestOp1\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TriangleOperator", "Plugins\TriangleOperator\TriangleOperator.csproj", "{46E28E4B-C29E-4D35-A2F7-204BB40B5A8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Texture", "Plugins\OpenGL\Texture\Texture.csproj", "{D85017D7-9E20-4C8E-8C71-BD148A35BD5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Texture", "Plugins\OpenGL\Texture\Texture.csproj", "{D85017D7-9E20-4C8E-8C71-BD148A35BD5B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenGL", "OpenGL", "{248A2E2D-5693-48DE-92A7-18840E57983F}"
 EndProject

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ZigZag\ZigZag.csproj">
+    <ProjectReference Include="..\..\ZigZag\ZigZagPluginBase.csproj">
       <Private>false</Private>
     </ProjectReference>
     <ProjectReference Include="..\OpenGL\Texture\Texture.csproj" />

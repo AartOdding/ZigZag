@@ -12,7 +12,7 @@
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\ZigZag\ZigZag.csproj">
+    <ProjectReference Include="..\..\ZigZag\ZigZagPluginBase.csproj">
       <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
