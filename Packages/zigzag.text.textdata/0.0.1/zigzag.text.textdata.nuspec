@@ -8,8 +8,10 @@
     <license type="file">LICENSE</license>
     <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
     <description>Package Description</description>
+    <copyright>2020</copyright>
+    <repository type="git" url="https://github.com/AartOdding/ZigZag" />
     <dependencies>
-      <group targetFramework=".NETStandard2.1">
+      <group targetFramework=".NETCoreApp3.1">
         <dependency id="ZigZag.Core" version="0.0.1" exclude="Build,Analyzers" />
       </group>
     </dependencies>
