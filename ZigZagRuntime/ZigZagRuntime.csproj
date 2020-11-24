@@ -1,14 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ZigZag\ZigZagPluginBase.csproj">
-      <Private>false</Private>
-    </ProjectReference>
+    <PackageReference Include="NuGet.Protocol" Version="5.7.0" />
+    <PackageReference Include="ZigZag.Core" Version="0.0.2" />
   </ItemGroup>
 
 </Project>
