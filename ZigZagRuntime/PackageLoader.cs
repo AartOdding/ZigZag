@@ -1,13 +1,27 @@
-﻿using NuGet.Repositories;
+﻿using NuGet.Frameworks;
+using NuGet.Repositories;
 using System;
 using System.IO;
 using System.Collections.Generic;
-
+using System.Reflection;
+using System.Runtime.Versioning;
+using System.Linq;
 
 namespace ZigZag.Runtime
 {
     internal static class PackageLoader
     {
+
+        static private readonly NuGetFramework m_framework;
+
+
+        static PackageLoader()
+        {
+            var frameworkName = Assembly.GetExecutingAssembly().
+                GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName;
+            m_framework = NuGetFramework.ParseFrameworkName(frameworkName, 
+                DefaultFrameworkNameProvider.Instance);
+        }
 
         public static void AddLocalRepository(string repositoryPath)
         {
@@ -38,6 +52,7 @@ namespace ZigZag.Runtime
 
         private static void ResolvePackage(string name, int versionMajor, List<Package> resolvedPackages)
         {
+
             // First make sure we cant get stuck in an infinite loop by having a circular dependency.
             foreach(Package package in resolvedPackages)
             {
@@ -78,7 +93,7 @@ namespace ZigZag.Runtime
                         ResolvePackage(package.Id, dependencyVersionMajor, resolvedPackages);
                     }
                 }
-            }
+            } 
         }
 
         // Returns a list of error messages. If the list is empty, the package was loaded successfully
@@ -120,90 +135,61 @@ namespace ZigZag.Runtime
 
             foreach (var p in packagesToLoad)
             {
-                Console.WriteLine(GetBestTargetFrameworkMoniker(p));
-/*                Console.WriteLine(p.localPackage.ExpandedPath);
-                foreach (var fl in p.localPackage.Files)
-                {
-                    Console.WriteLine(fl);
-                }
-                Console.WriteLine(p.name);*/
+                GetBestTargetFrameworkMoniker(p);
+                //Console.WriteLine(GetBestTargetFrameworkMoniker(p));
+                /*                Console.WriteLine(p.localPackage.ExpandedPath);
+                                foreach (var fl in p.localPackage.Files)
+                                {
+                                    Console.WriteLine(fl);
+                                }
+                                Console.WriteLine(p.name);*/
             }
+
+            NuGet.Frameworks.FrameworkReducer r;
+
+            var x = Assembly.GetExecutingAssembly().GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName;
+
+            Console.WriteLine(x);
+
+            var m = NuGet.Frameworks.DefaultFrameworkMappings.Instance;
+            foreach (var sn in m.IdentifierShortNames)
+            {
+                Console.Write(sn.Key);
+                Console.Write("\t");
+                Console.WriteLine(sn.Value);
+            }
+            var fp = new NuGet.Frameworks.DefaultFrameworkNameProvider();
+            string z;
+            fp.TryGetShortIdentifier(x, out z);
+            Console.WriteLine(z);
+
+            NuGet.Frameworks.FrameworkRuntimePair pr;
+            
+            var y = NuGet.Frameworks.NuGetFramework.ParseFrameworkName(x, fp);
+            
+            Console.WriteLine(y.DotNetPlatformName);
+
+
         }
 
         private static string GetBestTargetFrameworkMoniker(Package package)
         {
-            var libPath = package.localPackage.ExpandedPath + "/lib";
+            var frameworkToFolderDict = new Dictionary<NuGetFramework, string>();
 
-            if (Directory.Exists(libPath))
+            foreach(var dir in Directory.EnumerateDirectories(package.localPackage.ExpandedPath + "/lib"))
             {
-                List<string> all = new List<string>();
-                List<string> dotNet = new List<string>();
-                List<string> dotNetStandard = new List<string>();
-                List<string> dotNetCore = new List<string>();
-                List<string> dotNetFrameWork = new List<string>();
-
-                foreach (var directory in Directory.GetDirectories(libPath))
-                {
-                    var folderName = new DirectoryInfo(directory).Name;
-                    
-                    all.Add(folderName);
-                    
-                    if (folderName.StartsWith("net5"))
-                    {
-                        dotNet.Add(folderName);
-                    }
-                    else if (folderName.StartsWith("netstandard"))
-                    {
-                        dotNetStandard.Add(folderName);
-                    }
-                    else if (folderName.StartsWith("netcoreapp"))
-                    {
-                        dotNetCore.Add(folderName);
-                    }
-                    else if (folderName.StartsWith("net") && !folderName.StartsWith("netcore"))
-                    {
-                        dotNetFrameWork.Add(folderName);
-                    }
-                    else
-                    {
-                        all.RemoveAt(all.Count - 1);
-                    }
-                }
-
-                if (all.Count == 1)
-                {
-                    return all[0];
-                }
-                else if (all.Count > 0)
-                {
-                    if (dotNet.Count > 0)
-                    {
-                        dotNet.Sort();
-                        return dotNet[dotNet.Count - 1]; // return highest
-                    }
-                    else if (dotNetStandard.Count > 0)
-                    {
-                        dotNetStandard.Sort();
-                        return dotNetStandard[dotNetStandard.Count - 1]; // return highest
-                    }
-                    else if (dotNetCore.Count > 0)
-                    {
-                        dotNetStandard.Sort();
-                        return dotNetStandard[dotNetStandard.Count - 1]; // return highest
-                    }
-                    else
-                    {
-                        dotNetFrameWork.Sort();
-                        return dotNetFrameWork[dotNetFrameWork.Count - 1]; // return highest
-                        // return highest from 
-                    }
-                }
-                else
-                {
-                    throw new PackageLoadException();
-                }
+                var folder = new DirectoryInfo(dir).Name;
+                frameworkToFolderDict.Add(NuGetFramework.ParseFolder(folder), folder);
             }
-            return "Error";
+
+            FrameworkReducer reducer = new FrameworkReducer();
+            var bestFramework = reducer.GetNearest(m_framework, frameworkToFolderDict.Select(kv => kv.Key));
+
+            if (bestFramework is null)
+            {
+                throw new PackageLoadException();
+            }
+            return frameworkToFolderDict[bestFramework];
         }
 
         private static LocalPackageInfo GetBestPackageVersion(string name, int versionMajor)
@@ -212,7 +198,8 @@ namespace ZigZag.Runtime
 
             foreach (var repository in m_localRepositories)
             {
-                foreach (var package in WithMajorVersion(repository.FindPackagesById(name), versionMajor))
+                foreach (var package in repository.FindPackagesById(name)
+                    .Where(pkg => pkg.Version.Major == versionMajor))
                 {
                     if (bestPackage is null || package.Version > bestPackage.Version)
                     {
@@ -222,17 +209,6 @@ namespace ZigZag.Runtime
             }
 
             return bestPackage;
-        }
-
-        private static IEnumerable<LocalPackageInfo> WithMajorVersion(IEnumerable<LocalPackageInfo> packages, int versionMajor)
-        {
-            foreach(var package in packages)
-            {
-                if (package.Version.Major == versionMajor)
-                {
-                    yield return package;
-                }
-            }
         }
 
         private static readonly Dictionary<string, Package> m_loadedPackages = new Dictionary<string, Package>();
