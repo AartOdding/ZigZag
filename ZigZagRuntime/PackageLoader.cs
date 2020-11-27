@@ -7,100 +7,26 @@ using System.Reflection;
 using System.Runtime.Versioning;
 using System.Linq;
 
+
+
+// can have conflict inside of a package, package A has Dependencies B and C, 
+// B depends on X1.0.0 and C depends of X2.0.0, package should never be loaded
+
 namespace ZigZag.Runtime
 {
     internal static class PackageLoader
     {
-
-        static private readonly NuGetFramework m_framework;
-
-
-        static PackageLoader()
-        {
-            var frameworkName = Assembly.GetExecutingAssembly().
-                GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName;
-            m_framework = NuGetFramework.ParseFrameworkName(frameworkName, 
-                DefaultFrameworkNameProvider.Instance);
-        }
+        public class PackageLoadException : Exception { }
 
         public static void AddLocalRepository(string repositoryPath)
         {
             m_localRepositories.Add(new NuGetv3LocalRepository(repositoryPath));
         }
 
-
-        private struct Package
-        {
-            public string name;
-            public int versionMajor;
-            public LocalPackageInfo localPackage; // null if package not found
-        }
-
-        public class PackageLoadException : Exception { }
-
-        // Reasons package loading can fail:
-        // a package could not be available
-        // conflict with already loaded package
-        // package might not have been expanded
-        // proper framework might not be available
-
-        // can have conflict inside of a package, package A has Dependencies B and C, 
-        // B depends on Xv1 and C depends of Xv2, package should never be loaded
-
-        // can have loops in dependencies, need to take this into account :(
-
-
-        private static void ResolvePackage(string name, int versionMajor, List<Package> resolvedPackages)
-        {
-
-            // First make sure we cant get stuck in an infinite loop by having a circular dependency.
-            foreach(Package package in resolvedPackages)
-            {
-                if (package.name == name && package.versionMajor == versionMajor)
-                {
-                    // There is a loop, but since this package has already been processed we can return now.
-                    return;
-                }
-            }
-
-            Package p;
-            p.name = name;
-            p.versionMajor = versionMajor;
-            p.localPackage = GetBestPackageVersion(name, versionMajor);
-            // When there is no package with the correct major version p.localPackage will be null.
-
-            resolvedPackages.Add(p);
-
-            if (!(p.localPackage is null))
-            {
-                var nuspec = p.localPackage.Nuspec;
-
-                foreach (var dependencyGroup in nuspec.GetDependencyGroups())
-                {
-                    foreach (var package in dependencyGroup.Packages)
-                    {
-                        int dependencyVersionMajor = 0;
-
-                        if (package.VersionRange.HasUpperBound)
-                        {
-                            dependencyVersionMajor = package.VersionRange.MaxVersion.Major;
-                        }
-                        else if (package.VersionRange.HasLowerBound)
-                        {
-                            dependencyVersionMajor = package.VersionRange.MinVersion.Major;
-                        }
-
-                        ResolvePackage(package.Id, dependencyVersionMajor, resolvedPackages);
-                    }
-                }
-            } 
-        }
-
-        // Returns a list of error messages. If the list is empty, the package was loaded successfully
         public static void LoadPackage(string name, int versionMajor)
         {
             List<Package> packagesToLoad = new List<Package>();
-            ResolvePackage(name, versionMajor, packagesToLoad);
+            CollectDependencies(name, versionMajor, packagesToLoad);
 
             // Check for unavailable packages
             foreach (var p in packagesToLoad)
@@ -131,48 +57,78 @@ namespace ZigZag.Runtime
             }
 
             // If we reach here there are no unavailable packages and no incompatible packages.
-            // Load everything that has not yet been loaded. 
+            // By calling GetBestFrameworkFolder() later we also ensure that the package has been
+            // expanded, and that there is atleast a compatible target framework assembly inside.
 
             foreach (var p in packagesToLoad)
             {
-                GetBestTargetFrameworkMoniker(p);
-                //Console.WriteLine(GetBestTargetFrameworkMoniker(p));
-                /*                Console.WriteLine(p.localPackage.ExpandedPath);
-                                foreach (var fl in p.localPackage.Files)
-                                {
-                                    Console.WriteLine(fl);
-                                }
-                                Console.WriteLine(p.name);*/
+                // Only load the package if the package is not loaded yet.
+                // best load in reverse order, so dependencies go before dependants.
+                GetBestFrameworkFolder(p);
             }
-
-            NuGet.Frameworks.FrameworkReducer r;
-
-            var x = Assembly.GetExecutingAssembly().GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName;
-
-            Console.WriteLine(x);
-
-            var m = NuGet.Frameworks.DefaultFrameworkMappings.Instance;
-            foreach (var sn in m.IdentifierShortNames)
-            {
-                Console.Write(sn.Key);
-                Console.Write("\t");
-                Console.WriteLine(sn.Value);
-            }
-            var fp = new NuGet.Frameworks.DefaultFrameworkNameProvider();
-            string z;
-            fp.TryGetShortIdentifier(x, out z);
-            Console.WriteLine(z);
-
-            NuGet.Frameworks.FrameworkRuntimePair pr;
-            
-            var y = NuGet.Frameworks.NuGetFramework.ParseFrameworkName(x, fp);
-            
-            Console.WriteLine(y.DotNetPlatformName);
-
-
         }
 
-        private static string GetBestTargetFrameworkMoniker(Package package)
+        private struct Package
+        {
+            public string name;
+            public int versionMajor;
+            public LocalPackageInfo localPackage; // null if package not found
+        }
+
+        private static void CollectDependencies(string name, int versionMajor, List<Package> dependencyList)
+        {
+
+            // First make sure we cant get stuck in an infinite loop by having a circular dependency.
+            foreach (Package package in dependencyList)
+            {
+                if (package.name == name && package.versionMajor == versionMajor)
+                {
+                    // There is a loop, but since this package has already been processed we can return now.
+                    return;
+                }
+            }
+
+            Package p;
+            p.name = name;
+            p.versionMajor = versionMajor;
+            p.localPackage = GetHighestCompatiblePackage(name, versionMajor);
+
+            // When there is no package with the correct major version p.localPackage will be null.
+            // We still put p in the dependency list, because the fact that the dependency is not 
+            // available does not change that it is still a dependency. After all the dependencies
+            // have been collected this list can be checked for packages without localPackage, and
+            // act accordingly.
+            // It is important to note that if a dependency is missing, more indirect dependencies
+            // could also be missing.
+
+            dependencyList.Add(p);
+
+            if (!(p.localPackage is null))
+            {
+                var nuspec = p.localPackage.Nuspec;
+
+                foreach (var dependencyGroup in nuspec.GetDependencyGroups())
+                {
+                    foreach (var package in dependencyGroup.Packages)
+                    {
+                        int dependencyVersionMajor = 0;
+
+                        if (package.VersionRange.HasUpperBound)
+                        {
+                            dependencyVersionMajor = package.VersionRange.MaxVersion.Major;
+                        }
+                        else if (package.VersionRange.HasLowerBound)
+                        {
+                            dependencyVersionMajor = package.VersionRange.MinVersion.Major;
+                        }
+
+                        CollectDependencies(package.Id, dependencyVersionMajor, dependencyList);
+                    }
+                }
+            }
+        }
+
+        private static string GetBestFrameworkFolder(Package package)
         {
             var frameworkToFolderDict = new Dictionary<NuGetFramework, string>();
 
@@ -192,7 +148,7 @@ namespace ZigZag.Runtime
             return frameworkToFolderDict[bestFramework];
         }
 
-        private static LocalPackageInfo GetBestPackageVersion(string name, int versionMajor)
+        private static LocalPackageInfo GetHighestCompatiblePackage(string name, int versionMajor)
         {
             LocalPackageInfo bestPackage = null;
 
@@ -207,11 +163,21 @@ namespace ZigZag.Runtime
                     }
                 }
             }
-
             return bestPackage;
         }
 
-        private static readonly Dictionary<string, Package> m_loadedPackages = new Dictionary<string, Package>();
-        private static readonly List<NuGetv3LocalRepository> m_localRepositories = new List<NuGetv3LocalRepository>();
+        static PackageLoader()
+        {
+            m_localRepositories = new List<NuGetv3LocalRepository>();
+            m_loadedPackages = new Dictionary<string, Package>();
+            var frameworkName = Assembly.GetExecutingAssembly().
+                GetCustomAttribute<TargetFrameworkAttribute>().FrameworkName;
+            m_framework = NuGetFramework.ParseFrameworkName(frameworkName,
+                DefaultFrameworkNameProvider.Instance);
+        }
+
+        private static readonly NuGetFramework m_framework;
+        private static readonly Dictionary<string, Package> m_loadedPackages;
+        private static readonly List<NuGetv3LocalRepository> m_localRepositories;
     }
 }

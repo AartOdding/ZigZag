@@ -14,6 +14,7 @@ namespace ZigZag.Runtime
         {
             PackageLoader.AddLocalRepository("C:/Users/aart_/AppData/Roaming/ZigZag/LocalPackages");
             PackageLoader.LoadPackage("yamldotnet", 8);
+            PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0);
 
             var targetFrameworkAttribute = Assembly.GetExecutingAssembly()
                 .GetCustomAttributes(typeof(System.Runtime.Versioning.TargetFrameworkAttribute), false);
