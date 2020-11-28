@@ -13,9 +13,14 @@ namespace ZigZag.Runtime
         static void Main(string[] args)
         {
             PackageLoader.AddLocalRepository("C:/Users/aart_/AppData/Roaming/ZigZag/LocalPackages");
-            PackageLoader.LoadPackage("yamldotnet", 8);
-            PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0);
-            PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0);
+            
+            TypeLibrary.AddProcessNodes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0)));
+            TypeLibrary.AddProcessNodes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
+
+            foreach (var nodeType in TypeLibrary.ProcessNodes)
+            {
+                Console.WriteLine(nodeType.FullName);
+            }
         }
     }
 }

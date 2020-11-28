@@ -24,7 +24,7 @@ namespace ZigZag.Runtime
             m_localRepositories.Add(new NuGetv3LocalRepository(repositoryPath));
         }
 
-        public static void LoadPackage(string name, int versionMajor)
+        public static List<Assembly> LoadPackage(string name, int versionMajor)
         {
             List<Package> packagesToLoad = new List<Package>();
             CollectDependencies(name, versionMajor, packagesToLoad);
@@ -82,6 +82,8 @@ namespace ZigZag.Runtime
                 uniquePackagesToLoad[i].frameworkFolder = GetBestFrameworkFolder(uniquePackagesToLoad[i]);
             }
 
+            List<Assembly> addedAssemblies = new List<Assembly>();
+
             // Load packages in reverse order, so dependencies go before dependants.
             foreach (var p in uniquePackagesToLoad.Reverse<Package>())
             {
@@ -92,12 +94,14 @@ namespace ZigZag.Runtime
                     var f = new FileInfo(file);
                     if (f.Extension == ".dll")
                     {
-                        var ass = AssemblyLoadContext.Default.LoadFromAssemblyPath(f.FullName);
+                        addedAssemblies.Add(AssemblyLoadContext.Default.LoadFromAssemblyPath(f.FullName));
                         m_loadedPackages.Add(p.name, p);
                         Console.WriteLine($"Assembly Loaded: {p.name} {p.localPackage.Version}");
                     }
                 }
             }
+
+            return addedAssemblies;
         }
 
         private class Package

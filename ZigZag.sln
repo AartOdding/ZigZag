@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoremIpsum", "ZigZagStandar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Print", "ZigZagStandardLibrary\Text\Print\Print.csproj", "{11E5F371-7130-4BEE-8083-5A7D9B2A04F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZagRuntime", "ZigZagRuntime\ZigZagRuntime.csproj", "{4D46B1C9-E116-4F81-9C8E-BA5A6C015E1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag.Runtime", "ZigZagRuntime\ZigZag.Runtime.csproj", "{4D46B1C9-E116-4F81-9C8E-BA5A6C015E1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
