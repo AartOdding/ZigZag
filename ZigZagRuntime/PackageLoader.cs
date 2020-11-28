@@ -5,6 +5,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Versioning;
+using System.Runtime.Loader;
 using System.Linq;
 
 
@@ -57,21 +58,36 @@ namespace ZigZag.Runtime
             }
 
             // If we reach here there are no unavailable packages and no incompatible packages.
-            // By calling GetBestFrameworkFolder() later we also ensure that the package has been
-            // expanded, and that there is atleast a compatible target framework assembly inside.
 
-            foreach (var p in packagesToLoad)
+            for (int i = 0; i < packagesToLoad.Count; ++i)
             {
-                // Only load the package if the package is not loaded yet.
-                // best load in reverse order, so dependencies go before dependants.
-                GetBestFrameworkFolder(p);
+                // By calling GetBestFrameworkFolder() we ensure that the package has been expanded, 
+                // and that there is atleast a compatible target framework assembly inside.
+                packagesToLoad[i].frameworkFolder = GetBestFrameworkFolder(packagesToLoad[i]);
+            }
+
+            // Load packages in reverse order, so dependencies go before dependants.
+            foreach (var p in packagesToLoad.Reverse<Package>())
+            {
+                var dllPath = p.localPackage.ExpandedPath + "/lib/" + p.frameworkFolder;
+
+                foreach (var file in Directory.EnumerateFiles(dllPath))
+                {
+                    var f = new FileInfo(file);
+                    if (f.Extension == ".dll")
+                    {
+                        var ass = AssemblyLoadContext.Default.LoadFromAssemblyPath(f.FullName);
+                        Console.WriteLine($"Loading assembly: {f.FullName}");
+                    }
+                }
             }
         }
 
-        private struct Package
+        private class Package
         {
             public string name;
             public int versionMajor;
+            public string frameworkFolder;
             public LocalPackageInfo localPackage; // null if package not found
         }
 
@@ -88,7 +104,7 @@ namespace ZigZag.Runtime
                 }
             }
 
-            Package p;
+            Package p = new Package();
             p.name = name;
             p.versionMajor = versionMajor;
             p.localPackage = GetHighestCompatiblePackage(name, versionMajor);
