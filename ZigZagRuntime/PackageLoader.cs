@@ -29,18 +29,33 @@ namespace ZigZag.Runtime
             List<Package> packagesToLoad = new List<Package>();
             CollectDependencies(name, versionMajor, packagesToLoad);
 
+            /* 
+             * After we all the dependencies have been found we need to check
+             * that all the to be loades packages pass a few criteria. it is 
+             * important to first check for every package that will be loaded
+             * if it passes these criteria, and only after every package has
+             * been checked, to actually load the packages. This is because
+             * you should not be able to load a package, without also loading
+             * all of its dependencies.
+             */
+
             // Check for unavailable packages
             foreach (var p in packagesToLoad)
             {
                 if (p.localPackage is null)
                 {
+                    // Could not find package/ package not installed
                     throw new PackageLoadException();
                 }
             }
 
+            // There can be duplicates
+
             // Check for incompatible packages.
             var packageList = new Dictionary<string, Package>(m_loadedPackages);
-            
+
+            List<Package> uniquePackagesToLoad = new List<Package>();
+
             foreach (var p in packagesToLoad)
             {
                 if (packageList.ContainsKey(p.name))
@@ -53,21 +68,22 @@ namespace ZigZag.Runtime
                 }
                 else
                 {
+                    uniquePackagesToLoad.Add(p);
                     packageList.Add(p.name, p);
                 }
             }
 
             // If we reach here there are no unavailable packages and no incompatible packages.
 
-            for (int i = 0; i < packagesToLoad.Count; ++i)
+            for (int i = 0; i < uniquePackagesToLoad.Count; ++i)
             {
                 // By calling GetBestFrameworkFolder() we ensure that the package has been expanded, 
                 // and that there is atleast a compatible target framework assembly inside.
-                packagesToLoad[i].frameworkFolder = GetBestFrameworkFolder(packagesToLoad[i]);
+                uniquePackagesToLoad[i].frameworkFolder = GetBestFrameworkFolder(uniquePackagesToLoad[i]);
             }
 
             // Load packages in reverse order, so dependencies go before dependants.
-            foreach (var p in packagesToLoad.Reverse<Package>())
+            foreach (var p in uniquePackagesToLoad.Reverse<Package>())
             {
                 var dllPath = p.localPackage.ExpandedPath + "/lib/" + p.frameworkFolder;
 
@@ -77,7 +93,8 @@ namespace ZigZag.Runtime
                     if (f.Extension == ".dll")
                     {
                         var ass = AssemblyLoadContext.Default.LoadFromAssemblyPath(f.FullName);
-                        Console.WriteLine($"Loading assembly: {f.FullName}");
+                        m_loadedPackages.Add(p.name, p);
+                        Console.WriteLine($"Assembly Loaded: {p.name} {p.localPackage.Version}");
                     }
                 }
             }
