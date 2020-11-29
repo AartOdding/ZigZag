@@ -12,7 +12,7 @@ namespace ZigZag
 
             public override void Process()
             {
-                if (Input.Node != null)
+                if (!(Input is null) && !(Input.Node is null))
                 {
                     foreach (string line in Input.Node.Lines)
                     {
