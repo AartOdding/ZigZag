@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ZigZag.Text.TextData" Version="0.0.1" />
+    <ProjectReference Include="..\TextData\TextData.csproj" />
   </ItemGroup>
 
 </Project>
