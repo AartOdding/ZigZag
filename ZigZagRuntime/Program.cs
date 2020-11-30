@@ -6,6 +6,9 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.Versioning;
 using System.Runtime.Loader;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 
 namespace ZigZag.Runtime
 {
@@ -41,9 +44,25 @@ namespace ZigZag.Runtime
 
             var loremNode = (ZigZag.ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.LoremIpsum"));
             var printNode = (ZigZag.ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.Print"));
+            var printNode2 = (ZigZag.ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.Print"));
 
-            loremNode.Process();
-            printNode.Process();
+            printNode.Name = "pwintie";
+            printNode2.Name = "Lil pwintie";
+            loremNode.Name = "lorem";
+            loremNode.Parent = printNode;
+            printNode2.Parent = printNode;
+
+            string jsonString;
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new JsonStringEnumConverter());
+            options.Converters.Add(new NodeSerializer());
+            options.WriteIndented = true;
+            
+            jsonString = JsonSerializer.Serialize(printNode, printNode.GetType(), options);
+
+            var n = JsonSerializer.Deserialize(jsonString, typeof(AbstractNode), options);
+
+            Console.WriteLine(jsonString);
 
             foreach (var nodeType in TypeLibrary.ProcessNodes)
             {
