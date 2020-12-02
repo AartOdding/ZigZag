@@ -58,14 +58,54 @@ namespace ZigZag.Runtime
             {
                 node = (AbstractNode)Activator.CreateInstance(nodeType);
 
-                // while loop until we reach a property named children
+                while(reader.TokenType != JsonTokenType.EndObject)
+                {
+                    reader.Read();
+                    JsonAssert(reader.TokenType == JsonTokenType.PropertyName);
+                    string propertyName = reader.GetString();
 
-                // after children have been made set this as parent
+                    switch (propertyName)
+                    {
+                        case "children":
+                            reader.Read();
+                            JsonAssert(reader.TokenType == JsonTokenType.StartArray);
+                            reader.Read();
 
-                reader.Read();
-                JsonAssert(reader.TokenType == JsonTokenType.PropertyName);
+                            while (reader.TokenType != JsonTokenType.EndArray)
+                            {
+                                JsonAssert(reader.TokenType == JsonTokenType.StartObject);
 
+                                // recursively deserialize new node here.
 
+                                // instead for now skip
+                                reader.Skip();
+                                JsonAssert(reader.TokenType == JsonTokenType.EndObject);
+                                reader.Read(); // reader.Skip() moved to the end token. Read past it.
+                            }
+                            JsonAssert(reader.TokenType == JsonTokenType.EndArray);
+                            reader.Read(); // Read past EndArray token.
+                            break;
+
+                        case "something":
+                            // do something
+                            //break; // fallthrough break for now while "something"
+
+                        case "somethingElse":
+                            // do something else
+                            //break; // fallthrough break for now while "something"
+
+                        default: // Read and skip.
+                            reader.Read();
+                            if (reader.TokenType == JsonTokenType.StartArray ||
+                                reader.TokenType == JsonTokenType.StartObject)
+                            {
+                                reader.Skip();
+                                reader.Read(); // reader.Skip() moved to the end token. Read past it.
+                            }
+                            break;
+                    }
+                }
+                // Read past end token?
             }
             return node;
         }
