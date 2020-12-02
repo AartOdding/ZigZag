@@ -75,10 +75,9 @@ namespace ZigZag.Runtime
                             {
                                 JsonAssert(reader.TokenType == JsonTokenType.StartObject);
 
-                                // recursively deserialize new node here.
+                                var child = JsonSerializer.Deserialize<AbstractNode>(ref reader, options);
+                                child.Parent = node;
 
-                                // instead for now skip
-                                reader.Skip();
                                 JsonAssert(reader.TokenType == JsonTokenType.EndObject);
                                 reader.Read(); // reader.Skip() moved to the end token. Read past it.
                             }
@@ -86,13 +85,17 @@ namespace ZigZag.Runtime
                             reader.Read(); // Read past EndArray token.
                             break;
 
-                        case "something":
-                            // do something
-                            //break; // fallthrough break for now while "something"
+                        case "name":
+                            reader.Read();
+                            JsonAssert(reader.TokenType == JsonTokenType.String);
+                            node.Name = reader.GetString();
+                            break;
 
+                        /*
                         case "somethingElse":
-                            // do something else
-                            //break; // fallthrough break for now while "something"
+                            // do other stuff
+                            break;
+                        */
 
                         default: // Read and skip.
                             reader.Read();
@@ -105,7 +108,7 @@ namespace ZigZag.Runtime
                             break;
                     }
                 }
-                // Read past end token?
+                JsonAssert(reader.TokenType == JsonTokenType.EndObject);
             }
             return node;
         }
