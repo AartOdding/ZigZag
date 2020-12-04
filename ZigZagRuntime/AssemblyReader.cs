@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
+using ZigZag.Core;
 
 namespace ZigZag.Runtime
 {
@@ -16,7 +17,7 @@ namespace ZigZag.Runtime
             {
                 foreach (var type in assembly.ExportedTypes)
                 {
-                    if (type.IsSubclassOf(typeof(ZigZag.ProcessNode)))
+                    if (type.IsSubclassOf(typeof(ProcessNode)))
                     {
                         types.Add(type);
                     }
@@ -31,7 +32,7 @@ namespace ZigZag.Runtime
 
             foreach (var t in assembly.ExportedTypes)
             {
-                if (t.IsSubclassOf(typeof(ZigZag.ProcessNode)))
+                if (t.IsSubclassOf(typeof(ProcessNode)))
                 {
                     types.Add(t);
                 }

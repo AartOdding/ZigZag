@@ -1,13 +1,8 @@
-﻿using NuGet.Repositories;
-using NuGet.Packaging;
-using NuGet.Frameworks;
-using System;
-using System.IO;
-using System.Reflection;
-using System.Runtime.Versioning;
+﻿using System;
 using System.Runtime.Loader;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using ZigZag.Core;
 
 
 namespace ZigZag.Runtime
@@ -42,9 +37,9 @@ namespace ZigZag.Runtime
                 TypeLibrary.AddProcessNodes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
             }
 
-            var loremNode = (ZigZag.ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.LoremIpsum"));
-            var printNode = (ZigZag.ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.Print"));
-            var printNode2 = (ZigZag.ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.Print"));
+            var loremNode = (ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.LoremIpsum"));
+            var printNode = (ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.Print"));
+            var printNode2 = (ProcessNode)Activator.CreateInstance(TypeLibrary.GetProcessNode("ZigZag.Text.Print"));
 
             printNode.Name = "pwintie";
             printNode2.Name = "Lil pwintie";

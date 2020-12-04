@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
+using ZigZag.Core;
 
-namespace ZigZag
+
+namespace ZigZag.Text
 {
-    namespace Text
+    public class TextData : OutputNode
     {
-        public class TextData : OutputNode
-        {
 
-            public List<string> Lines = new List<string>();
+        public List<string> Lines = new List<string>();
 
-        }
     }
 }

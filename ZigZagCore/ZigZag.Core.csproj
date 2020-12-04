@@ -12,7 +12,7 @@
     <Copyright>2020</Copyright>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageProjectUrl>www.zigzag-interactive.com</PackageProjectUrl>
-    <RootNamespace>ZigZag</RootNamespace>
+    <RootNamespace>ZigZag.Core</RootNamespace>
     <RepositoryUrl>https://github.com/AartOdding/ZigZag</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>

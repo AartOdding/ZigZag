@@ -1,5 +1,5 @@
-﻿
-namespace ZigZag
+
+namespace ZigZag.Core
 {
     public class ProcessNode : AbstractNode
     {

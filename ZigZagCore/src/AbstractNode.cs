@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 
-namespace ZigZag
+namespace ZigZag.Core
 {
     public class AbstractNode
     {
@@ -20,6 +20,7 @@ namespace ZigZag
             {
                 return m_parent;
             }
+
             set
             {
                 if (IsIndirectParentOf(value))
