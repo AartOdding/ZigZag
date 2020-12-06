@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\ZigZagCore\ZigZag.Core.csproj" />
+    <ProjectReference Include="..\..\..\ZigZag.Core\ZigZag.Core.csproj" />
   </ItemGroup>
 
 </Project>

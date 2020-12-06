@@ -17,7 +17,7 @@ namespace ZigZag.Runtime
 
             if (forceLoadFromDevPath)
             {
-                string devLibPath = "D:/ZigZag/ZigZag/ZigZagStandardLibrary";
+                string devLibPath = "D:/ZigZag/ZigZag/ZigZag.StandardLibrary";
                 
                 TypeLibrary.AddProcessNodes(AssemblyReader.ReadProcessNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(

@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag.Core", "ZigZagCore\ZigZag.Core.csproj", "{8A3FE28F-313E-47BF-BDFF-BE525082999D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag.Core", "ZigZag.Core\ZigZag.Core.csproj", "{8A3FE28F-313E-47BF-BDFF-BE525082999D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextData", "ZigZagStandardLibrary\Text\TextData\TextData.csproj", "{42DE09FD-2BCD-4195-A28E-D9E500F482AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextData", "ZigZag.StandardLibrary\Text\TextData\TextData.csproj", "{42DE09FD-2BCD-4195-A28E-D9E500F482AA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StandardLibrary", "StandardLibrary", "{881C6FD3-8F0E-482C-AC8F-1E3474DD4E28}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Text", "Text", "{17D1B458-B913-44F3-A743-CCD31CA8B519}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoremIpsum", "ZigZagStandardLibrary\Text\LoremIpsum\LoremIpsum.csproj", "{8314C1DF-8415-4C1C-9512-9C4E3B643594}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoremIpsum", "ZigZag.StandardLibrary\Text\LoremIpsum\LoremIpsum.csproj", "{8314C1DF-8415-4C1C-9512-9C4E3B643594}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Print", "ZigZagStandardLibrary\Text\Print\Print.csproj", "{11E5F371-7130-4BEE-8083-5A7D9B2A04F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Print", "ZigZag.StandardLibrary\Text\Print\Print.csproj", "{11E5F371-7130-4BEE-8083-5A7D9B2A04F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag.Runtime", "ZigZagRuntime\ZigZag.Runtime.csproj", "{4D46B1C9-E116-4F81-9C8E-BA5A6C015E1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag.Runtime", "ZigZag.Runtime\ZigZag.Runtime.csproj", "{4D46B1C9-E116-4F81-9C8E-BA5A6C015E1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
