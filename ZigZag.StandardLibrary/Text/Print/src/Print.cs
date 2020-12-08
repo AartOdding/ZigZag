@@ -7,13 +7,13 @@ namespace ZigZag.Text
     public class Print : ProcessNode
     {
 
-        public InputNode<TextData> Input;
+        public readonly TextDataInput Input = new TextDataInput();
 
         public override void Process()
         {
-            if (!(Input is null) && !(Input.Node is null))
+            if (!(Input.ConnectedOutput is null))
             {
-                foreach (string line in Input.Node.Lines)
+                foreach (string line in Input.ConnectedOutput.Lines)
                 {
                     Console.WriteLine(line);
                 }

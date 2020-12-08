@@ -4,6 +4,20 @@ using ZigZag.Core;
 
 namespace ZigZag.Text
 {
+    public class TextDataInput : InputNode
+    {
+        public TextData ConnectedOutput
+        {
+            get;
+            set;
+        }
+
+        public override bool CanConnect(OutputNode node)
+        {
+            return node.GetType() == typeof(TextData);
+        }
+    }
+
     public class TextData : OutputNode
     {
 
