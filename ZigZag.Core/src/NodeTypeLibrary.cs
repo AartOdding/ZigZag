@@ -8,6 +8,7 @@ namespace ZigZag.Core
     public static class NodeTypeLibrary
     {
         public class NodeTypeNameTakenException : Exception { }
+        public class NodeTypeMissingException : Exception { }
 
         public static void AddNodeType(Type nodeType)
         {
@@ -38,7 +39,10 @@ namespace ZigZag.Core
             {
                 return (AbstractNode)Activator.CreateInstance(m_nodeTypes[nodeTypeName]);
             }
-            return null;
+            else
+            {
+                throw new NodeTypeMissingException();
+            }
         }
 
         public static Type GetNodeType(string nodeTypeName)
