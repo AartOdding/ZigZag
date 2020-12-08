@@ -1,10 +1,10 @@
 ﻿
 namespace ZigZag.Core
 {
-    public class InputNode<T> : AbstractNode where T : OutputNode
+    public abstract class InputNode : AbstractNode
     {
 
-        public T Node;
+        public abstract bool CanConnect(OutputNode output);
 
     }
 }

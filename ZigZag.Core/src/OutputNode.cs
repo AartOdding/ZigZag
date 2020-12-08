@@ -1,7 +1,7 @@
 ﻿
 namespace ZigZag.Core
 {
-    public class OutputNode : AbstractNode
+    public abstract class OutputNode : AbstractNode
     {
 
     }
