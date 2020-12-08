@@ -45,7 +45,7 @@ namespace ZigZag.Core
             JsonAssert(reader.TokenType == JsonTokenType.String);
 
             string nodeTypeString = reader.GetString();
-            var nodeType = NodeLibrary.GetNodeType(nodeTypeString);
+            var nodeType = NodeTypeLibrary.GetNodeType(nodeTypeString);
 
             AbstractNode node;
 

@@ -19,27 +19,27 @@ namespace ZigZag.Runtime
             {
                 string devLibPath = "D:/ZigZag/ZigZag/ZigZag.StandardLibrary";
                 
-                NodeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
+                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/TextData/bin/Debug/netcoreapp3.1/TextData.dll")));
 
-                NodeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
+                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/LoremIpsum/bin/Debug/netcoreapp3.1/LoremIpsum.dll")));
 
-                NodeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
+                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/Print/bin/Debug/netcoreapp3.1/Print.dll")));
             }
             else
             {
-                NodeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0)));
-                NodeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
+                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0)));
+                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
             }
 
-            var loremNode = (ProcessNode)Activator.CreateInstance(NodeLibrary.GetNodeType("ZigZag.Text.LoremIpsum"));
-            var printNode = (ProcessNode)Activator.CreateInstance(NodeLibrary.GetNodeType("ZigZag.Text.Print"));
-            var printNode2 = (ProcessNode)Activator.CreateInstance(NodeLibrary.GetNodeType("ZigZag.Text.Print"));
+            var loremNode = NodeTypeLibrary.CreateNode("ZigZag.Text.LoremIpsum");
+            var printNode = NodeTypeLibrary.CreateNode("ZigZag.Text.Print");
+            var printNode2 = NodeTypeLibrary.CreateNode("ZigZag.Text.Print");
 
             printNode.Name = "pwintie";
             printNode2.Name = "Lil pwintie";
@@ -68,7 +68,7 @@ namespace ZigZag.Runtime
             }
             Console.WriteLine("*");
 
-            foreach (var nodeType in NodeLibrary.ProcessNodeTypes)
+            foreach (var nodeType in NodeTypeLibrary.NodeTypes)
             {
                 Console.WriteLine(nodeType.FullName);
             }
