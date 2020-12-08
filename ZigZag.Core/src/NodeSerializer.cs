@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using ZigZag.Core;
 
 
-namespace ZigZag.Runtime
+namespace ZigZag.Core
 {
-    internal class NodeSerializer : JsonConverter<AbstractNode>
+    public class NodeSerializer : JsonConverter<AbstractNode>
     {
         class UnknownNodeTypeException : Exception
         {
@@ -46,7 +45,7 @@ namespace ZigZag.Runtime
             JsonAssert(reader.TokenType == JsonTokenType.String);
 
             string nodeTypeString = reader.GetString();
-            var nodeType = TypeLibrary.GetProcessNode(nodeTypeString);
+            var nodeType = NodeLibrary.GetNodeType(nodeTypeString);
 
             AbstractNode node;
 
@@ -116,7 +115,7 @@ namespace ZigZag.Runtime
         public override void Write(Utf8JsonWriter writer, AbstractNode node, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-
+            
             writer.WriteString("type", node.GetType().FullName);
             writer.WriteString("name", node.Name);
 

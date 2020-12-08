@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace ZigZag.Runtime
+
+namespace ZigZag.Core
 {
-    internal static class TypeLibrary
+    public static class NodeLibrary
     {
 
-        public static void AddProcessNode(Type processNode)
+        public static void AddNodeType(Type processNode)
         {
             m_processNodes.Add(processNode.FullName, processNode);
         }
 
-        public static void AddProcessNodes(List<Type> processNodes)
+        public static void AddNodeTypes(List<Type> processNodes)
         {
             foreach(var t in processNodes)
             {
@@ -21,12 +21,12 @@ namespace ZigZag.Runtime
             }
         }
 
-        public static Type GetProcessNode(string fullName)
+        public static Type GetNodeType(string fullName)
         {
             return m_processNodes[fullName];
         }
 
-        public static IEnumerable<Type> ProcessNodes
+        public static IEnumerable<Type> ProcessNodeTypes
         {
             get
             {
