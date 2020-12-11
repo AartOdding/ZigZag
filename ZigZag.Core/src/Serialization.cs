@@ -16,6 +16,19 @@ namespace ZigZag.Core
             }
         }
 
+        public static void ReadTillEndOfObject(ref Utf8JsonReader reader)
+        {
+            while (reader.TokenType != JsonTokenType.EndObject)
+            {
+                if (reader.TokenType == JsonTokenType.StartArray ||
+                    reader.TokenType == JsonTokenType.StartObject)
+                {
+                    reader.Skip();
+                }
+                reader.Read();
+            }
+        }
+
         internal static void WriteAbstractNodePart(AbstractNode node, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
@@ -31,55 +44,46 @@ namespace ZigZag.Core
 
             writer.WriteEndArray();
 
+            // When adding more properties make sure to add them here.
+
             writer.WriteEndObject();
         }
 
         internal static void ReadAbstractNodePart(AbstractNode node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
+
+            reader.Read();
+            Assert(reader.TokenType == JsonTokenType.PropertyName);
+            Assert(reader.GetString() == "name");
+            
+            reader.Read();
+            Assert(reader.TokenType == JsonTokenType.String);
+            node.Name = reader.GetString();
+
+            reader.Read();
+            Assert(reader.TokenType == JsonTokenType.PropertyName);
+            Assert(reader.GetString() == "children");
+
+            reader.Read();
+            Assert(reader.TokenType == JsonTokenType.StartArray);
+
             reader.Read();
 
-            while (reader.TokenType != JsonTokenType.EndObject)
+            while (reader.TokenType != JsonTokenType.EndArray)
             {
-                Assert(reader.TokenType == JsonTokenType.PropertyName);
-                string propertyName = reader.GetString();
+                Assert(reader.TokenType == JsonTokenType.StartObject);
+
+                var child = JsonSerializer.Deserialize<AbstractNode>(ref reader, options);
+                child.Parent = node;
+
+                Assert(reader.TokenType == JsonTokenType.EndObject);
                 reader.Read();
-
-                switch (propertyName)
-                {
-                    case "name":
-                        Assert(reader.TokenType == JsonTokenType.String);
-                        node.Name = reader.GetString();
-                        reader.Read();
-                        break;
-
-                    case "children":
-                        Assert(reader.TokenType == JsonTokenType.StartArray);
-                        reader.Read();
-
-                        while (reader.TokenType != JsonTokenType.EndArray)
-                        {
-                            Assert(reader.TokenType == JsonTokenType.StartObject);
-
-                            var child = JsonSerializer.Deserialize<AbstractNode>(ref reader, options);
-                            child.Parent = node;
-
-                            Assert(reader.TokenType == JsonTokenType.EndObject);
-                        }
-                        Assert(reader.TokenType == JsonTokenType.EndArray);
-                        reader.Read();
-                        break;
-
-                    default:
-                        if (reader.TokenType == JsonTokenType.StartArray ||
-                            reader.TokenType == JsonTokenType.StartObject)
-                        {
-                            reader.Skip();
-                        }
-                        reader.Read();
-                        break;
-                }
             }
+            Assert(reader.TokenType == JsonTokenType.EndArray);
+
+            // Forward compatible as long as new properties are added at the end.
+            ReadTillEndOfObject(ref reader);
 
             Assert(reader.TokenType == JsonTokenType.EndObject);
         }
