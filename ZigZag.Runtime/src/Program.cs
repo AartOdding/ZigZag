@@ -54,10 +54,10 @@ namespace ZigZag.Runtime
             options.WriteIndented = true;
             
             jsonString = JsonSerializer.Serialize(printNode, printNode.GetType(), options);    
+            Console.WriteLine(jsonString);
 
             var n = JsonSerializer.Deserialize(jsonString, typeof(AbstractNode), options);
 
-            Console.WriteLine(jsonString);
 
             var t = n.GetType();
 

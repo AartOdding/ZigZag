@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -57,7 +57,7 @@ namespace ZigZag.Core
             {
                 node = (AbstractNode)Activator.CreateInstance(nodeType);
 
-                while(reader.TokenType != JsonTokenType.EndObject)
+                while (reader.TokenType != JsonTokenType.EndObject)
                 {
                     reader.Read();
                     JsonAssert(reader.TokenType == JsonTokenType.PropertyName);
@@ -117,16 +117,26 @@ namespace ZigZag.Core
             writer.WriteStartObject();
             
             writer.WriteString("type", node.GetType().FullName);
-            writer.WriteString("name", node.Name);
 
-            writer.WriteStartArray("children");
+            writer.WritePropertyName("ZigZag.Core.AbstractNode");
+            Serialization.WriteAbstractNodePart(node, writer, options);
 
-            foreach(var child in node.Children)
+            switch (node)
             {
-                JsonSerializer.Serialize(writer, child, child.GetType(), options);
+                case InputNode inputNode:
+                    writer.WritePropertyName("ZigZag.Core.InputNode");
+                    Serialization.WriteInputNodePart(inputNode, writer, options);
+                    break;
+                case OutputNode outputNode:
+                    writer.WritePropertyName("ZigZag.Core.OutputNode");
+                    Serialization.WriteOutputNodePart(outputNode, writer, options);
+                    break;
+                case ProcessNode processNode:
+                    writer.WritePropertyName("ZigZag.Core.ProcessNode");
+                    Serialization.WriteProcessNodePart(processNode, writer, options);
+                    break;
             }
 
-            writer.WriteEndArray();
             writer.WriteEndObject();
         }
 

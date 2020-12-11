@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace ZigZag.Core
 {
-    public class AbstractNode
+    public abstract class AbstractNode
     {
         public class ReparentingException : Exception { }
 
