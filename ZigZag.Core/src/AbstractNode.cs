@@ -11,7 +11,7 @@ namespace ZigZag.Core
         public string Name
         {
             get;
-            set;
+            internal set;
         }
 
         public AbstractNode Parent
@@ -21,7 +21,7 @@ namespace ZigZag.Core
                 return m_parent;
             }
 
-            set
+            internal set
             {
                 if (IsIndirectParentOf(value))
                 {

@@ -6,5 +6,11 @@ namespace ZigZag.Core
 
         public abstract bool CanConnect(OutputNode output);
 
+        public OutputNode ConnectedOutputNode
+        {
+            get;
+            internal set;
+        }
+
     }
 }
