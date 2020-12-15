@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ZigZag.Core
 {
-    public class AbstractExecutor
+    public abstract class AbstractExecutor
     {
         public ProcessNode Node
         {
