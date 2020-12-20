@@ -3,6 +3,7 @@ using System.Runtime.Loader;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ZigZag.Core;
+using ZigZag.Core.Commands;
 
 
 namespace ZigZag.Runtime
@@ -37,15 +38,25 @@ namespace ZigZag.Runtime
                 NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
             }
 
+            var proj = new Project();
+            // Make sure project can only execute commands on its own children
+
             var loremNode = NodeTypeLibrary.CreateNode("ZigZag.Text.LoremIpsum");
             var printNode = NodeTypeLibrary.CreateNode("ZigZag.Text.Print");
             var printNode2 = NodeTypeLibrary.CreateNode("ZigZag.Text.Print");
 
-            printNode.Name = "pwintie";
-            printNode2.Name = "Lil pwintie";
-            loremNode.Name = "lorem";
-            loremNode.Parent = printNode;
-            printNode2.Parent = printNode;
+            proj.SubmitCommand(new AddNodeCommand(proj, loremNode));
+            proj.SubmitCommand(new AddNodeCommand(loremNode, printNode));
+            proj.SubmitCommand(new AddNodeCommand(loremNode, printNode2));
+
+
+            proj.Execute();
+
+            //printNode.Name = "pwintie";
+            //printNode2.Name = "Lil pwintie";
+            //loremNode.Name = "lorem";
+            //loremNode.Parent = printNode;
+            //printNode2.Parent = printNode;
 
             string jsonString;
             var options = new JsonSerializerOptions();
