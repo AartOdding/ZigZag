@@ -6,8 +6,6 @@ namespace ZigZag.Core
 {
     public abstract class AbstractNode
     {
-        public class ReparentingException : Exception { }
-
         public string Name
         {
             get;
@@ -16,28 +14,8 @@ namespace ZigZag.Core
 
         public AbstractNode Parent
         {
-            get
-            {
-                return m_parent;
-            }
-
-            internal set
-            {
-                if (IsIndirectParentOf(value))
-                {
-                    throw new ReparentingException();
-                }
-                if (!(m_parent is null))
-                {
-                    m_parent.m_children.Remove(this);
-                    m_parent = null;
-                }
-                if (!(value is null))
-                {
-                    m_parent = value;
-                    value.m_children.Add(this);
-                }
-            }
+            get;
+            internal set;
         }
 
         public IEnumerable<AbstractNode> Children
@@ -50,7 +28,7 @@ namespace ZigZag.Core
 
         public bool IsParentOf(AbstractNode child)
         {
-            if (child != null)
+            if (!(child is null))
             {
                 return child.IsChildOf(this);
             }
@@ -59,7 +37,7 @@ namespace ZigZag.Core
 
         public bool IsChildOf(AbstractNode parent)
         {
-            return m_parent == parent;
+            return Parent == parent;
         }
 
         public bool IsIndirectParentOf(AbstractNode child)
@@ -73,7 +51,7 @@ namespace ZigZag.Core
 
         public bool IsIndirectChildOf(AbstractNode parent)
         {
-            AbstractNode p = m_parent;
+            AbstractNode p = Parent;
 
             while (!(p is null))
             {
@@ -81,7 +59,7 @@ namespace ZigZag.Core
                 {
                     return true;
                 }
-                p = p.m_parent;
+                p = p.Parent;
             }
             return p == parent;
         }
@@ -97,7 +75,6 @@ namespace ZigZag.Core
             }
         }
 
-        private AbstractNode m_parent;
-        private readonly List<AbstractNode> m_children = new List<AbstractNode>();
+        internal readonly List<AbstractNode> m_children = new List<AbstractNode>();
     }
 }

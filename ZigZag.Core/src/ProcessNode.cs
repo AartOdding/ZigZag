@@ -21,12 +21,7 @@ namespace ZigZag.Core
             }
         }
 
-        public void Execute()
-        {
-
-        }
-
-        public virtual void Process()
+        internal void Process()
         {
 
         }
