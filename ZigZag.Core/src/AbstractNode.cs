@@ -22,7 +22,17 @@ namespace ZigZag.Core
         {
             get
             {
-                return m_children;
+                if (m_children is null)
+                {
+                    yield break;
+                }
+                else
+                {
+                    foreach (var child in m_children)
+                    {
+                        yield return child;
+                    }
+                }
             }
         }
 
@@ -66,6 +76,10 @@ namespace ZigZag.Core
 
         public IEnumerable<T> GetChildren<T>() where T : AbstractNode
         {
+            if (m_children is null)
+            {
+                yield break;
+            }
             foreach (var child in m_children)
             {
                 if (child is T c)
@@ -75,6 +89,6 @@ namespace ZigZag.Core
             }
         }
 
-        internal readonly List<AbstractNode> m_children = new List<AbstractNode>();
+        internal List<AbstractNode> m_children;
     }
 }

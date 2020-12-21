@@ -1,4 +1,5 @@
-﻿
+﻿using System.Collections.Generic;
+
 
 namespace ZigZag.Core.Commands
 {
@@ -17,9 +18,13 @@ namespace ZigZag.Core.Commands
                 throw new CommandException();
             }
             if (m_childNode.Parent is null &&
-                !m_parentNode.m_children.Contains(m_childNode) &&
+                (m_parentNode.m_children is null || !m_parentNode.m_children.Contains(m_childNode)) &&
                 !m_parentNode.IsIndirectChildOf(m_childNode))
             {
+                if (m_parentNode.m_children is null)
+                {
+                    m_parentNode.m_children = new List<AbstractNode>();
+                }
                 m_parentNode.m_children.Add(m_childNode);
                 m_childNode.Parent = m_parentNode;
             }

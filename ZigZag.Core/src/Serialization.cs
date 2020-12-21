@@ -58,8 +58,11 @@ namespace ZigZag.Core
             Assert(reader.GetString() == "name");
             
             reader.Read();
-            Assert(reader.TokenType == JsonTokenType.String);
-            node.Name = reader.GetString();
+            Assert(reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null);
+            if (reader.TokenType == JsonTokenType.String)
+            {
+                node.Name = reader.GetString();
+            }
 
             reader.Read();
             Assert(reader.TokenType == JsonTokenType.PropertyName);
@@ -70,12 +73,18 @@ namespace ZigZag.Core
 
             reader.Read();
 
+            if (reader.TokenType != JsonTokenType.EndArray)
+            {
+                node.m_children = new List<AbstractNode>();
+            }
+
             while (reader.TokenType != JsonTokenType.EndArray)
             {
                 Assert(reader.TokenType == JsonTokenType.StartObject);
 
                 var child = JsonSerializer.Deserialize<AbstractNode>(ref reader, options);
                 child.Parent = node;
+                node.m_children.Add(child);
 
                 Assert(reader.TokenType == JsonTokenType.EndObject);
                 reader.Read();
