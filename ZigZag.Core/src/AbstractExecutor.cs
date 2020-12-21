@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿
 
 namespace ZigZag.Core
 {
@@ -11,6 +9,5 @@ namespace ZigZag.Core
             get;
             internal set;
         }
-
     }
 }

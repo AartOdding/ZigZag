@@ -6,7 +6,7 @@ using ZigZag.Core.Commands;
 
 namespace ZigZag.Core
 {
-    public class Project : ProcessNode
+    public class Project : GroupNode
     {
         // can do serialization
 
