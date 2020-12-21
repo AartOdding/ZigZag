@@ -29,7 +29,7 @@ namespace ZigZag.Core
 
             reader.Read();
             JsonAssert(reader.TokenType == JsonTokenType.PropertyName);
-            JsonAssert(reader.GetString() == "type");
+            JsonAssert(reader.GetString() == "Type");
 
             reader.Read();
             JsonAssert(reader.TokenType == JsonTokenType.String);
@@ -90,7 +90,7 @@ namespace ZigZag.Core
         {
             writer.WriteStartObject();
             
-            writer.WriteString("type", node.GetType().FullName);
+            writer.WriteString("Type", node.GetType().FullName);
 
             writer.WritePropertyName("ZigZag.Core.AbstractNode");
             Serialization.WriteAbstractNodePart(node, writer, options);

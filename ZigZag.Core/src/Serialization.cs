@@ -33,9 +33,9 @@ namespace ZigZag.Core
         {
             writer.WriteStartObject();
 
-            writer.WriteString("name", node.Name);
+            writer.WriteString("Name", node.Name);
 
-            writer.WriteStartArray("children");
+            writer.WriteStartArray("Children");
 
             foreach (var child in node.Children)
             {
@@ -55,7 +55,7 @@ namespace ZigZag.Core
 
             reader.Read();
             Assert(reader.TokenType == JsonTokenType.PropertyName);
-            Assert(reader.GetString() == "name");
+            Assert(reader.GetString() == "Name");
             
             reader.Read();
             Assert(reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null);
@@ -66,7 +66,7 @@ namespace ZigZag.Core
 
             reader.Read();
             Assert(reader.TokenType == JsonTokenType.PropertyName);
-            Assert(reader.GetString() == "children");
+            Assert(reader.GetString() == "Children");
 
             reader.Read();
             Assert(reader.TokenType == JsonTokenType.StartArray);
