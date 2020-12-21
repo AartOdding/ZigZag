@@ -52,5 +52,10 @@ namespace ZigZag.Text
             Output.Lines.Add("Curabitur ullamcorper ultricies nisi.");
             Output.Lines.Add("Nam eget dui.");
         }
+
+        public override void Process()
+        {
+
+        }
     }
 }
