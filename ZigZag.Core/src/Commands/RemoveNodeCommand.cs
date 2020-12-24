@@ -4,7 +4,7 @@ namespace ZigZag.Core.Commands
 {
     public class RemoveNodeCommand : AbstractCommand
     {
-        public RemoveNodeCommand(AbstractNode parentNode, AbstractNode childNodeToRemove)
+        public RemoveNodeCommand(Node parentNode, Node childNodeToRemove)
         {
             m_parentNode = parentNode;
             m_childNode = childNodeToRemove;
@@ -16,12 +16,12 @@ namespace ZigZag.Core.Commands
             {
                 throw new CommandException();
             }
-            if (m_childNode.Parent == m_parentNode &&
-                m_parentNode.m_children.Contains(m_childNode))
+            if (m_childNode.ParentNode == m_parentNode &&
+                m_parentNode.m_childNodes.Contains(m_childNode))
                 // And check there are no connections
             {
-                m_parentNode.m_children.Remove(m_childNode);
-                m_childNode.Parent = null;
+                m_parentNode.m_childNodes.Remove(m_childNode);
+                m_childNode.ParentNode = null;
             }
             else
             {
@@ -31,11 +31,11 @@ namespace ZigZag.Core.Commands
 
         internal override void Undo()
         {
-            m_parentNode.m_children.Add(m_childNode);
-            m_childNode.Parent = m_parentNode;
+            m_parentNode.m_childNodes.Add(m_childNode);
+            m_childNode.ParentNode = m_parentNode;
         }
 
-        private readonly AbstractNode m_parentNode;
-        private readonly AbstractNode m_childNode;
+        private readonly Node m_parentNode;
+        private readonly Node m_childNode;
     }
 }

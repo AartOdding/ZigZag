@@ -4,12 +4,12 @@ using ZigZag.Core;
 
 namespace ZigZag.Text
 {
-    public class Print : ProcessNode
+    public class Print : Node
     {
 
         public readonly TextDataInput Input = new TextDataInput();
 
-        public override void Process()
+        public override void Update()
         {
             if (!(Input.ConnectedOutput is null))
             {

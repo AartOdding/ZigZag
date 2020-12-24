@@ -4,31 +4,31 @@ using System.Diagnostics;
 
 namespace ZigZag.Core
 {
-    public abstract class AbstractNode
+    public abstract class Node
     {
-        public AbstractNode()
+        public Node()
         {
         }
 
-        public AbstractNode(AbstractNode parent)
+        public Node(Node parent)
         {
             // No need to check for loops
             Debug.Assert(!(parent is null));
-            Parent = parent;
-            Parent.m_children.Add(this);
+            ParentNode = parent;
+            ParentNode.m_childNodes.Add(this);
         }
 
-        public AbstractNode(string name)
+        public Node(string name)
         {
             Name = name;
         }
 
-        public AbstractNode(AbstractNode parent, string name)
+        public Node(Node parent, string name)
         {
             // No need to check for loops
             Debug.Assert(!(parent is null));
-            Parent = parent;
-            Parent.m_children.Add(this);
+            ParentNode = parent;
+            ParentNode.m_childNodes.Add(this);
             Name = name;
         }
 
@@ -38,23 +38,23 @@ namespace ZigZag.Core
             internal set;
         }
 
-        public AbstractNode Parent
+        public Node ParentNode
         {
             get;
             internal set;
         }
 
-        public IEnumerable<AbstractNode> Children
+        public IEnumerable<Node> ChildNodes
         {
             get
             {
-                if (m_children is null)
+                if (m_childNodes is null)
                 {
                     yield break;
                 }
                 else
                 {
-                    foreach (var child in m_children)
+                    foreach (var child in m_childNodes)
                     {
                         yield return child;
                     }
@@ -62,7 +62,9 @@ namespace ZigZag.Core
             }
         }
 
-        public bool IsParentOf(AbstractNode child)
+        public abstract void Update();
+
+        public bool IsParentOf(Node child)
         {
             if (!(child is null))
             {
@@ -71,12 +73,12 @@ namespace ZigZag.Core
             return false;
         }
 
-        public bool IsChildOf(AbstractNode parent)
+        public bool IsChildOf(Node parent)
         {
-            return Parent == parent;
+            return ParentNode == parent;
         }
 
-        public bool IsIndirectParentOf(AbstractNode child)
+        public bool IsIndirectParentOf(Node child)
         {
             if (!(child is null))
             {
@@ -85,9 +87,9 @@ namespace ZigZag.Core
             return false;
         }
 
-        public bool IsIndirectChildOf(AbstractNode parent)
+        public bool IsIndirectChildOf(Node parent)
         {
-            AbstractNode p = Parent;
+            Node p = ParentNode;
 
             while (!(p is null))
             {
@@ -95,18 +97,18 @@ namespace ZigZag.Core
                 {
                     return true;
                 }
-                p = p.Parent;
+                p = p.ParentNode;
             }
             return p == parent;
         }
 
-        public IEnumerable<T> GetChildren<T>() where T : AbstractNode
+        public IEnumerable<T> GetChildren<T>() where T : Node
         {
-            if (m_children is null)
+            if (m_childNodes is null)
             {
                 yield break;
             }
-            foreach (var child in m_children)
+            foreach (var child in m_childNodes)
             {
                 if (child is T c)
                 {
@@ -115,6 +117,6 @@ namespace ZigZag.Core
             }
         }
 
-        internal List<AbstractNode> m_children;
+        internal List<Node> m_childNodes;
     }
 }

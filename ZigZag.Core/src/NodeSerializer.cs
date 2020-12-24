@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace ZigZag.Core
 {
-    public class NodeSerializer : JsonConverter<AbstractNode>
+    public class NodeSerializer : JsonConverter<Node>
     {
         class UnknownNodeTypeException : Exception
         {
@@ -19,11 +19,11 @@ namespace ZigZag.Core
 
         public override bool CanConvert(Type typeToConvert)
         {
-            return typeToConvert.IsSubclassOf(typeof(AbstractNode))
-                || typeToConvert.Equals(typeof(AbstractNode));
+            return typeToConvert.IsSubclassOf(typeof(Node))
+                || typeToConvert.Equals(typeof(Node));
         }
 
-        public override AbstractNode Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override Node Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             JsonAssert(reader.TokenType == JsonTokenType.StartObject);
 
@@ -42,11 +42,11 @@ namespace ZigZag.Core
                 throw new UnknownNodeTypeException(nodeTypeString);
             }
 
-            AbstractNode node = (AbstractNode)Activator.CreateInstance(nodeType);
+            Node node = (Node)Activator.CreateInstance(nodeType);
 
             reader.Read();
             JsonAssert(reader.TokenType == JsonTokenType.PropertyName);
-            JsonAssert(reader.GetString() == typeof(AbstractNode).FullName);
+            JsonAssert(reader.GetString() == typeof(Node).FullName);
 
             reader.Read();
 
@@ -71,10 +71,6 @@ namespace ZigZag.Core
                     JsonAssert(nodeBaseClass == typeof(NodeOutput).FullName);
                     Serialization.ReadNodeOutputPart(nodeOutput, ref reader, options);
                     break;
-                case ProcessNode processNode:
-                    JsonAssert(nodeBaseClass == typeof(ProcessNode).FullName);
-                    Serialization.ReadProcessNodePart(processNode, ref reader, options);
-                    break;
             }
 
             JsonAssert(reader.TokenType == JsonTokenType.EndObject);
@@ -86,13 +82,13 @@ namespace ZigZag.Core
             return node;
         }
 
-        public override void Write(Utf8JsonWriter writer, AbstractNode node, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, Node node, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
             
             writer.WriteString("Type", node.GetType().FullName);
 
-            writer.WritePropertyName(typeof(AbstractNode).FullName);
+            writer.WritePropertyName(typeof(Node).FullName);
             Serialization.WriteAbstractNodePart(node, writer, options);
 
             switch (node)
@@ -104,10 +100,6 @@ namespace ZigZag.Core
                 case NodeOutput nodeOutput:
                     writer.WritePropertyName(typeof(NodeOutput).FullName);
                     Serialization.WriteOutputNodePart(nodeOutput, writer, options);
-                    break;
-                case ProcessNode processNode:
-                    writer.WritePropertyName(typeof(ProcessNode).FullName);
-                    Serialization.WriteProcessNodePart(processNode, writer, options);
                     break;
             }
 

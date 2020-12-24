@@ -25,7 +25,7 @@ Nam eget dui.
 
 namespace ZigZag.Text
 {
-    public class LoremIpsum : ProcessNode
+    public class LoremIpsum : Node
     {
         public TextData Output;
 
@@ -53,7 +53,7 @@ namespace ZigZag.Text
             Output.Lines.Add("Nam eget dui.");
         }
 
-        public override void Process()
+        public override void Update()
         {
 
         }

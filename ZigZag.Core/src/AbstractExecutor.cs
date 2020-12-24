@@ -4,7 +4,7 @@ namespace ZigZag.Core
 {
     public abstract class AbstractExecutor
     {
-        public ProcessNode Node
+        public Node Node
         {
             get;
             internal set;

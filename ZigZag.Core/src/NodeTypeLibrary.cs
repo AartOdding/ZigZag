@@ -12,7 +12,7 @@ namespace ZigZag.Core
 
         public static void AddNodeType(Type nodeType)
         {
-            if (nodeType.IsSubclassOf(typeof(AbstractNode)))
+            if (nodeType.IsSubclassOf(typeof(Node)))
             {
                 if (m_nodeTypes.ContainsKey(nodeType.FullName))
                 {
@@ -33,11 +33,11 @@ namespace ZigZag.Core
             }
         }
 
-        public static AbstractNode CreateNode(string nodeTypeName)
+        public static Node CreateNode(string nodeTypeName)
         {
             if (m_nodeTypes.ContainsKey(nodeTypeName))
             {
-                return (AbstractNode)Activator.CreateInstance(m_nodeTypes[nodeTypeName]);
+                return (Node)Activator.CreateInstance(m_nodeTypes[nodeTypeName]);
             }
             else
             {

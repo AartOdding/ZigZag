@@ -9,7 +9,7 @@ namespace ZigZag.Runtime
     internal static class AssemblyReader
     {
 
-        public static List<Type> ReadProcessNodes(List<Assembly> assemblies)
+        public static List<Type> ReadNodes(List<Assembly> assemblies)
         {
             List<Type> types = new List<Type>();
 
@@ -17,7 +17,7 @@ namespace ZigZag.Runtime
             {
                 foreach (var type in assembly.ExportedTypes)
                 {
-                    if (type.IsSubclassOf(typeof(ProcessNode)))
+                    if (type.IsSubclassOf(typeof(Node)))
                     {
                         types.Add(type);
                     }
@@ -26,13 +26,13 @@ namespace ZigZag.Runtime
             return types;
         }
 
-        public static List<Type> ReadProcessNodes(Assembly assembly)
+        public static List<Type> ReadNodes(Assembly assembly)
         {
             List<Type> types = new List<Type>();
 
             foreach (var t in assembly.ExportedTypes)
             {
-                if (t.IsSubclassOf(typeof(ProcessNode)))
+                if (t.IsSubclassOf(typeof(Node)))
                 {
                     types.Add(t);
                 }

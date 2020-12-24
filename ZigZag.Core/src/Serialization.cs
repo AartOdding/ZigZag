@@ -29,7 +29,7 @@ namespace ZigZag.Core
             }
         }
 
-        internal static void WriteAbstractNodePart(AbstractNode node, Utf8JsonWriter writer, JsonSerializerOptions options)
+        internal static void WriteAbstractNodePart(Node node, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
@@ -37,7 +37,7 @@ namespace ZigZag.Core
 
             writer.WriteStartArray("Children");
 
-            foreach (var child in node.Children)
+            foreach (var child in node.ChildNodes)
             {
                 JsonSerializer.Serialize(writer, child, child.GetType(), options);
             }
@@ -49,7 +49,7 @@ namespace ZigZag.Core
             writer.WriteEndObject();
         }
 
-        internal static void ReadAbstractNodePart(AbstractNode node, ref Utf8JsonReader reader, JsonSerializerOptions options)
+        internal static void ReadAbstractNodePart(Node node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
 
@@ -75,16 +75,16 @@ namespace ZigZag.Core
 
             if (reader.TokenType != JsonTokenType.EndArray)
             {
-                node.m_children = new List<AbstractNode>();
+                node.m_childNodes = new List<Node>();
             }
 
             while (reader.TokenType != JsonTokenType.EndArray)
             {
                 Assert(reader.TokenType == JsonTokenType.StartObject);
 
-                var child = JsonSerializer.Deserialize<AbstractNode>(ref reader, options);
-                child.Parent = node;
-                node.m_children.Add(child);
+                var child = JsonSerializer.Deserialize<Node>(ref reader, options);
+                child.ParentNode = node;
+                node.m_childNodes.Add(child);
 
                 Assert(reader.TokenType == JsonTokenType.EndObject);
                 reader.Read();
@@ -119,20 +119,6 @@ namespace ZigZag.Core
         }
 
         internal static void ReadNodeOutputPart(NodeOutput node, ref Utf8JsonReader reader, JsonSerializerOptions options)
-        {
-            Assert(reader.TokenType == JsonTokenType.StartObject);
-            reader.Read();
-            Assert(reader.TokenType == JsonTokenType.EndObject);
-        }
-
-        internal static void WriteProcessNodePart(ProcessNode node, Utf8JsonWriter writer, JsonSerializerOptions options)
-        {
-            writer.WriteStartObject();
-
-            writer.WriteEndObject();
-        }
-
-        internal static void ReadProcessNodePart(ProcessNode node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
             reader.Read();

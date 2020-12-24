@@ -3,7 +3,7 @@
 
 namespace ZigZag.Core
 {
-    public abstract class NodeOutput : AbstractNode
+    public abstract class NodeOutput : Node
     {
         public IEnumerable<NodeInput> ConnectedNodeInputs
         {

@@ -2,9 +2,19 @@
 
 namespace ZigZag.Core
 {
-    public class GroupNode : ProcessNode
+    public class GroupNode : Node
     {
-        public sealed override void Process()
+        public sealed override void Update()
+        {
+
+        }
+
+        public virtual void EarlyUpdate()
+        {
+
+        }
+
+        public virtual void LateUpdate()
         {
 
         }

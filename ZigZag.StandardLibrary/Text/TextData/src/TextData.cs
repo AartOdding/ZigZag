@@ -16,6 +16,11 @@ namespace ZigZag.Text
         {
             return node.GetType() == typeof(TextData);
         }
+
+        public override void Update()
+        {
+
+        }
     }
 
     public class TextData : NodeOutput
@@ -23,5 +28,9 @@ namespace ZigZag.Text
 
         public List<string> Lines = new List<string>();
 
+        public override void Update()
+        {
+
+        }
     }
 }

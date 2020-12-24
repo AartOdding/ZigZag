@@ -56,7 +56,7 @@ namespace ZigZag.Core
                 }
             }
 
-            Process();
+            Update();
         }
 
         public void Redo()

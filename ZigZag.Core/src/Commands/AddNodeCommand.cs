@@ -5,7 +5,7 @@ namespace ZigZag.Core.Commands
 {
     public class AddNodeCommand : AbstractCommand
     {
-        public AddNodeCommand(AbstractNode parentNode, AbstractNode childNodeToAdd)
+        public AddNodeCommand(Node parentNode, Node childNodeToAdd)
         {
             m_parentNode = parentNode;
             m_childNode = childNodeToAdd;
@@ -17,16 +17,16 @@ namespace ZigZag.Core.Commands
             {
                 throw new CommandException();
             }
-            if (m_childNode.Parent is null &&
-                (m_parentNode.m_children is null || !m_parentNode.m_children.Contains(m_childNode)) &&
+            if (m_childNode.ParentNode is null &&
+                (m_parentNode.m_childNodes is null || !m_parentNode.m_childNodes.Contains(m_childNode)) &&
                 !m_parentNode.IsIndirectChildOf(m_childNode))
             {
-                if (m_parentNode.m_children is null)
+                if (m_parentNode.m_childNodes is null)
                 {
-                    m_parentNode.m_children = new List<AbstractNode>();
+                    m_parentNode.m_childNodes = new List<Node>();
                 }
-                m_parentNode.m_children.Add(m_childNode);
-                m_childNode.Parent = m_parentNode;
+                m_parentNode.m_childNodes.Add(m_childNode);
+                m_childNode.ParentNode = m_parentNode;
             }
             else
             {
@@ -36,11 +36,11 @@ namespace ZigZag.Core.Commands
 
         internal override void Undo()
         {
-            m_parentNode.m_children.Remove(m_childNode);
-            m_childNode.Parent = null;
+            m_parentNode.m_childNodes.Remove(m_childNode);
+            m_childNode.ParentNode = null;
         }
 
-        private readonly AbstractNode m_parentNode;
-        private readonly AbstractNode m_childNode;
+        private readonly Node m_parentNode;
+        private readonly Node m_childNode;
     }
 }
