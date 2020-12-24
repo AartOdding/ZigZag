@@ -12,7 +12,7 @@ namespace ZigZag.Text
             set;
         }
 
-        public override bool CanConnect(OutputNode node)
+        public override bool Accepts(OutputNode node)
         {
             return node.GetType() == typeof(TextData);
         }
