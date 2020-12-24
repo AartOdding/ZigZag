@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 
 namespace ZigZag.Core
@@ -12,7 +12,10 @@ namespace ZigZag.Core
 
         public AbstractNode(AbstractNode parent)
         {
+            // No need to check for loops
+            Debug.Assert(!(parent is null));
             Parent = parent;
+            Parent.m_children.Add(this);
         }
 
         public AbstractNode(string name)
@@ -22,7 +25,10 @@ namespace ZigZag.Core
 
         public AbstractNode(AbstractNode parent, string name)
         {
+            // No need to check for loops
+            Debug.Assert(!(parent is null));
             Parent = parent;
+            Parent.m_children.Add(this);
             Name = name;
         }
 
