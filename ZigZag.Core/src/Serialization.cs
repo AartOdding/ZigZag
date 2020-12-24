@@ -97,28 +97,28 @@ namespace ZigZag.Core
             Assert(reader.TokenType == JsonTokenType.EndObject);
         }
 
-        internal static void WriteInputNodePart(InputNode node, Utf8JsonWriter writer, JsonSerializerOptions options)
+        internal static void WriteInputNodePart(NodeInput node, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
             writer.WriteEndObject();
         }
 
-        internal static void ReadInputNodePart(InputNode node, ref Utf8JsonReader reader, JsonSerializerOptions options)
+        internal static void ReadNodeInputPart(NodeInput node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
             reader.Read();
             Assert(reader.TokenType == JsonTokenType.EndObject);
         }
 
-        internal static void WriteOutputNodePart(OutputNode node, Utf8JsonWriter writer, JsonSerializerOptions options)
+        internal static void WriteOutputNodePart(NodeOutput node, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
             writer.WriteEndObject();
         }
 
-        internal static void ReadOutputNodePart(OutputNode node, ref Utf8JsonReader reader, JsonSerializerOptions options)
+        internal static void ReadNodeOutputPart(NodeOutput node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
             reader.Read();

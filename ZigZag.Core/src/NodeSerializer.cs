@@ -46,7 +46,7 @@ namespace ZigZag.Core
 
             reader.Read();
             JsonAssert(reader.TokenType == JsonTokenType.PropertyName);
-            JsonAssert(reader.GetString() == "ZigZag.Core.AbstractNode");
+            JsonAssert(reader.GetString() == typeof(AbstractNode).FullName);
 
             reader.Read();
 
@@ -63,16 +63,16 @@ namespace ZigZag.Core
 
             switch (node)
             {
-                case InputNode inputNode:
-                    JsonAssert(nodeBaseClass == "ZigZag.Core.InputNode");
-                    Serialization.ReadInputNodePart(inputNode, ref reader, options);
+                case NodeInput nodeInput:
+                    JsonAssert(nodeBaseClass == typeof(NodeInput).FullName);
+                    Serialization.ReadNodeInputPart(nodeInput, ref reader, options);
                     break;
-                case OutputNode outputNode:
-                    JsonAssert(nodeBaseClass == "ZigZag.Core.OutputNode");
-                    Serialization.ReadOutputNodePart(outputNode, ref reader, options);
+                case NodeOutput nodeOutput:
+                    JsonAssert(nodeBaseClass == typeof(NodeOutput).FullName);
+                    Serialization.ReadNodeOutputPart(nodeOutput, ref reader, options);
                     break;
                 case ProcessNode processNode:
-                    JsonAssert(nodeBaseClass == "ZigZag.Core.ProcessNode");
+                    JsonAssert(nodeBaseClass == typeof(ProcessNode).FullName);
                     Serialization.ReadProcessNodePart(processNode, ref reader, options);
                     break;
             }
@@ -92,21 +92,21 @@ namespace ZigZag.Core
             
             writer.WriteString("Type", node.GetType().FullName);
 
-            writer.WritePropertyName("ZigZag.Core.AbstractNode");
+            writer.WritePropertyName(typeof(AbstractNode).FullName);
             Serialization.WriteAbstractNodePart(node, writer, options);
 
             switch (node)
             {
-                case InputNode inputNode:
-                    writer.WritePropertyName("ZigZag.Core.InputNode");
-                    Serialization.WriteInputNodePart(inputNode, writer, options);
+                case NodeInput nodeInput:
+                    writer.WritePropertyName(typeof(NodeInput).FullName);
+                    Serialization.WriteInputNodePart(nodeInput, writer, options);
                     break;
-                case OutputNode outputNode:
-                    writer.WritePropertyName("ZigZag.Core.OutputNode");
-                    Serialization.WriteOutputNodePart(outputNode, writer, options);
+                case NodeOutput nodeOutput:
+                    writer.WritePropertyName(typeof(NodeOutput).FullName);
+                    Serialization.WriteOutputNodePart(nodeOutput, writer, options);
                     break;
                 case ProcessNode processNode:
-                    writer.WritePropertyName("ZigZag.Core.ProcessNode");
+                    writer.WritePropertyName(typeof(ProcessNode).FullName);
                     Serialization.WriteProcessNodePart(processNode, writer, options);
                     break;
             }

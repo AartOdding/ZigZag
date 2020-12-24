@@ -4,24 +4,24 @@ namespace ZigZag.Core.Commands
 {
     public class ConnectNodesCommand : AbstractCommand
     {
-        public ConnectNodesCommand(OutputNode output, InputNode input)
+        public ConnectNodesCommand(NodeOutput output, NodeInput input)
         {
-            m_outputNode = output;
-            m_inputNode = input;
+            m_output = output;
+            m_input = input;
         }
 
         internal override void Do()
         {
-            if (m_inputNode is null || m_outputNode is null)
+            if (m_input is null || m_output is null)
             {
                 throw new CommandException();
             }
-            if (m_inputNode.ConnectedOutputNode is null &&
-                !m_outputNode.m_connectedInputNodes.Contains(m_inputNode))
+            if (m_input.ConnectedNodeOutput is null &&
+                !m_output.m_connectedNodeInputs.Contains(m_input))
                 // And check scope is compatible!
             {
-                m_inputNode.ConnectedOutputNode = m_outputNode;
-                m_outputNode.m_connectedInputNodes.Add(m_inputNode);
+                m_input.ConnectedNodeOutput = m_output;
+                m_output.m_connectedNodeInputs.Add(m_input);
             }
             else
             {
@@ -31,11 +31,11 @@ namespace ZigZag.Core.Commands
 
         internal override void Undo()
         {
-            m_outputNode.m_connectedInputNodes.Remove(m_inputNode);
-            m_inputNode.ConnectedOutputNode = null;
+            m_output.m_connectedNodeInputs.Remove(m_input);
+            m_input.ConnectedNodeOutput = null;
         }
 
-        private readonly OutputNode m_outputNode;
-        private readonly InputNode m_inputNode;
+        private readonly NodeOutput m_output;
+        private readonly NodeInput m_input;
     }
 }

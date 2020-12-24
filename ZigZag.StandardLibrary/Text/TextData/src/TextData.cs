@@ -4,7 +4,7 @@ using ZigZag.Core;
 
 namespace ZigZag.Text
 {
-    public class TextDataInput : InputNode
+    public class TextDataInput : NodeInput
     {
         public TextData ConnectedOutput
         {
@@ -12,13 +12,13 @@ namespace ZigZag.Text
             set;
         }
 
-        public override bool Accepts(OutputNode node)
+        public override bool Accepts(NodeOutput node)
         {
             return node.GetType() == typeof(TextData);
         }
     }
 
-    public class TextData : OutputNode
+    public class TextData : NodeOutput
     {
 
         public List<string> Lines = new List<string>();
