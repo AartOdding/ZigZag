@@ -6,6 +6,26 @@ namespace ZigZag.Core
 {
     public abstract class AbstractNode
     {
+        public AbstractNode()
+        {
+        }
+
+        public AbstractNode(AbstractNode parent)
+        {
+            Parent = parent;
+        }
+
+        public AbstractNode(string name)
+        {
+            Name = name;
+        }
+
+        public AbstractNode(AbstractNode parent, string name)
+        {
+            Parent = parent;
+            Name = name;
+        }
+
         public string Name
         {
             get;
