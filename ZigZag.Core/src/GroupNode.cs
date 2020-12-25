@@ -1,4 +1,5 @@
-﻿
+﻿using System.Text.Json;
+
 
 namespace ZigZag.Core
 {
@@ -38,5 +39,38 @@ namespace ZigZag.Core
         }
 
         private AbstractExecutor m_executor;
+
+        internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteString("Name", Name);
+
+            writer.WriteStartArray("NodePorts");
+
+            foreach (var port in m_nodePorts)
+            {
+                JsonSerializer.Serialize(writer, port, port.GetType(), options);
+            }
+            writer.WriteEndArray();
+
+            writer.WriteStartArray("ChildNodes");
+
+            foreach (var child in m_childNodes)
+            {
+                JsonSerializer.Serialize(writer, child, child.GetType(), options);
+            }
+
+            writer.WriteEndArray();
+
+            // When adding more properties make sure to add them here.
+
+            writer.WriteEndObject();
+        }
+        internal override void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+
+        }
+
     }
 }

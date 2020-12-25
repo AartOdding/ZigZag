@@ -8,6 +8,15 @@ namespace ZigZag.Core
 {
     public static class Serialization
     {
+        public class UnknownTypeException : JsonException
+        {
+            public UnknownTypeException(string typeName)
+                : base($"Attempt to instantiate unknown type: {typeName}") { }
+
+            public UnknownTypeException(string typeName, TypeLibrary.UnknownTypeException inner) 
+                : base($"Attempt to instantiate unknown type: {typeName}", inner) { }
+        }
+
         public static void Assert(bool statement)
         {
             if (!statement)
@@ -29,27 +38,12 @@ namespace ZigZag.Core
             }
         }
 
-        internal static void WriteAbstractNodePart(Node node, Utf8JsonWriter writer, JsonSerializerOptions options)
+        internal static void WriteNode(Node node, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
-            writer.WriteStartObject();
 
-            writer.WriteString("Name", node.Name);
-
-            writer.WriteStartArray("Children");
-
-            foreach (var child in node.ChildNodes)
-            {
-                JsonSerializer.Serialize(writer, child, child.GetType(), options);
-            }
-
-            writer.WriteEndArray();
-
-            // When adding more properties make sure to add them here.
-
-            writer.WriteEndObject();
         }
 
-        internal static void ReadAbstractNodePart(Node node, ref Utf8JsonReader reader, JsonSerializerOptions options)
+        internal static void ReadNode(Node node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
 
@@ -97,28 +91,42 @@ namespace ZigZag.Core
             Assert(reader.TokenType == JsonTokenType.EndObject);
         }
 
-        internal static void WriteInputNodePart(NodeInput node, Utf8JsonWriter writer, JsonSerializerOptions options)
+        internal static void WriteNodePort(NodePort nodePort, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
             writer.WriteEndObject();
         }
 
-        internal static void ReadNodeInputPart(NodeInput node, ref Utf8JsonReader reader, JsonSerializerOptions options)
+        internal static void ReadNodePort(NodePort nodePort, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
             reader.Read();
             Assert(reader.TokenType == JsonTokenType.EndObject);
         }
 
-        internal static void WriteOutputNodePart(NodeOutput node, Utf8JsonWriter writer, JsonSerializerOptions options)
+        internal static void WriteNodeInput(NodeInput node, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
             writer.WriteEndObject();
         }
 
-        internal static void ReadNodeOutputPart(NodeOutput node, ref Utf8JsonReader reader, JsonSerializerOptions options)
+        internal static void ReadNodeInput(NodeInput node, ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            Assert(reader.TokenType == JsonTokenType.StartObject);
+            reader.Read();
+            Assert(reader.TokenType == JsonTokenType.EndObject);
+        }
+
+        internal static void WriteNodeOutput(NodeOutput node, Utf8JsonWriter writer, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteEndObject();
+        }
+
+        internal static void ReadNodeOutput(NodeOutput node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             Assert(reader.TokenType == JsonTokenType.StartObject);
             reader.Read();

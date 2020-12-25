@@ -20,30 +20,30 @@ namespace ZigZag.Runtime
             {
                 string devLibPath = "D:/ZigZag/ZigZag/ZigZag.StandardLibrary";
                 
-                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
+                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/TextData/bin/Debug/netcoreapp3.1/TextData.dll")));
 
-                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
+                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/LoremIpsum/bin/Debug/netcoreapp3.1/LoremIpsum.dll")));
 
-                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(
+                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/Print/bin/Debug/netcoreapp3.1/Print.dll")));
             }
             else
             {
-                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0)));
-                NodeTypeLibrary.AddNodeTypes(AssemblyReader.ReadProcessNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
+                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0)));
+                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
             }
 
             var proj = new Project();
             // Make sure project can only execute commands on its own children
 
-            var loremNode = NodeTypeLibrary.CreateNode("ZigZag.Text.LoremIpsum");
-            var printNode = NodeTypeLibrary.CreateNode("ZigZag.Text.Print");
-            var printNode2 = NodeTypeLibrary.CreateNode("ZigZag.Text.Print");
+            var loremNode = TypeLibrary.CreateInstance<Node>("ZigZag.Text.LoremIpsum");
+            var printNode = TypeLibrary.CreateInstance<Node>("ZigZag.Text.Print");
+            var printNode2 = TypeLibrary.CreateInstance<Node>("ZigZag.Text.Print");
 
             proj.SubmitCommand(new AddNodeCommand(proj, loremNode));
             proj.SubmitCommand(new AddNodeCommand(loremNode, printNode));
@@ -61,14 +61,16 @@ namespace ZigZag.Runtime
             string jsonString;
             var options = new JsonSerializerOptions();
             options.Converters.Add(new JsonStringEnumConverter());
-            options.Converters.Add(new NodeSerializer());
+            options.Converters.Add(new ZObjectSerializer());
             options.WriteIndented = true;
             
             jsonString = JsonSerializer.Serialize(printNode, printNode.GetType(), options);    
             Console.WriteLine(jsonString);
 
-            var n = JsonSerializer.Deserialize(jsonString, typeof(AbstractNode), options);
+            var n = JsonSerializer.Deserialize(jsonString, typeof(Node), options);
 
+            Console.WriteLine(typeof(Int32).IsAssignableFrom(typeof(Double)));
+            Console.WriteLine(typeof(Double).IsAssignableFrom(typeof(Int32)));
 
             var t = n.GetType();
 
@@ -79,7 +81,7 @@ namespace ZigZag.Runtime
             }
             Console.WriteLine("*");
 
-            foreach (var nodeType in NodeTypeLibrary.NodeTypes)
+            foreach (var nodeType in TypeLibrary.Types)
             {
                 Console.WriteLine(nodeType.FullName);
             }

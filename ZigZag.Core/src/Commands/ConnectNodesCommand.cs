@@ -16,11 +16,11 @@ namespace ZigZag.Core.Commands
             {
                 throw new CommandException();
             }
-            if (m_input.ConnectedNodeOutput is null &&
+            if (m_input.ConnectedOutput is null &&
                 !m_output.m_connectedNodeInputs.Contains(m_input))
                 // And check scope is compatible!
             {
-                m_input.ConnectedNodeOutput = m_output;
+                m_input.ConnectedOutput = m_output;
                 m_output.m_connectedNodeInputs.Add(m_input);
             }
             else
@@ -32,7 +32,7 @@ namespace ZigZag.Core.Commands
         internal override void Undo()
         {
             m_output.m_connectedNodeInputs.Remove(m_input);
-            m_input.ConnectedNodeOutput = null;
+            m_input.ConnectedOutput = null;
         }
 
         private readonly NodeOutput m_output;

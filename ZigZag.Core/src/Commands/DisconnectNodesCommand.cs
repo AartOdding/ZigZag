@@ -16,11 +16,11 @@ namespace ZigZag.Core.Commands
             {
                 throw new CommandException();
             }
-            if (m_input.ConnectedNodeOutput == m_output &&
+            if (m_input.ConnectedOutput == m_output &&
                 m_output.m_connectedNodeInputs.Contains(m_input))
             {
                 m_output.m_connectedNodeInputs.Remove(m_input);
-                m_input.ConnectedNodeOutput = null;
+                m_input.ConnectedOutput = null;
             }
             else
             {
@@ -30,7 +30,7 @@ namespace ZigZag.Core.Commands
 
         internal override void Undo()
         {
-            m_input.ConnectedNodeOutput = m_output;
+            m_input.ConnectedOutput = m_output;
             m_output.m_connectedNodeInputs.Add(m_input);
         }
 
