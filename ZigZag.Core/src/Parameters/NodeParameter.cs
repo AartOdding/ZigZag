@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 
 namespace ZigZag.Core.Parameters
@@ -13,7 +14,7 @@ namespace ZigZag.Core.Parameters
         {
             // No need to check for loops
             Debug.Assert(!(node is null));
-            ParentNode = node;
+            Node = node;
         }
 
         public NodeParameter(string name)
@@ -25,7 +26,7 @@ namespace ZigZag.Core.Parameters
         {
             // No need to check for loops
             Debug.Assert(!(node is null));
-            ParentNode = node;
+            Node = node;
             Name = name;
         }
 
@@ -35,7 +36,7 @@ namespace ZigZag.Core.Parameters
             internal set;
         }
 
-        public Node ParentNode
+        public Node Node
         {
             get;
             internal set;

@@ -36,40 +36,9 @@ namespace ZigZag.Core
                 throw new Serialization.UnknownTypeException(reader.GetString(), e);
             }
 
-            reader.Read();
-            Serialization.Assert(reader.TokenType == JsonTokenType.PropertyName);
-            Serialization.Assert(reader.GetString() == typeof(Node).FullName);
-
-            reader.Read();
-            Serialization.Assert(reader.TokenType == JsonTokenType.StartObject);
-            Serialization.ReadNode(node, ref reader, options);
+            node.ReadJson(ref reader, options);
             Serialization.Assert(reader.TokenType == JsonTokenType.EndObject);
-
-            reader.Read();
-            Serialization.Assert(reader.TokenType == JsonTokenType.PropertyName);
-            string nodeBaseClass = reader.GetString();
-
-            reader.Read();
-            Serialization.Assert(reader.TokenType == JsonTokenType.StartObject);
-
-            switch (node)
-            {
-                case NodeInput nodeInput:
-                    Serialization.Assert(nodeBaseClass == typeof(NodeInput).FullName);
-                    Serialization.ReadNodeInput(nodeInput, ref reader, options);
-                    break;
-                case NodeOutput nodeOutput:
-                    Serialization.Assert(nodeBaseClass == typeof(NodeOutput).FullName);
-                    Serialization.ReadNodeOutput(nodeOutput, ref reader, options);
-                    break;
-            }
-
-            Serialization.Assert(reader.TokenType == JsonTokenType.EndObject);
-            reader.Read();
-
-            Serialization.ReadTillEndOfObject(ref reader);
-            Serialization.Assert(reader.TokenType == JsonTokenType.EndObject);
-
+            
             return node;
         }
 

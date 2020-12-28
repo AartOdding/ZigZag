@@ -12,8 +12,7 @@ namespace ZigZag.Core
 
         public static void AddType(Type type)
         {
-            if (type.IsSubclassOf(typeof(Node)) ||
-                type.IsSubclassOf(typeof(NodePort)))
+            if (type.IsSubclassOf(typeof(ZObject)))
             {
                 if (m_types.ContainsKey(type.FullName))
                 {

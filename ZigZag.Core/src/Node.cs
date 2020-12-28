@@ -64,6 +64,20 @@ namespace ZigZag.Core
                 }
             }
         }
+        public int NumChildNodes
+        {
+            get
+            {
+                if (m_childNodes is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return m_childNodes.Count;
+                }
+            }
+        }
         public IEnumerable<NodeInput> NodeInputs
         {
             get
@@ -75,6 +89,20 @@ namespace ZigZag.Core
                 else
                 {
                     return m_nodeInputs;
+                }
+            }
+        }
+        public int NumNodeInputs
+        {
+            get
+            {
+                if (m_nodeInputs is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return m_nodeInputs.Count;
                 }
             }
         }
@@ -92,6 +120,20 @@ namespace ZigZag.Core
                 }
             }
         }
+        public int NumNodeOutputs
+        {
+            get
+            {
+                if (m_nodeOutputs is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return m_nodeOutputs.Count;
+                }
+            }
+        }
         public IEnumerable<NodeParameter> NodeParameters
         {
             get
@@ -103,6 +145,20 @@ namespace ZigZag.Core
                 else
                 {
                     return m_nodeParameters;
+                }
+            }
+        }
+        public int NumNodeParameters
+        {
+            get
+            {
+                if (m_nodeParameters is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return m_nodeParameters.Count;
                 }
             }
         }
@@ -150,7 +206,52 @@ namespace ZigZag.Core
         }
         internal override void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
+            Serialization.Expect(ref reader, JsonTokenType.PropertyName, typeof(Node).FullName);
+            Serialization.Expect(ref reader, JsonTokenType.StartObject);
+            Serialization.Expect(ref reader, JsonTokenType.PropertyName, "Name");
+            Serialization.Expect(ref reader, JsonTokenType.String);
+            Name = reader.GetString();
 
+            Serialization.Expect(ref reader, JsonTokenType.PropertyName, "NodeInputs");
+            Serialization.Expect(ref reader, JsonTokenType.StartArray);
+            while(reader.TokenType != JsonTokenType.EndArray)
+            {
+                Serialization.Expect(ref reader, JsonTokenType.StartObject);
+                var nodeInput = JsonSerializer.Deserialize<NodeInput>(ref reader, options);
+                nodeInput.Node = this;
+                m_nodeInputs.Add(nodeInput);
+            }
+
+            Serialization.Expect(ref reader, JsonTokenType.PropertyName, "NodeOutputs");
+            Serialization.Expect(ref reader, JsonTokenType.StartArray);
+            while (reader.TokenType != JsonTokenType.EndArray)
+            {
+                Serialization.Expect(ref reader, JsonTokenType.StartObject);
+                var nodeOutput = JsonSerializer.Deserialize<NodeOutput>(ref reader, options);
+                nodeOutput.Node = this;
+                m_nodeOutputs.Add(nodeOutput);
+            }
+
+            Serialization.Expect(ref reader, JsonTokenType.PropertyName, "NodeParameters");
+            Serialization.Expect(ref reader, JsonTokenType.StartArray);
+            while (reader.TokenType != JsonTokenType.EndArray)
+            {
+                Serialization.Expect(ref reader, JsonTokenType.StartObject);
+                var nodeParameter = JsonSerializer.Deserialize<NodeParameter>(ref reader, options);
+                nodeParameter.Node = this;
+                m_nodeParameters.Add(nodeParameter);
+            }
+
+            Serialization.Expect(ref reader, JsonTokenType.PropertyName, "ChildNodes");
+            Serialization.Expect(ref reader, JsonTokenType.StartArray);
+            while (reader.TokenType != JsonTokenType.EndArray)
+            {
+                Serialization.Expect(ref reader, JsonTokenType.StartObject);
+                var node = JsonSerializer.Deserialize<Node>(ref reader, options);
+                node.ParentNode = this;
+                m_childNodes.Add(node);
+            }
+            Serialization.FinishCurrentObject(ref reader);
         }
 
         public bool IsParentOf(Node child)

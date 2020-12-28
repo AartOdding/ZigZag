@@ -25,7 +25,7 @@ namespace ZigZag.Core
             }
         }
 
-        public static void ReadTillEndOfObject(ref Utf8JsonReader reader)
+        public static void FinishCurrentObject(ref Utf8JsonReader reader)
         {
             while (reader.TokenType != JsonTokenType.EndObject)
             {
@@ -38,6 +38,28 @@ namespace ZigZag.Core
             }
         }
 
+        public static void Expect(ref Utf8JsonReader reader, JsonTokenType expectedToken)
+        {
+            reader.Read();
+            if (reader.TokenType != expectedToken)
+            {
+                throw new JsonException();
+            }
+        }
+
+        public static void Expect(ref Utf8JsonReader reader, JsonTokenType expectedToken, string expectedValue)
+        {
+            reader.Read();
+            if (reader.TokenType != expectedToken)
+            {
+                throw new JsonException();
+            }
+            if (reader.GetString() != expectedValue)
+            {
+                throw new JsonException();
+            }
+        }
+
         internal static void WriteNode(Node node, Utf8JsonWriter writer, JsonSerializerOptions options)
         {
 
@@ -45,6 +67,7 @@ namespace ZigZag.Core
 
         internal static void ReadNode(Node node, ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
+            /*
             Assert(reader.TokenType == JsonTokenType.StartObject);
 
             reader.Read();
@@ -88,21 +111,7 @@ namespace ZigZag.Core
             // Forward compatible as long as new properties are added at the end.
             ReadTillEndOfObject(ref reader);
 
-            Assert(reader.TokenType == JsonTokenType.EndObject);
-        }
-
-        internal static void WriteNodePort(NodePort nodePort, Utf8JsonWriter writer, JsonSerializerOptions options)
-        {
-            writer.WriteStartObject();
-
-            writer.WriteEndObject();
-        }
-
-        internal static void ReadNodePort(NodePort nodePort, ref Utf8JsonReader reader, JsonSerializerOptions options)
-        {
-            Assert(reader.TokenType == JsonTokenType.StartObject);
-            reader.Read();
-            Assert(reader.TokenType == JsonTokenType.EndObject);
+            Assert(reader.TokenType == JsonTokenType.EndObject);*/
         }
 
         internal static void WriteNodeInput(NodeInput node, Utf8JsonWriter writer, JsonSerializerOptions options)

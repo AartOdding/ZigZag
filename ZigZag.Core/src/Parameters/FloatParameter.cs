@@ -1,8 +1,10 @@
 ﻿
 
+using System.Text.Json;
+
 namespace ZigZag.Core.Parameters
 {
-    class FloatParameter : NumericalParameter
+    class FloatParameter : NodeParameter, INumericalParameter
     {
         public double Value
         {
@@ -20,22 +22,37 @@ namespace ZigZag.Core.Parameters
             }
         }
 
+        public override bool Accepts(NodeParameter parameter)
+        {
+            return parameter is INumericalParameter;
+        }
+
         public override void Update()
         {
             if (IsListening() && ListenedParameter.Changed)
             {
-                Value = ((NumericalParameter)ListenedParameter).GetFloat(0);
+                Value = ((INumericalParameter)ListenedParameter).GetFloat(0);
             }
         }
 
-        public override long GetInt(int index)
+        public long GetInt(int index)
         {
             return (long)m_value;
         }
 
-        public override double GetFloat(int index)
+        public double GetFloat(int index)
         {
             return m_value;
+        }
+
+        internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        internal override void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            throw new System.NotImplementedException();
         }
 
         private double m_value;
