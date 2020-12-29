@@ -8,16 +8,13 @@ namespace ZigZag.Core
     {
         internal ZObject()
         {
-            Identity = Interlocked.Increment(ref NEXT_ID);
+            ID = Interlocked.Increment(ref NEXT_ID);
         }
 
-        public long Identity
+        public long ID
         {
             get;
         }
-
-        internal abstract void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options);
-        internal abstract void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options);
 
         private static long NEXT_ID = 4000;
     }

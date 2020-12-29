@@ -16,11 +16,11 @@ namespace ZigZag.Core.Commands
             {
                 throw new CommandException();
             }
-            if (m_childNode.ParentNode == m_parentNode &&
-                m_parentNode.m_childNodes.Contains(m_childNode))
+            if (m_childNode.ParentNode == m_parentNode)// &&
+                //m_parentNode.m_childNodes.Contains(m_childNode))
                 // And check there are no connections
             {
-                m_parentNode.m_childNodes.Remove(m_childNode);
+                m_parentNode.RemoveChildNode(m_childNode);
                 m_childNode.ParentNode = null;
             }
             else
@@ -31,7 +31,7 @@ namespace ZigZag.Core.Commands
 
         internal override void Undo()
         {
-            m_parentNode.m_childNodes.Add(m_childNode);
+            m_parentNode.AddChildNode(m_childNode);
             m_childNode.ParentNode = m_parentNode;
         }
 

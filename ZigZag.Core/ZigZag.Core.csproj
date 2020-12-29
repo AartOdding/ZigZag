@@ -18,14 +18,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="src\Serialization\**" />
+    <EmbeddedResource Remove="src\Serialization\**" />
+    <None Remove="src\Serialization\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="..\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="src\Serialization\" />
   </ItemGroup>
 
 </Project>

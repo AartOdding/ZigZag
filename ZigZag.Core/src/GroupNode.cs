@@ -40,24 +40,19 @@ namespace ZigZag.Core
 
         private AbstractExecutor m_executor;
 
-        internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        internal new void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
         {
-            base.WriteJson(writer, options);
-
-            writer.WritePropertyName(typeof(GroupNode).FullName);
             writer.WriteStartObject();
 
             writer.WriteString("Stuff", "yes");
 
-            // When adding more properties make sure to add them here.
-
             writer.WriteEndObject();
         }
-        internal override void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        internal new void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            base.ReadJson(ref reader, options);
-
-            Serialization.Assert(true);
+            Serialization.Assert(reader.TokenType == JsonTokenType.StartObject);
+            Serialization.FinishCurrentObject(ref reader);
+            Serialization.Assert(reader.TokenType == JsonTokenType.EndObject);
         }
 
     }

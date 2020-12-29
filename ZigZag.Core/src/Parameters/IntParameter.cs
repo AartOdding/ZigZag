@@ -45,12 +45,12 @@ namespace ZigZag.Core.Parameters
             return m_value;
         }
 
-        internal override void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        public void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             throw new System.NotImplementedException();
         }
 
-        internal override void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        public void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
             throw new System.NotImplementedException();
         }
