@@ -1,11 +1,14 @@
-﻿
+﻿using System.Text.Json;
+using ZigZag.Core.Serialization;
 
-using System.Text.Json;
 
 namespace ZigZag.Core.Parameters
 {
-    class FloatParameter : NodeParameter, INumericalParameter
+    public class FloatParameter : NodeParameter, INumericalParameter
     {
+        public FloatParameter() : base() { }
+        public FloatParameter(Node node) : base(node) { }
+
         public double Value
         {
             get
@@ -45,14 +48,20 @@ namespace ZigZag.Core.Parameters
             return m_value;
         }
 
-        public void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        public new void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
         {
-            throw new System.NotImplementedException();
+            writer.WriteStartObject();
+            writer.WriteNumber("Value", m_value);
+            writer.WriteEndObject();
         }
 
-        public void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        public new void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            throw new System.NotImplementedException();
+            SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
+            SerializationUtils.MustReadPropertyName(ref reader, "Value");
+            SerializationUtils.MustReadTokenType(ref reader, JsonTokenType.Number);
+            m_value = reader.GetDouble();
+            SerializationUtils.FinishCurrentObject(ref reader);
         }
 
         private double m_value;

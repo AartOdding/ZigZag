@@ -4,9 +4,9 @@ using System.Text;
 using System.Text.Json;
 
 
-namespace ZigZag.Core
+namespace ZigZag.Core.Serialization
 {
-    public static class Serialization
+    public static class SerializationUtils
     {
         public class UnknownTypeException : JsonException
         {
@@ -47,10 +47,10 @@ namespace ZigZag.Core
             }
         }
 
-        public static void MustReadPropertyName(ref Utf8JsonReader reader, JsonTokenType expectedToken, string expectedValue)
+        public static void MustReadPropertyName(ref Utf8JsonReader reader, string expectedValue)
         {
             reader.Read();
-            if (reader.TokenType != expectedToken)
+            if (reader.TokenType != JsonTokenType.PropertyName)
             {
                 throw new JsonException();
             }

@@ -4,6 +4,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using ZigZag.Core;
 using ZigZag.Core.Commands;
+using ZigZag.Core.Serialization;
+using ZigZag.Core.Parameters;
 
 
 namespace ZigZag.Runtime
@@ -44,6 +46,10 @@ namespace ZigZag.Runtime
             var loremNode = TypeLibrary.CreateInstance<Node>("ZigZag.Text.LoremIpsum");
             var printNode = TypeLibrary.CreateInstance<Node>("ZigZag.Text.Print");
             var printNode2 = TypeLibrary.CreateInstance<Node>("ZigZag.Text.Print");
+            var par0 = new IntParameter(loremNode);
+            var par1 = new FloatParameter(loremNode);
+            var par2 = new FloatParameter(loremNode);
+
 
             proj.SubmitCommand(new AddNodeCommand(proj, loremNode));
             proj.SubmitCommand(new AddNodeCommand(loremNode, printNode));
@@ -62,31 +68,15 @@ namespace ZigZag.Runtime
             var options = new JsonSerializerOptions();
             options.Converters.Add(new JsonStringEnumConverter());
             options.Converters.Add(new ZObjectSerializer());
+            options.Converters.Add(new ObjectRefSerializer());
             options.WriteIndented = true;
             
-            jsonString = JsonSerializer.Serialize(printNode, printNode.GetType(), options);    
+            jsonString = JsonSerializer.Serialize(loremNode, loremNode.GetType(), options);    
             Console.WriteLine(jsonString);
 
-            var n = JsonSerializer.Deserialize(jsonString, typeof(Node), options);
+            var n = JsonSerializer.Deserialize(jsonString, typeof(ZObject), options);
 
-            Console.WriteLine(typeof(Int32).IsAssignableFrom(typeof(Double)));
-            Console.WriteLine(typeof(Double).IsAssignableFrom(typeof(Int32)));
-
-            var t = n.GetType();
-
-            while (!(t is null))
-            {
-                Console.WriteLine(t.FullName);
-                t = t.BaseType;
-            }
             Console.WriteLine("*");
-
-            foreach (var nodeType in TypeLibrary.Types)
-            {
-                Console.WriteLine(nodeType.FullName);
-            }
-
-            //ZigZag.Text.Print p = new Text.Print();
         }
     }
 }

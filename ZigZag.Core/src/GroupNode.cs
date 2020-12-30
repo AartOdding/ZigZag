@@ -1,11 +1,12 @@
 ﻿using System.Text.Json;
+using ZigZag.Core.Serialization;
 
 
 namespace ZigZag.Core
 {
     public class GroupNode : Node
     {
-        public sealed override void Update()
+        public override void Update()
         {
 
         }
@@ -40,7 +41,7 @@ namespace ZigZag.Core
 
         private AbstractExecutor m_executor;
 
-        internal new void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        public new void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
@@ -48,11 +49,11 @@ namespace ZigZag.Core
 
             writer.WriteEndObject();
         }
-        internal new void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        public new void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
         {
-            Serialization.Assert(reader.TokenType == JsonTokenType.StartObject);
-            Serialization.FinishCurrentObject(ref reader);
-            Serialization.Assert(reader.TokenType == JsonTokenType.EndObject);
+            SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
+            SerializationUtils.FinishCurrentObject(ref reader);
+            SerializationUtils.Assert(reader.TokenType == JsonTokenType.EndObject);
         }
 
     }

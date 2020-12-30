@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.Json;
+using ZigZag.Core.Serialization;
 
 
 namespace ZigZag.Core.Parameters
@@ -12,22 +15,11 @@ namespace ZigZag.Core.Parameters
 
         public NodeParameter(Node node)
         {
-            // No need to check for loops
-            Debug.Assert(!(node is null));
             Node = node;
-        }
-
-        public NodeParameter(string name)
-        {
-            Name = name;
-        }
-
-        public NodeParameter(Node node, string name)
-        {
-            // No need to check for loops
-            Debug.Assert(!(node is null));
-            Node = node;
-            Name = name;
+            if (!(node is null))
+            {
+                node.AddNodeParameter(this);
+            }
         }
 
         public string Name
@@ -64,19 +56,47 @@ namespace ZigZag.Core.Parameters
 
         public NodeParameter ListenedParameter
         {
-            get;
-            internal set;
+            get
+            {
+                return m_listenedParameter.Object;
+            }
         }
 
         public IEnumerable<NodeParameter> ListeningParameters
         {
             get
             {
-                return m_listeningParameters;
+                return m_listeningParameters.Select(objRef => objRef.Object);
             }
         }
 
-        internal NodeParameter m_listenedParameter;
-        internal readonly List<NodeParameter> m_listeningParameters = new List<NodeParameter>();
+        public void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+
+            writer.WritePropertyName("ListenedParameter");
+            JsonSerializer.Serialize(writer, m_listenedParameter, options);
+
+            writer.WritePropertyName("ListeningParameters");
+            JsonSerializer.Serialize(writer, m_listeningParameters, options);
+            
+            writer.WriteEndObject();
+        }
+
+        public void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
+            
+            SerializationUtils.MustReadPropertyName(ref reader, "ListenedParameter");
+            m_listenedParameter = JsonSerializer.Deserialize<ObjectRef<NodeParameter>>(ref reader, options);
+
+            SerializationUtils.MustReadPropertyName(ref reader, "ListeningParameters");
+            m_listeningParameters = JsonSerializer.Deserialize<List<ObjectRef<NodeParameter>>>(ref reader, options);
+
+            SerializationUtils.FinishCurrentObject(ref reader);
+        }
+
+        internal ObjectRef<NodeParameter> m_listenedParameter = new ObjectRef<NodeParameter>();
+        internal List<ObjectRef<NodeParameter>> m_listeningParameters = new List<ObjectRef<NodeParameter>>();
     }
 }

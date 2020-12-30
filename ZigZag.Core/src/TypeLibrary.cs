@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ZigZag.Core.Parameters;
 
 
 namespace ZigZag.Core
@@ -9,6 +10,12 @@ namespace ZigZag.Core
     {
         public class TypeNameTakenException : Exception { }
         public class UnknownTypeException : Exception { }
+
+        static TypeLibrary()
+        {
+            AddType(typeof(FloatParameter));
+            AddType(typeof(IntParameter));
+        }
 
         public static void AddType(Type type)
         {
