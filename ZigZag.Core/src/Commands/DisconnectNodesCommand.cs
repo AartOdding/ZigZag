@@ -1,4 +1,4 @@
-﻿
+﻿ 
 
 namespace ZigZag.Core.Commands
 {
@@ -12,26 +12,23 @@ namespace ZigZag.Core.Commands
 
         internal override void Do()
         {
-            if (m_input is null || m_output is null)
+            if (m_input is null || m_output is null ||
+                m_input.ConnectedOutput != m_output ||
+                !m_output.ContainsConnectedInput(m_input))
             {
                 throw new CommandException();
-            }
-            if (m_input.ConnectedOutput == m_output &&
-                m_output.m_connectedNodeInputs.Contains(m_input))
-            {
-                m_output.m_connectedNodeInputs.Remove(m_input);
-                m_input.ConnectedOutput = null;
             }
             else
             {
-                throw new CommandException();
+                m_output.RemoveConnectedInput(m_input);
+                m_input.ConnectedOutput = null;
             }
         }
 
         internal override void Undo()
         {
             m_input.ConnectedOutput = m_output;
-            m_output.m_connectedNodeInputs.Add(m_input);
+            m_output.AddConnectedInput(m_input);
         }
 
         private readonly NodeOutput m_output;

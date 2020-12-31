@@ -11,27 +11,23 @@ namespace ZigZag.Core.Commands
         }
 
         internal override void Do()
-        {
-            if (m_input is null || m_output is null)
+        { 
+            if (m_input is null || m_output is null || 
+                m_input.ConnectedOutput is not null ||
+                m_output.ContainsConnectedInput(m_input))
             {
                 throw new CommandException();
-            }
-            if (m_input.ConnectedOutput is null &&
-                !m_output.m_connectedNodeInputs.Contains(m_input))
-                // And check scope is compatible!
-            {
-                m_input.ConnectedOutput = m_output;
-                m_output.m_connectedNodeInputs.Add(m_input);
             }
             else
             {
-                throw new CommandException();
+                m_input.ConnectedOutput = m_output;
+                m_output.AddConnectedInput(m_input);
             }
         }
 
         internal override void Undo()
         {
-            m_output.m_connectedNodeInputs.Remove(m_input);
+            m_output.RemoveConnectedInput(m_input);
             m_input.ConnectedOutput = null;
         }
 

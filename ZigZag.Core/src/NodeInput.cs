@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Text.Json;
+using ZigZag.Core.Serialization;
 
 
 namespace ZigZag.Core
@@ -11,22 +12,20 @@ namespace ZigZag.Core
 
         public NodeInput(Node node)
         {
-            // No need to check for loops
-            Debug.Assert(!(node is null));
-            Node = node;
+            if (node is not null)
+            {
+                Node = node;
+                node.AddNodeInput(this);
+            }
         }
 
-        public NodeInput(string name)
-        {
-            Name = name;
-        }
+        public abstract void Update();
+        public abstract bool Accepts(NodeOutput output);
 
-        public NodeInput(Node node, string name)
+        public Node Node
         {
-            // No need to check for loops
-            Debug.Assert(!(node is null));
-            Node = node;
-            Name = name;
+            get;
+            internal set;
         }
 
         public string Name
@@ -35,22 +34,64 @@ namespace ZigZag.Core
             internal set;
         }
 
-        public Node Node
-        {
-            get;
-            internal set;
-        }
-
         public NodeOutput ConnectedOutput
         {
-            get;
-            internal set;
+            get
+            {
+                if (m_connectedOutput is null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return m_connectedOutput.Object;
+                }
+            }
+            internal set
+            {
+                if (value is null)
+                {
+                    m_connectedOutput = null;
+                }
+                else
+                {
+                    m_connectedOutput = new ObjectRef<NodeOutput>(value);
+                }
+            }
         }
 
-        public abstract void Update();
+        public bool IsConnected()
+        {
+            if (m_connectedOutput is null)
+            {
+                return false;
+            }
+            else
+            {
+                return m_connectedOutput.Object is not null;
+            }
+        }
 
-        public abstract bool Accepts(NodeOutput output);
+        public void WriteJson(Utf8JsonWriter writer, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
 
+            writer.WritePropertyName(nameof(ConnectedOutput));
+            JsonSerializer.Serialize(writer, m_connectedOutput, options);
 
+            writer.WriteEndObject();
+        }
+
+        public void ReadJson(ref Utf8JsonReader reader, JsonSerializerOptions options)
+        {
+            SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
+
+            SerializationUtils.MustReadPropertyName(ref reader, nameof(ConnectedOutput));
+            m_connectedOutput = JsonSerializer.Deserialize<ObjectRef<NodeOutput>>(ref reader, options);
+
+            SerializationUtils.FinishCurrentObject(ref reader);
+        }
+
+        private ObjectRef<NodeOutput> m_connectedOutput;
     }
 }

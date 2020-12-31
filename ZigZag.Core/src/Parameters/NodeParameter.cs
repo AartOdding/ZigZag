@@ -14,9 +14,9 @@ namespace ZigZag.Core.Parameters
         }
         public NodeParameter(Node node)
         {
-            Node = node;
-            if (!(node is null))
+            if (node is not null)
             {
+                Node = node;
                 node.AddNodeParameter(this);
             }
         }
@@ -24,13 +24,13 @@ namespace ZigZag.Core.Parameters
         public abstract void Update();
         public abstract bool Accepts(NodeParameter parameter);
 
-        public string Name
+        public Node Node
         {
             get;
             internal set;
         }
 
-        public Node Node
+        public string Name
         {
             get;
             internal set;
@@ -106,7 +106,7 @@ namespace ZigZag.Core.Parameters
             }
             else
             {
-                return !(m_listened.Object is null);
+                return m_listened.Object is not null;
             }
         }
 
@@ -114,10 +114,10 @@ namespace ZigZag.Core.Parameters
         {
             writer.WriteStartObject();
 
-            writer.WritePropertyName("Listened");
+            writer.WritePropertyName(nameof(Listened));
             JsonSerializer.Serialize(writer, m_listened, options);
 
-            writer.WritePropertyName("Listeners");
+            writer.WritePropertyName(nameof(Listeners));
             JsonSerializer.Serialize(writer, m_listeners, options);
             
             writer.WriteEndObject();
@@ -127,10 +127,10 @@ namespace ZigZag.Core.Parameters
         {
             SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
             
-            SerializationUtils.MustReadPropertyName(ref reader, "Listened");
+            SerializationUtils.MustReadPropertyName(ref reader, nameof(Listened));
             m_listened = JsonSerializer.Deserialize<ObjectRef<NodeParameter>>(ref reader, options);
 
-            SerializationUtils.MustReadPropertyName(ref reader, "Listeners");
+            SerializationUtils.MustReadPropertyName(ref reader, nameof(Listeners));
             m_listeners = JsonSerializer.Deserialize<List<ObjectRef<NodeParameter>>>(ref reader, options);
 
             SerializationUtils.FinishCurrentObject(ref reader);
@@ -141,20 +141,24 @@ namespace ZigZag.Core.Parameters
             Changed = changed;
         }
 
-        internal void AddListeningParameter(NodeParameter parameter)
+        internal void AddListener(NodeParameter listener)
         {
-            Debug.Assert(!(parameter is null));
+            Debug.Assert(listener is not null);
+            Debug.Assert(!ContainsListener(listener));
+
             if (m_listeners is null)
             {
                 m_listeners = new List<ObjectRef<NodeParameter>>();
             }
-            m_listeners.Add(new ObjectRef<NodeParameter>(parameter));
+            m_listeners.Add(new ObjectRef<NodeParameter>(listener));
         }
-        internal void RemoveListeningParameter(NodeParameter parameter)
+        internal void RemoveListener(NodeParameter listener)
         {
-            for(int i = 0; i < m_listeners.Count; ++i)
+            Debug.Assert(ContainsListener(listener));
+
+            for (int i = 0; i < m_listeners.Count; ++i)
             {
-                if (m_listeners[i].Object == parameter)
+                if (m_listeners[i].Object == listener)
                 {
                     m_listeners.RemoveAt(i);
                     break;
@@ -163,6 +167,24 @@ namespace ZigZag.Core.Parameters
             if (m_listeners.Count == 0)
             {
                 m_listeners = null;
+            }
+        }
+        internal bool ContainsListener(NodeParameter listener)
+        {
+            if (m_listeners is null)
+            {
+                return false;
+            }
+            else
+            {
+                foreach (var l in m_listeners)
+                {
+                    if (l.Object == listener)
+                    {
+                        return true;
+                    }
+                }
+                return false;
             }
         }
 
