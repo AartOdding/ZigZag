@@ -4,7 +4,7 @@
     <PackageId>ZigZag.Text.TextData</PackageId>
     <Version>0.0.2</Version>
     <OutputType>Library</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Aart Odding</Authors>
     <Company>Aart Odding</Company>
