@@ -12,7 +12,6 @@ namespace ZigZag.Core.Parameters
         public NodeParameter()
         {
         }
-
         public NodeParameter(Node node)
         {
             Node = node;
@@ -21,6 +20,9 @@ namespace ZigZag.Core.Parameters
                 node.AddNodeParameter(this);
             }
         }
+
+        public abstract void Update();
+        public abstract bool Accepts(NodeParameter parameter);
 
         public string Name
         {
@@ -34,39 +36,77 @@ namespace ZigZag.Core.Parameters
             internal set;
         }
 
-        public abstract void Update();
-
-        public abstract bool Accepts(NodeParameter parameter);
-
         public bool Changed
         {
             get;
             protected set;
         }
 
-        public bool IsListening()
-        {
-            return !(ListenedParameter is null);
-        }
-
-        internal void SetChanged(bool changed)
-        {
-            Changed = changed;
-        }
-
-        public NodeParameter ListenedParameter
+        public NodeParameter Listened
         {
             get
             {
-                return m_listenedParameter.Object;
+                if (m_listened is null)
+                {
+                    return null;
+                }
+                else
+                {
+                    return m_listened.Object;
+                }
+            }
+            internal set
+            {
+                if (value is null)
+                {
+                    m_listened = null;
+                }
+                else
+                {
+                    m_listened = new ObjectRef<NodeParameter>(value);
+                }
             }
         }
 
-        public IEnumerable<NodeParameter> ListeningParameters
+        public IEnumerable<NodeParameter> Listeners
         {
             get
             {
-                return m_listeningParameters.Select(objRef => objRef.Object);
+                if (m_listeners is null)
+                {
+                    return Enumerable.Empty<NodeParameter>();
+                }
+                else
+                {
+                    return m_listeners.Select(objRef => objRef.Object);
+                }
+            }
+        }
+
+        public int ListenerCount
+        {
+            get
+            {
+                if (m_listeners is null)
+                {
+                    return 0;
+                }
+                else
+                {
+                    return m_listeners.Count;
+                }
+            }
+        }
+
+        public bool IsListening()
+        {
+            if (m_listened is null)
+            {
+                return false;
+            }
+            else
+            {
+                return !(m_listened.Object is null);
             }
         }
 
@@ -74,11 +114,11 @@ namespace ZigZag.Core.Parameters
         {
             writer.WriteStartObject();
 
-            writer.WritePropertyName("ListenedParameter");
-            JsonSerializer.Serialize(writer, m_listenedParameter, options);
+            writer.WritePropertyName("Listened");
+            JsonSerializer.Serialize(writer, m_listened, options);
 
-            writer.WritePropertyName("ListeningParameters");
-            JsonSerializer.Serialize(writer, m_listeningParameters, options);
+            writer.WritePropertyName("Listeners");
+            JsonSerializer.Serialize(writer, m_listeners, options);
             
             writer.WriteEndObject();
         }
@@ -87,16 +127,46 @@ namespace ZigZag.Core.Parameters
         {
             SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
             
-            SerializationUtils.MustReadPropertyName(ref reader, "ListenedParameter");
-            m_listenedParameter = JsonSerializer.Deserialize<ObjectRef<NodeParameter>>(ref reader, options);
+            SerializationUtils.MustReadPropertyName(ref reader, "Listened");
+            m_listened = JsonSerializer.Deserialize<ObjectRef<NodeParameter>>(ref reader, options);
 
-            SerializationUtils.MustReadPropertyName(ref reader, "ListeningParameters");
-            m_listeningParameters = JsonSerializer.Deserialize<List<ObjectRef<NodeParameter>>>(ref reader, options);
+            SerializationUtils.MustReadPropertyName(ref reader, "Listeners");
+            m_listeners = JsonSerializer.Deserialize<List<ObjectRef<NodeParameter>>>(ref reader, options);
 
             SerializationUtils.FinishCurrentObject(ref reader);
         }
 
-        internal ObjectRef<NodeParameter> m_listenedParameter = new ObjectRef<NodeParameter>();
-        internal List<ObjectRef<NodeParameter>> m_listeningParameters = new List<ObjectRef<NodeParameter>>();
+        internal void SetChanged(bool changed)
+        {
+            Changed = changed;
+        }
+
+        internal void AddListeningParameter(NodeParameter parameter)
+        {
+            Debug.Assert(!(parameter is null));
+            if (m_listeners is null)
+            {
+                m_listeners = new List<ObjectRef<NodeParameter>>();
+            }
+            m_listeners.Add(new ObjectRef<NodeParameter>(parameter));
+        }
+        internal void RemoveListeningParameter(NodeParameter parameter)
+        {
+            for(int i = 0; i < m_listeners.Count; ++i)
+            {
+                if (m_listeners[i].Object == parameter)
+                {
+                    m_listeners.RemoveAt(i);
+                    break;
+                }
+            }
+            if (m_listeners.Count == 0)
+            {
+                m_listeners = null;
+            }
+        }
+
+        private ObjectRef<NodeParameter> m_listened;
+        private List<ObjectRef<NodeParameter>> m_listeners;
     }
 }

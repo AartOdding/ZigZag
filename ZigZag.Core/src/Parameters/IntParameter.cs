@@ -32,9 +32,9 @@ namespace ZigZag.Core.Parameters
 
         public override void Update()
         {
-            if (IsListening() && ListenedParameter.Changed)
+            if (IsListening() && Listened.Changed)
             {
-                Value = ((INumericalParameter)ListenedParameter).GetInt(0);
+                Value = ((INumericalParameter)Listened).GetInt(0);
             }
         }
 

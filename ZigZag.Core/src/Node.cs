@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using ZigZag.Core.Parameters;
@@ -155,35 +156,17 @@ namespace ZigZag.Core
 
             writer.WriteString("Name", Name);
 
-            writer.WriteStartArray("NodeInputs");
-            foreach (var nodeInput in NodeInputs)
-            {
-                JsonSerializer.Serialize(writer, nodeInput, nodeInput.GetType(), options);
-            }
-            writer.WriteEndArray();
+            writer.WritePropertyName("NodeInputs");
+            JsonSerializer.Serialize(writer, m_nodeInputs, options);
 
-            writer.WriteStartArray("NodeOutputs");
-            foreach (var nodeOutput in NodeOutputs)
-            {
-                JsonSerializer.Serialize(writer, nodeOutput, nodeOutput.GetType(), options);
-            }
-            writer.WriteEndArray();
+            writer.WritePropertyName("NodeOutputs");
+            JsonSerializer.Serialize(writer, m_nodeOutputs, options);
 
-            writer.WriteStartArray("NodeParameters");
-            foreach (var nodeParameter in NodeParameters)
-            {
-                JsonSerializer.Serialize(writer, nodeParameter, nodeParameter.GetType(), options);
-            }
-            writer.WriteEndArray();
+            writer.WritePropertyName("NodeParameters");
+            JsonSerializer.Serialize(writer, m_nodeParameters, options);
 
-            writer.WriteStartArray("ChildNodes");
-            foreach (var childNode in ChildNodes)
-            {
-                JsonSerializer.Serialize(writer, childNode, childNode.GetType(), options);
-            }
-            writer.WriteEndArray();
-
-            // When adding more properties make sure to add them here.
+            writer.WritePropertyName("ChildNodes");
+            JsonSerializer.Serialize(writer, m_childNodes, options);
 
             writer.WriteEndObject();
         }
@@ -192,67 +175,21 @@ namespace ZigZag.Core
             SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
 
             SerializationUtils.MustReadPropertyName(ref reader, "Name");
-            reader.Read();
-            SerializationUtils.Assert(reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null);
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                Name = reader.GetString();
-            }
+            Name = JsonSerializer.Deserialize<string>(ref reader, options);
 
             SerializationUtils.MustReadPropertyName(ref reader, "NodeInputs");
-            SerializationUtils.MustReadTokenType(ref reader, JsonTokenType.StartArray);
-            reader.Read();
-            while(reader.TokenType != JsonTokenType.EndArray)
-            {
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
-                var nodeInput = JsonSerializer.Deserialize<NodeInput>(ref reader, options);
-                nodeInput.Node = this;
-                AddNodeInput(nodeInput);
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.EndObject);
-                reader.Read();
-            }
+            m_nodeInputs = JsonSerializer.Deserialize<List<NodeInput>>(ref reader, options);
 
             SerializationUtils.MustReadPropertyName(ref reader, "NodeOutputs");
-            SerializationUtils.MustReadTokenType(ref reader, JsonTokenType.StartArray);
-            reader.Read();
-            while (reader.TokenType != JsonTokenType.EndArray)
-            {
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
-                var nodeOutput = JsonSerializer.Deserialize<NodeOutput>(ref reader, options);
-                nodeOutput.Node = this;
-                AddNodeOutput(nodeOutput);
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.EndObject);
-                reader.Read();
-            }
+            m_nodeOutputs = JsonSerializer.Deserialize<List<NodeOutput>>(ref reader, options);
 
             SerializationUtils.MustReadPropertyName(ref reader, "NodeParameters");
-            SerializationUtils.MustReadTokenType(ref reader, JsonTokenType.StartArray);
-            reader.Read();
-            while (reader.TokenType != JsonTokenType.EndArray)
-            {
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
-                var nodeParameter = JsonSerializer.Deserialize<NodeParameter>(ref reader, options);
-                nodeParameter.Node = this;
-                AddNodeParameter(nodeParameter);
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.EndObject);
-                reader.Read();
-            }
+            m_nodeParameters = JsonSerializer.Deserialize<List<NodeParameter>>(ref reader, options);
 
             SerializationUtils.MustReadPropertyName(ref reader, "ChildNodes");
-            SerializationUtils.MustReadTokenType(ref reader, JsonTokenType.StartArray);
-            reader.Read();
-            while (reader.TokenType != JsonTokenType.EndArray)
-            {
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.StartObject);
-                var node = JsonSerializer.Deserialize<Node>(ref reader, options);
-                node.ParentNode = this;
-                AddChildNode(node);
-                SerializationUtils.Assert(reader.TokenType == JsonTokenType.EndObject);
-                reader.Read();
-            }
+            m_childNodes = JsonSerializer.Deserialize<List<Node>>(ref reader, options);
 
             SerializationUtils.FinishCurrentObject(ref reader);
-            SerializationUtils.Assert(reader.TokenType == JsonTokenType.EndObject);
         }
 
         public bool IsParentOf(Node child)
@@ -307,6 +244,7 @@ namespace ZigZag.Core
 
         internal void AddChildNode(Node childNode)
         {
+            Debug.Assert(!(childNode is null));
             if (m_childNodes is null)
             {
                 m_childNodes = new List<Node>();
@@ -315,6 +253,7 @@ namespace ZigZag.Core
         }
         internal void AddNodeInput(NodeInput nodeInput)
         {
+            Debug.Assert(!(nodeInput is null));
             if (m_nodeInputs is null)
             {
                 m_nodeInputs = new List<NodeInput>();
@@ -323,6 +262,7 @@ namespace ZigZag.Core
         }
         internal void AddNodeOutput(NodeOutput nodeOutput)
         {
+            Debug.Assert(!(nodeOutput is null));
             if (m_nodeOutputs is null)
             {
                 m_nodeOutputs = new List<NodeOutput>();
@@ -331,6 +271,7 @@ namespace ZigZag.Core
         }
         internal void AddNodeParameter(NodeParameter nodeParameter)
         {
+            Debug.Assert(!(nodeParameter is null));
             if (m_nodeParameters is null)
             {
                 m_nodeParameters = new List<NodeParameter>();
@@ -340,18 +281,34 @@ namespace ZigZag.Core
         internal void RemoveChildNode(Node childNode)
         {
             m_childNodes.Remove(childNode);
+            if (m_childNodes.Count == 0)
+            {
+                m_childNodes = null;
+            }
         }
         internal void RemoveNodeInput(NodeInput nodeInput)
         {
             m_nodeInputs.Remove(nodeInput);
+            if (m_nodeInputs.Count == 0)
+            {
+                m_nodeInputs = null;
+            }
         }
         internal void RemoveNodeOutput(NodeOutput nodeOutput)
         {
             m_nodeOutputs.Remove(nodeOutput);
+            if (m_nodeOutputs.Count == 0)
+            {
+                m_nodeOutputs = null;
+            }
         }
         internal void RemoveNodeParameter(NodeParameter nodeParameter)
         {
             m_nodeParameters.Remove(nodeParameter);
+            if (m_nodeParameters.Count == 0)
+            {
+                m_nodeParameters = null;
+            }
         }
 
         private List<Node> m_childNodes;
