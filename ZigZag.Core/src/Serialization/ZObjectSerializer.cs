@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 
 namespace ZigZag.Core.Serialization
 {
-
     public class ZObjectSerializer : JsonConverterFactory
     {
         public override bool CanConvert(Type typeToConvert)
