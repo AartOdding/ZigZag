@@ -24,15 +24,15 @@ namespace ZigZag.Runtime
                 
                 TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                        devLibPath + "/Text/TextData/bin/Debug/netcoreapp3.1/TextData.dll")));
+                        devLibPath + "/Text/TextData/bin/Debug/net5.0/TextData.dll")));
 
                 TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                        devLibPath + "/Text/LoremIpsum/bin/Debug/netcoreapp3.1/LoremIpsum.dll")));
+                        devLibPath + "/Text/LoremIpsum/bin/Debug/net5.0/LoremIpsum.dll")));
 
                 TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                        devLibPath + "/Text/Print/bin/Debug/netcoreapp3.1/Print.dll")));
+                        devLibPath + "/Text/Print/bin/Debug/net5.0/Print.dll")));
             }
             else
             {
