@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -10,6 +11,7 @@ namespace ZigZag.Core.Serialization
         public override bool CanConvert(Type typeToConvert)
         {
             return typeToConvert.IsGenericType && 
+                typeof(ZObject).IsAssignableFrom(typeToConvert.GenericTypeArguments[0]) &&
                 typeToConvert.GetGenericTypeDefinition() == typeof(ObjectRef<>);
         }
 
@@ -17,11 +19,40 @@ namespace ZigZag.Core.Serialization
         {
             Type objectType = type.GetGenericArguments()[0];
             Type converterType = typeof(ObjectRefSerializerInner<>).MakeGenericType(new Type[] { objectType });
-            return (JsonConverter)Activator.CreateInstance(converterType);
+            return (JsonConverter)Activator.CreateInstance(converterType, new object[] { m_createdObjectReferences });
         }
+
+        public void ResolveObjects(Dictionary<long, ZObject> objects)
+        {
+            foreach (var kv in m_createdObjectReferences)
+            {
+                long id = kv.Key;
+
+                if (objects.ContainsKey(id))
+                {
+                    ZObject obj = objects[id];
+
+                    foreach (var objRef in kv.Value)
+                    {
+                        objRef.SetObject(obj);
+                    }
+                }
+                else
+                {
+                    throw new Exception();
+                }
+            }
+        }
+
+        private readonly Dictionary<long, List<IObjectRef>> m_createdObjectReferences = new Dictionary<long, List<IObjectRef>>();
 
         private class ObjectRefSerializerInner<T> : JsonConverter<ObjectRef<T>> where T : ZObject
         {
+            public ObjectRefSerializerInner(Dictionary<long, List<IObjectRef>> createdObjectReferences)
+            {
+                m_createdObjectReferences = createdObjectReferences;
+            }
+
             public override bool CanConvert(Type typeToConvert)
             {
                 return typeToConvert.IsGenericType &&
@@ -39,7 +70,13 @@ namespace ZigZag.Core.Serialization
 
                 if (reader.TokenType == JsonTokenType.Number)
                 {
-                    objectRef.DeserializedID = reader.GetInt64();
+                    long id = reader.GetInt64();
+
+                    if (!m_createdObjectReferences.ContainsKey(id))
+                    {
+                        m_createdObjectReferences.Add(id, new List<IObjectRef>());
+                    }
+                    m_createdObjectReferences[id].Add(objectRef);
                 }
                 return objectRef;
             }
@@ -58,6 +95,8 @@ namespace ZigZag.Core.Serialization
                     writer.WriteNumberValue(objectRef.Object.ID);
                 }
             }
+
+            private readonly Dictionary<long, List<IObjectRef>> m_createdObjectReferences;
         }
     }
 }

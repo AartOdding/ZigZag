@@ -2,7 +2,12 @@
 
 namespace ZigZag.Core
 {
-    public class ObjectRef<T> where T : ZObject
+    public interface IObjectRef
+    {
+        internal void SetObject(object obj);
+    }
+
+    public class ObjectRef<T> : IObjectRef
     {
         public ObjectRef() { }
         public ObjectRef(T obj)
@@ -16,10 +21,9 @@ namespace ZigZag.Core
             set;
         }
 
-        internal long DeserializedID
+        void IObjectRef.SetObject(object obj)
         {
-            get;
-            set;
+            Object = (T)obj;
         }
     }
 }

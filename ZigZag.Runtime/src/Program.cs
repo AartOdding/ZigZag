@@ -54,6 +54,9 @@ namespace ZigZag.Runtime
             proj.SubmitCommand(new AddNodeCommand(proj, loremNode));
             proj.SubmitCommand(new AddNodeCommand(loremNode, printNode));
             proj.SubmitCommand(new AddNodeCommand(loremNode, printNode2));
+            proj.SubmitCommand(new ConnectParametersCommand(par0, par1));
+            proj.SubmitCommand(new ConnectParametersCommand(par0, par2));
+
 
 
             proj.Execute();
@@ -66,15 +69,19 @@ namespace ZigZag.Runtime
 
             string jsonString;
             var options = new JsonSerializerOptions();
+            var objectSerializer = new ZObjectSerializer();
+            var objectRefSerializer = new ObjectRefSerializer();
             options.Converters.Add(new JsonStringEnumConverter());
-            options.Converters.Add(new ZObjectSerializer());
-            options.Converters.Add(new ObjectRefSerializer());
+            options.Converters.Add(objectSerializer);
+            options.Converters.Add(objectRefSerializer);
             options.WriteIndented = true;
             
             jsonString = JsonSerializer.Serialize(loremNode, loremNode.GetType(), options);    
             Console.WriteLine(jsonString);
 
             var n = JsonSerializer.Deserialize(jsonString, typeof(ZObject), options);
+            objectRefSerializer.ResolveObjects(objectSerializer.CreatedObjects);
+
 
             Console.WriteLine("*");
         }

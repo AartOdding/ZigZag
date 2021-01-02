@@ -8,6 +8,14 @@ namespace ZigZag.Core.Serialization
 {
     public class ZObjectSerializer : JsonConverterFactory
     {
+        public Dictionary<long, ZObject> CreatedObjects
+        {
+            get
+            {
+                return m_createdObjects;
+            }
+        }
+
         public override bool CanConvert(Type typeToConvert)
         {
             return typeToConvert.IsSubclassOf(typeof(ZObject))
@@ -17,11 +25,18 @@ namespace ZigZag.Core.Serialization
         public override JsonConverter CreateConverter(Type type, JsonSerializerOptions options)
         {
             Type converterType = typeof(ZObjectSerializerInner<>).MakeGenericType(new Type[] { type });
-            return (JsonConverter)Activator.CreateInstance(converterType);
+            return (JsonConverter)Activator.CreateInstance(converterType, new object[] { m_createdObjects });
         }
+
+        private readonly Dictionary<long, ZObject> m_createdObjects = new Dictionary<long, ZObject>();
 
         private class ZObjectSerializerInner<T> : JsonConverter<T> where T : ZObject
         {
+            public ZObjectSerializerInner(Dictionary<long, ZObject> createdObjects)
+            {
+                m_createdObjects = createdObjects;
+            }
+
             public override bool CanConvert(Type typeToConvert)
             {
                 return typeToConvert.IsSubclassOf(typeof(ZObject))
@@ -73,6 +88,7 @@ namespace ZigZag.Core.Serialization
                 }
 
                 SerializationUtils.Assert(reader.TokenType == JsonTokenType.EndObject);
+                m_createdObjects.Add(id, obj);
                 return obj;
             }
 
@@ -121,6 +137,8 @@ namespace ZigZag.Core.Serialization
             }
 
             private delegate void ReadJsonDelegate(ref Utf8JsonReader reader, JsonSerializerOptions options);
+
+            private readonly Dictionary<long, ZObject> m_createdObjects;
 
             private static readonly Type[] writeJsonArgumentTypes = { typeof(Utf8JsonWriter), typeof(JsonSerializerOptions) };
             private static readonly Type[] readJsonArgumentTypes = { typeof(Utf8JsonReader).MakeByRefType(), typeof(JsonSerializerOptions) };
