@@ -12,9 +12,6 @@
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ZigZag\ZigZagPluginBase.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="OpenTK" Version="4.0.0-pre9.7" />
   </ItemGroup>
 
