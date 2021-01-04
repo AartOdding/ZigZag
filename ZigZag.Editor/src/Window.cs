@@ -1,8 +1,9 @@
-﻿using LearnOpenTK.Common;
+﻿using System;
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenTK.Windowing.Desktop;
+using ImGuiNET;
 
 
 namespace ZigZag.Editor
@@ -19,6 +20,8 @@ namespace ZigZag.Editor
         private int m_vertexBufferObject;
         private int m_vertexArrayObject;
 
+        private IntPtr m_imguiContext;
+
         private Shader m_shader;
 
         public Window(GameWindowSettings gameWindowSettings, NativeWindowSettings nativeWindowSettings)
@@ -30,7 +33,7 @@ namespace ZigZag.Editor
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            m_shader = new Shader(Resources.Shaders.ImguiVertShaderSource, Resources.Shaders.ImguiFragShaderSource);
+            m_shader = new Shader(Resources.Shaders.ImGuiVertexShaderSource, Resources.Shaders.ImGuiFragmentShaderSource);
             m_shader.Use();
 
             m_vertexArrayObject = GL.GenVertexArray();
@@ -43,8 +46,13 @@ namespace ZigZag.Editor
             GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 0, 0);
             GL.EnableVertexAttribArray(0);
 
-            base.OnLoad();
+            m_imguiContext = ImGui.CreateContext();
+            ImGui.SetCurrentContext(m_imguiContext);
+
+            ImGui.GetIO().Fonts.AddFontDefault();
         }
+
+
 
         protected override void OnRenderFrame(FrameEventArgs e)
         {
@@ -55,8 +63,6 @@ namespace ZigZag.Editor
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
             SwapBuffers();
-
-            base.OnRenderFrame(e);
         }
 
         protected override void OnUpdateFrame(FrameEventArgs e)
@@ -67,14 +73,11 @@ namespace ZigZag.Editor
             {
                 Close();
             }
-
-            base.OnUpdateFrame(e);
         }
 
         protected override void OnResize(ResizeEventArgs e)
         {
             GL.Viewport(0, 0, Size.X, Size.Y);
-            base.OnResize(e);
         }
 
         protected override void OnUnload()
@@ -87,7 +90,6 @@ namespace ZigZag.Editor
             GL.DeleteVertexArray(m_vertexArrayObject);
 
             GL.DeleteProgram(m_shader.Handle);
-            base.OnUnload();
         }
     }
 }

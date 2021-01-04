@@ -6,7 +6,7 @@ using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 
 
-namespace LearnOpenTK.Common
+namespace ZigZag.Editor
 {
     // A simple class meant to help create shaders.
     public class Shader
@@ -194,6 +194,11 @@ namespace LearnOpenTK.Common
         {
             GL.UseProgram(Handle);
             GL.Uniform3(_uniformLocations[name], data);
+        }
+        public void SetVector2(string name, Vector2 data)
+        {
+            GL.UseProgram(Handle);
+            GL.Uniform2(_uniformLocations[name], data);
         }
     }
 }

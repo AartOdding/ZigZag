@@ -61,37 +61,51 @@ namespace ZigZag.Editor.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #version 330
+        ///   Looks up a localized string similar to #version 330 core
         ///
-        ///out vec4 outputColor;
+        ///uniform sampler2D active_texture;
+        ///
+        ///in vec2 uv;
+        ///in vec4 color;
+        ///
+        ///out vec4 fragment_color;
         ///
         ///void main()
         ///{
-        ///    outputColor = vec4(1.0, 1.0, 0.0, 1.0);
+        ///    fragment_color = color * texture(active_texture, uv);
         ///}
         ///.
         /// </summary>
-        internal static string ImguiFragShaderSource {
+        internal static string ImGuiFragmentShaderSource {
             get {
-                return ResourceManager.GetString("ImguiFragShaderSource", resourceCulture);
+                return ResourceManager.GetString("ImGuiFragmentShaderSource", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to // For more information on how shaders work, check out the web version of this tutorial
-        ///// I&apos;ll include a simpler summary here.
+        ///   Looks up a localized string similar to #version 330 core
         ///
-        ///// First non-comment line should always be a #version statement; this just tells the GLSL compiler what version it should use
-        ///#version 330 core
+        ///layout(location = 0) in vec2 pos_in;
+        ///layout(location = 1) in vec2 uv_in;
+        ///layout(location = 2) in vec4 color_in;
         ///
-        ///// GLSL&apos;s syntax is somewhat like C, but it has a few differences.
+        ///out vec2 uv;
+        ///out vec4 color;
         ///
-        ///// There are four different types of variables in GLSL: input, output, uniform, and internal.
-        ///// Input variables are sent from the buffer, in a way defined by GL.VertexAt [rest of string was truncated]&quot;;.
+        ///uniform mat4 projection_matrix;
+        ///
+        ///
+        ///void main(void)
+        ///{
+        ///    gl_Position = projection_matrix * vec4(pos_in, 0.0, 1.0);
+        ///    uv = uv_in;
+        ///    color = color_in;
+        ///}
+        ///.
         /// </summary>
-        internal static string ImguiVertShaderSource {
+        internal static string ImGuiVertexShaderSource {
             get {
-                return ResourceManager.GetString("ImguiVertShaderSource", resourceCulture);
+                return ResourceManager.GetString("ImGuiVertexShaderSource", resourceCulture);
             }
         }
     }
