@@ -22,14 +22,14 @@ namespace ZigZag.Editor.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Shaders {
+    internal class Fonts {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Shaders() {
+        internal Fonts() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ZigZag.Editor.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ZigZag.Editor.Resources.Shaders", typeof(Shaders).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ZigZag.Editor.Resources.Fonts", typeof(Fonts).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,56 +61,12 @@ namespace ZigZag.Editor.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to #version 330 core
-        ///
-        ///uniform sampler2D active_texture;
-        ///
-        ///in vec2 uv;
-        ///in vec4 color;
-        ///
-        ///out vec4 fragment_color;
-        ///
-        ///void main()
-        ///{
-        ///    //fragment_color = texture(active_texture, uv);
-        ///    //color *
-        ///    fragment_color = color * texture(active_texture, uv);
-        ///}
-        ///.
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static string ImGuiFragmentShaderSource {
+        internal static byte[] WorkSans_Regular {
             get {
-                return ResourceManager.GetString("ImGuiFragmentShaderSource", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to #version 330 core
-        ///
-        ///layout(location = 0) in vec2 pos_in;
-        ///layout(location = 1) in vec2 uv_in;
-        ///layout(location = 2) in vec4 color_in;
-        ///
-        ///out vec2 uv;
-        ///out vec4 color;
-        ///
-        ///uniform vec2 viewport_min;
-        ///uniform vec2 viewport_max;
-        ///
-        ///vec2 map(vec2 value, vec2 fromMin, vec2 fromMax, vec2 toMin, vec2 toMax)
-        ///{
-        ///  return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
-        ///}
-        ///
-        ///void main(void)
-        ///{
-        ///    vec2 pos = map(pos_in, viewport_min, viewport_max, vec2(-1, 1), vec2(1, -1));
-        ///    gl_Position = vec4(pos, 0.0, 1.0);
-        ///   [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string ImGuiVertexShaderSource {
-            get {
-                return ResourceManager.GetString("ImGuiVertexShaderSource", resourceCulture);
+                object obj = ResourceManager.GetObject("WorkSans_Regular", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }
