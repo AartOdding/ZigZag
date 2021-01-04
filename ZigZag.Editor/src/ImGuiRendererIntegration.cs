@@ -82,7 +82,7 @@ namespace ZigZag.Editor
 
                     int elemCount = (int)cmd.ElemCount;
                     int offset = (int)cmd.IdxOffset;
-                    GL.DrawElements(BeginMode.Triangles, elemCount, DrawElementsType.UnsignedShort, offset);
+                    GL.DrawElements(PrimitiveType.Triangles, elemCount, DrawElementsType.UnsignedShort, offset * sizeof(ushort));
                 }
 
                 //cmdList.VtxBuffer.Size
