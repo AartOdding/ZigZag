@@ -9,6 +9,13 @@ namespace ZigZag.Editor
 {
     class Program
     {
+        public static Ui.Style ActiveStyle
+        {
+            get;
+            set;
+        } = new Ui.FlatStyle();
+
+
         static void Main(string[] args)
         {
             var nativeWindowSettings = new NativeWindowSettings()
@@ -38,14 +45,16 @@ namespace ZigZag.Editor
                 }
             }
 
-            //io.Fonts.AddFontDefault();
-
             OpenGLTest t = new OpenGLTest();
             t.Setup();
 
             ImGuiPlatformIntegration.SetupKeys();
             ImGuiRendererIntegration.Initialize();
             ImGuiRendererIntegration.CreateFontsTexture();
+
+            Ui.MainMenu menu = new Ui.MainMenu();
+            Ui.HistoryWindow history = new Ui.HistoryWindow();
+            Ui.HierarchyWindow hierarchy = new Ui.HierarchyWindow();
 
             while (!n1.IsExiting)
             {
@@ -55,9 +64,14 @@ namespace ZigZag.Editor
                 GL.ClearColor(0.3f, 0, 0.1f, 1);
                 GL.Clear(ClearBufferMask.ColorBufferBit);
 
-                
                 ImGuiPlatformIntegration.UpdateIO(n1);
                 ImGui.NewFrame();
+
+                // Store active style in a variable in case it is changed midframe
+                var activeStyle = ActiveStyle;
+                activeStyle.BeginOverall();
+
+                menu.Draw(activeStyle);
 
                 // Very hacky: 
                 // 1 << 14 is the bit flag ImGuiDockNodeFlags_NoWindowMenuButton
@@ -66,16 +80,33 @@ namespace ZigZag.Editor
                 // thorugh ImGui.NET, but we can still use them as hardcoded values.
                 const int dockNodeFlags = (1 << 14) | (1 << 15);
 
+                // 1 << 19 = NoDockingOverMe
+
                 ImGui.DockSpaceOverViewport(new ImGuiViewportPtr(), (ImGuiDockNodeFlags)dockNodeFlags);
+                
+
+                if (!hierarchy.WantsToClose)
+                {
+                    hierarchy.Draw(activeStyle);
+                }
+                if (!history.WantsToClose)
+                {
+                    history.Draw(activeStyle);
+                }
+
+                Console.WriteLine($"Hierarchy: {hierarchy.IsDocked}, History: {history.IsDocked}");
 
                 ImGui.ShowDemoWindow();
+
+                activeStyle.EndOverall();
+
                 ImGui.EndFrame();
                 ImGui.Render();
 
                 ImGuiRendererIntegration.Render(ImGui.GetDrawData(), n1.Size.X, n1.Size.Y);
                 
 
-                t.Draw(n1.Size.X, n1.Size.Y);
+                //t.Draw(n1.Size.X, n1.Size.Y);
 
                 n1.Context.SwapBuffers();
             }
