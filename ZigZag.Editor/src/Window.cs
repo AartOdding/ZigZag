@@ -52,8 +52,6 @@ namespace ZigZag.Editor
             ImGui.GetIO().Fonts.AddFontDefault();
         }
 
-
-
         protected override void OnRenderFrame(FrameEventArgs e)
         {
             GL.Clear(ClearBufferMask.ColorBufferBit);

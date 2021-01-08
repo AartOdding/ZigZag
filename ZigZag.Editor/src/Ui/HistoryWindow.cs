@@ -8,7 +8,7 @@ namespace ZigZag.Editor.Ui
 {
     class HistoryWindow : DockableWindow
     {
-        public HistoryWindow() : base("History")
+        public HistoryWindow(string name) : base(name)
         {
 
         }

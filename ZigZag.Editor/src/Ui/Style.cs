@@ -18,5 +18,8 @@ namespace ZigZag.Editor.Ui
 
         public virtual void BeginDockableWindow(DockableWindow dockableWindow) { }
         public virtual void EndDockableWindow(DockableWindow dockableWindow) { }
+
+        public virtual void BeginDockableWindowInner(DockableWindow dockableWindow) { }
+        public virtual void EndDockableWindowInner(DockableWindow dockableWindow) { }
     }
 }

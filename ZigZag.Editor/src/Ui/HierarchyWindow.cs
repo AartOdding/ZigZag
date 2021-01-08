@@ -8,7 +8,7 @@ namespace ZigZag.Editor.Ui
 {
     class HierarchyWindow : DockableWindow
     {
-        public HierarchyWindow() : base("Hierarchy")
+        public HierarchyWindow(string name) : base(name)
         {
             
         }
