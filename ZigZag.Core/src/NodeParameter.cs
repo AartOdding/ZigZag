@@ -5,7 +5,7 @@ using System.Text.Json;
 using ZigZag.Core.Serialization;
 
 
-namespace ZigZag.Core.Parameters
+namespace ZigZag.Core
 {
     public abstract class NodeParameter : ZObject
     {
