@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Numerics;
-using OpenTK;
 using OpenTK.Windowing.Desktop;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL;

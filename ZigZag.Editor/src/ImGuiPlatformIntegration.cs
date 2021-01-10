@@ -1,7 +1,7 @@
 ﻿using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiNET;
-using OpenTK.Mathematics;
 using OpenTK.Windowing.Desktop;
+
 
 namespace ZigZag.Editor
 {
