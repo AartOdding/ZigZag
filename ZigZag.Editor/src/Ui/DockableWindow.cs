@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ImGuiNET;
 using System.Numerics;
-using ImGuiNET;
 
 
 namespace ZigZag.Editor.Ui
@@ -49,47 +44,19 @@ namespace ZigZag.Editor.Ui
             //style.BeginDockableWindow(this);
             if (ImGui.Begin(Name, ref wantsToStayOpen, ImGuiWindowFlags.None))
             {
-                var drawList = ImGui.GetWindowDrawList();
-                var windowPadding = ImGui.GetStyle().WindowPadding;
-                var framePadding = ImGui.GetStyle().FramePadding;
+                var padding = ImGui.GetStyle().FramePadding.X;
+                var windowMin = ImGui.GetWindowPos() + ImGui.GetWindowContentRegionMin() - ImGui.GetStyle().WindowPadding - new Vector2(0, 1);
+                var windowMax = ImGui.GetWindowPos() + ImGui.GetWindowContentRegionMax() + ImGui.GetStyle().WindowPadding;
+                var tabColor = HasFocus ? ((FlatStyle)style).OpenTabWithFocusColor : ((FlatStyle)style).OpenTabWithoutFocusColor;
 
-                var windowPos = ImGui.GetWindowPos();
-                var windowMin = windowPos + ImGui.GetWindowContentRegionMin() - windowPadding;
-                var windowMax = windowPos + ImGui.GetWindowContentRegionMax() + windowPadding;
+                Drawing.DrawVariableThicknessRectangle(ImGui.GetWindowDrawList(), 
+                    windowMin, windowMax, 0, padding, padding, padding, ((FlatStyle)style).ApplicationBackgroundColor);
 
-                //Drawing.DrawThickLineRectangle(drawList, min, max, new Vector2(10, 10), ImGui.GetColorU32(ImGuiCol.DockingPreview));
+                Drawing.DrawVariableThicknessRectangle(ImGui.GetWindowDrawList(),
+                    windowMin + new Vector2(padding, 0), windowMax - new Vector2(padding, padding), 3, 3, tabColor);
 
-                var leftColMin = windowMin;
-                leftColMin.Y -= 1;
-                var leftColMax = windowMax;
-                leftColMax.X = windowMin.X + framePadding.X;
-
-                drawList.AddRectFilled(leftColMin, leftColMax, ImGui.GetColorU32(ImGuiCol.MenuBarBg));
-
-                var rightColMin = windowMin;
-                rightColMin.Y -= 1;
-                rightColMin.X = windowMax.X - framePadding.X;
-
-                drawList.AddRectFilled(rightColMin, windowMax, ImGui.GetColorU32(ImGuiCol.MenuBarBg));
-
-
-
-                //drawList.AddLine(m, m + new Vector2(30, 0), Drawing.U32Color(0.2f, 0.2f, 0));
-                //drawList.AddLine(min, min + new Vector2(30, 0), ImGui.GetColorU32(ImGuiCol.DragDropTarget));
-
-
-                // When using child windows it seems completely impossible to
-                // dock nodes into nodes that are already docked in the main 
-                // docking viewport.
-                //drawList.AddRectFilled(minpos, maxpos, );
-
-                //if (ImGui.BeginChild(0, size))
-                //{
                 DrawImplementation(style);
-                //}
-                //ImGui.EndChild();
-
-
+                
                 if (!wantsToStayOpen)
                 {
                     WantsToClose = true;

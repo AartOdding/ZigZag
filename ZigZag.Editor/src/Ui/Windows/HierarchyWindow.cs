@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZigZag.Editor.Ui
+namespace ZigZag.Editor.Ui.Windows
 {
     class HierarchyWindow : DockableWindow
     {

@@ -5,16 +5,19 @@ using OpenTK.Windowing.Desktop;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using ZigZag.Editor.Ui.Windows;
+using ZigZag.Editor.Ui;
+
 
 namespace ZigZag.Editor
 {
     class Program
     {
-        public static Ui.Style ActiveStyle
+        public static Style ActiveStyle
         {
             get;
             set;
-        } = new Ui.FlatStyle();
+        } = new FlatStyle();
 
 
         static void Main(string[] args)
@@ -30,54 +33,46 @@ namespace ZigZag.Editor
             n1.Context.MakeCurrent();
             GLFW.SwapInterval(1);
 
-            n1.Refresh += () => {  };
-
             IntPtr m_imguiContext = ImGui.CreateContext();
             ImGui.SetCurrentContext(m_imguiContext);
             var io = ImGui.GetIO();
             io.ConfigFlags |= ImGuiConfigFlags.DockingEnable;
             
-            // Used to convert a byte[] to IntPtr.
             unsafe
             {
                 fixed (byte* ptr = Resources.Fonts.WorkSans_Regular)
                 {
-                    io.Fonts.AddFontFromMemoryTTF((IntPtr)ptr, Resources.Fonts.WorkSans_Regular.Length, 32);
+                    io.Fonts.AddFontFromMemoryTTF((IntPtr)ptr, Resources.Fonts.WorkSans_Regular.Length, 28);
                 }
             }
-
-            OpenGLTest t = new OpenGLTest();
-            t.Setup();
 
             ImGuiPlatformIntegration.SetupKeys();
             ImGuiRendererIntegration.Initialize();
             ImGuiRendererIntegration.CreateFontsTexture();
 
-            Ui.MainMenu menu = new Ui.MainMenu();
-            Ui.HistoryWindow history = new Ui.HistoryWindow("History 1");
-            Ui.HierarchyWindow hierarchy = new Ui.HierarchyWindow("Hierarchy 1");
-            Ui.HistoryWindow history2 = new Ui.HistoryWindow("History 2");
-            Ui.HierarchyWindow hierarchy2 = new Ui.HierarchyWindow("Hierarchy 2");
+            MainMenu menu = new MainMenu();
+            HistoryWindow history = new HistoryWindow("History 1");
+            HierarchyWindow hierarchy = new HierarchyWindow("Hierarchy 1");
+            HistoryWindow history2 = new HistoryWindow("History 2");
+            HierarchyWindow hierarchy2 = new HierarchyWindow("Hierarchy 2");
 
             while (!n1.IsExiting)
             {
                 n1.ProcessEvents();
 
                 GL.Viewport(0, 0, n1.Size.X, n1.Size.Y);
-                GL.ClearColor(0.3f, 0, 0.1f, 1);
+                GL.ClearColor(0, 0, 0, 1);
                 GL.Clear(ClearBufferMask.ColorBufferBit);
 
                 ImGuiPlatformIntegration.UpdateIO(n1);
 
+                // Store active style in a variable in case it is changed midframe
                 var activeStyle = ActiveStyle;
-
                 activeStyle.BeginOverall();
+
                 ImGui.NewFrame();
 
-                // Store active style in a variable in case it is changed midframe
-
                 menu.Draw(activeStyle);
-
 
                 // Very hacky: 
                 // 1 << 14 is the bit flag ImGuiDockNodeFlags_NoWindowMenuButton
@@ -96,18 +91,16 @@ namespace ZigZag.Editor
                 ImGui.SetNextWindowPos(mainWindowPos);
                 ImGui.SetNextWindowSize(mainWindowSize);
 
-                if (ImGui.Begin("mainWindow", ImGuiWindowFlags.NoDecoration 
-                    | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus))
+                if (ImGui.Begin("mainWindow", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoResize 
+                    | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBringToFrontOnFocus))
                 {
+                    Drawing.DrawVariableThicknessRectangle(ImGui.GetWindowDrawList(), mainWindowPos,
+                        mainWindowPos + mainWindowSize, 5, 5, 5, 5, ((FlatStyle)ActiveStyle).ApplicationBackgroundColor);
                     ImGui.SetCursorPos(new Vector2(5, 5));
-                    //ImGui.DockSpace(1110, new Vector2(1000, 1000), (ImGuiDockNodeFlags)dockNodeFlags);
                     ImGui.DockSpace(123, mainWindowSize - new Vector2(10, 10), (ImGuiDockNodeFlags)dockNodeFlags);
-                    //ImGui.DockSpaceOverViewport(new ImGuiViewportPtr(), (ImGuiDockNodeFlags)dockNodeFlags);
-
                 }
 
                 ImGui.End();
-
 
 
                 if (!hierarchy.WantsToClose)
