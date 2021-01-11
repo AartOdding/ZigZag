@@ -9,35 +9,35 @@ namespace ZigZag.Runtime
     internal static class AssemblyReader
     {
 
-        public static List<Type> ReadNodes(List<Assembly> assemblies)
+        public static List<Type> GetAllSubclasses(Type baseType, IEnumerable<Assembly> assemblies)
         {
-            List<Type> types = new List<Type>();
+            List<Type> subclasses = new List<Type>();
 
             foreach (var assembly in assemblies)
             {
                 foreach (var type in assembly.ExportedTypes)
                 {
-                    if (type.IsSubclassOf(typeof(Node)))
+                    if (type.IsAssignableTo(baseType))
                     {
-                        types.Add(type);
+                        subclasses.Add(type);
                     }
                 }
             }
-            return types;
+            return subclasses;
         }
 
-        public static List<Type> ReadNodes(Assembly assembly)
+        public static List<Type> GetAllSubclasses(Type baseType, Assembly assembly)
         {
-            List<Type> types = new List<Type>();
+            List<Type> subclasses = new List<Type>();
 
-            foreach (var t in assembly.ExportedTypes)
+            foreach (var type in assembly.ExportedTypes)
             {
-                if (t.IsSubclassOf(typeof(Node)))
+                if (type.IsAssignableTo(baseType))
                 {
-                    types.Add(t);
+                    subclasses.Add(type);
                 }
             }
-            return types;
+            return subclasses;
         }
 
     }

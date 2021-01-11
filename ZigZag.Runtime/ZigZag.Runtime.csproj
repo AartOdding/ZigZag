@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ImGui.NET" Version="1.78.0" />
     <PackageReference Include="NuGet.Commands" Version="5.8.0" />
+    <PackageReference Include="OpenTK" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>

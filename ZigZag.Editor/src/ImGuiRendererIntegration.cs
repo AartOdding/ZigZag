@@ -12,10 +12,10 @@ namespace ZigZag.Editor
     {
         public static void Initialize()
         {
-            string vertSource = File.ReadAllText("../../../Resources/Shaders/imgui.vert.txt");
-            string fragSource = File.ReadAllText("../../../Resources/Shaders/imgui.frag.txt");
+            //string vertSource = File.ReadAllText(Resources.Shaders.ImGuiVertexShaderSource);
+            //string fragSource = File.ReadAllText("../../../Resources/Shaders/imgui.frag.txt");
 
-            m_shader = new Shader(vertSource, fragSource);
+            m_shader = new Shader(Resources.Shaders.ImGuiVertexShaderSource, Resources.Shaders.ImGuiFragmentShaderSource);
             m_shader.SetInt("active_texture", 0);
 
             m_vertexArray = GL.GenVertexArray();

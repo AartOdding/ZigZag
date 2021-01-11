@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.Loader;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -12,33 +14,51 @@ namespace ZigZag.Runtime
 {
     class Program
     {
+
         static void Main(string[] args)
         {
+            AssemblyResolver assemblyResolver = new AssemblyResolver(AssemblyLoadContext.Default);
+            assemblyResolver.AddAssemblySearchFolder("D:/ZigZag/ZigZag/Dependencies/bin/Release/net5.0");
+
             PackageLoader.AddLocalRepository("C:/Users/aart_/AppData/Roaming/ZigZag/LocalPackages");
 
             bool forceLoadFromDevPath = true;
+            List<Type> editors = new List<Type>();
 
             if (forceLoadFromDevPath)
             {
                 string devLibPath = "D:/ZigZag/ZigZag/ZigZag.StandardLibrary";
-                
-                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
+                string devEditorPath = "D:/ZigZag/ZigZag/ZigZag.Editor";
+
+                TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject),
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/TextData/bin/Debug/net5.0/TextData.dll")));
 
-                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
+                TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject),
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/LoremIpsum/bin/Debug/net5.0/LoremIpsum.dll")));
 
-                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(
+                TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject),
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
                         devLibPath + "/Text/Print/bin/Debug/net5.0/Print.dll")));
+
+                editors = AssemblyReader.GetAllSubclasses(typeof(IEditor),
+                    AssemblyLoadContext.Default.LoadFromAssemblyPath(
+                        devEditorPath + "/bin/Debug/net5.0/ZigZag.Editor.dll"));
             }
             else
             {
-                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0)));
-                TypeLibrary.AddTypes(AssemblyReader.ReadNodes(PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
+                TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject), PackageLoader.LoadPackage("ZigZag.Text.LoremIpsum", 0)));
+                TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject), PackageLoader.LoadPackage("ZigZag.Text.Print", 0)));
             }
+
+            IEditor editor = null;
+            if (editors.Count > 0)
+            {
+                editor = (IEditor)Activator.CreateInstance(editors[0]);
+                editor.OpenEditor();
+            }
+
 
             var proj = new Project();
             // Make sure project can only execute commands on its own children
@@ -82,6 +102,10 @@ namespace ZigZag.Runtime
             var n = JsonSerializer.Deserialize(jsonString, typeof(ZObject), options);
             objectRefSerializer.ResolveObjects(objectSerializer.CreatedObjects);
 
+            while(editor is not null && !editor.WantsToClose())
+            {
+                editor.Update();
+            }
 
             Console.WriteLine("*");
         }
