@@ -1,10 +1,16 @@
-﻿using ImGuiNET;
+﻿using System.Collections.Generic;
+using ImGuiNET;
 
 
 namespace ZigZag.Editor.Ui
 {
     class MainMenu
     {
+        public MainMenu(Dictionary<string, DockableWindow> windows)
+        {
+            m_windows = windows;
+        }
+
         public void Draw(Style style)
         {
             style.BeginMainMenu(this);
@@ -29,11 +35,35 @@ namespace ZigZag.Editor.Ui
             }
             if (ImGui.BeginMenu("View"))
             {
+                if (ImGui.MenuItem("Node Hierarchy", "", m_windows.ContainsKey("Node Hierarchy")))
+                {
+                    if (m_windows.ContainsKey("Node Hierarchy"))
+                    {
+                        // take focus
+                    }
+                    else
+                    {
+                        m_windows.Add("Node Hierarchy", new Windows.HierarchyWindow("Node Hierarchy"));
+                    }
+                }
+                if (ImGui.MenuItem("History", "", m_windows.ContainsKey("History")))
+                {
+                    if (m_windows.ContainsKey("History"))
+                    {
+                        // take focus
+                    }
+                    else
+                    {
+                        m_windows.Add("History", new Windows.HistoryWindow("History"));
+                    }
+                }
                 ImGui.EndMenu();
             }
 
             ImGui.EndMainMenuBar();
             style.EndMainMenu(this);
         }
+
+        private Dictionary<string, DockableWindow> m_windows;
     }
 }

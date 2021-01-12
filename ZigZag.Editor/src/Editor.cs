@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using OpenTK.Windowing.Desktop;
 using ImGuiNET;
@@ -47,11 +48,12 @@ namespace ZigZag.Editor
             ImGuiPlatformIntegration.SetupKeys();
             ImGuiRendererIntegration.Initialize();
             ImGuiRendererIntegration.CreateFontsTexture();
- 
-            HistoryWindow history = new HistoryWindow("History 1");
-            HierarchyWindow hierarchy = new HierarchyWindow("Hierarchy 1");
-            HistoryWindow history2 = new HistoryWindow("History 2");
-            HierarchyWindow hierarchy2 = new HierarchyWindow("Hierarchy 2");
+
+            m_mainMenu = new MainMenu(m_openWindows);
+            m_openWindows.Add("History 1", new HistoryWindow("History 1"));
+            m_openWindows.Add("History 2", new HistoryWindow("History 2"));
+            m_openWindows.Add("Hierarchy 1", new HierarchyWindow("Hierarchy 1"));
+            m_openWindows.Add("Hierarchy 2", new HierarchyWindow("Hierarchy 2"));
         }
 
         public void CloseEditor()
@@ -91,11 +93,19 @@ namespace ZigZag.Editor
             }
             ImGui.End();
 
+            List<string> toRemove = new List<string>();
             foreach (var window in m_openWindows)
             {
-                window.Draw(activeStyle);
+                window.Value.Draw(activeStyle);
+                if (window.Value.WantsToClose)
+                {
+                    toRemove.Add(window.Key);
+                }
             }
-            m_openWindows.RemoveAll(window => window.WantsToClose);
+            foreach (var window in toRemove)
+            {
+                m_openWindows.Remove(window);
+            }
 
             ImGui.ShowDemoWindow();
             
@@ -116,8 +126,8 @@ namespace ZigZag.Editor
 
         private NativeWindow m_nativeWindow;
         private IntPtr m_imguiContext;
-        private readonly List<DockableWindow> m_openWindows = new List<DockableWindow>();
-        private readonly MainMenu m_mainMenu = new MainMenu();
+        private readonly Dictionary<string, DockableWindow> m_openWindows = new Dictionary<string, DockableWindow>();
+        private MainMenu m_mainMenu;
 
         // Very hacky: 
         // 1 << 14 is the bit flag ImGuiDockNodeFlags_NoWindowMenuButton
