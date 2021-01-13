@@ -6,13 +6,15 @@ using OpenTK.Windowing.Desktop;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.GraphicsLibraryFramework;
+using ZigZag.Core;
 using ZigZag.Editor.Ui.Windows;
 using ZigZag.Editor.Ui;
+using ZigZag.Runtime;
 
 
 namespace ZigZag.Editor
 {
-    public sealed class Editor : Runtime.IEditor
+    public sealed class Editor : IEditor
     {
         internal static Style ActiveStyle
         {
@@ -49,16 +51,23 @@ namespace ZigZag.Editor
             ImGuiRendererIntegration.Initialize();
             ImGuiRendererIntegration.CreateFontsTexture();
 
-            m_mainMenu = new MainMenu(m_openWindows);
-            m_openWindows.Add("History 1", new HistoryWindow("History 1"));
-            m_openWindows.Add("History 2", new HistoryWindow("History 2"));
-            m_openWindows.Add("Hierarchy 1", new HierarchyWindow("Hierarchy 1"));
-            m_openWindows.Add("Hierarchy 2", new HierarchyWindow("Hierarchy 2"));
+            m_mainMenu = new MainMenu();
+            m_hierarchyWindow = new HierarchyWindow("Hierarchy");
+            m_historyWindow = new HistoryWindow("History");
+            m_mainMenu.HierarchyWindow = m_hierarchyWindow;
+            m_mainMenu.HistoryWindow = m_historyWindow;
         }
 
         public void CloseEditor()
         {
-            throw new System.NotImplementedException();
+        }
+
+        public void ProjectChanged(Project project)
+        {
+            m_project = project;
+            m_mainMenu.Project = project;
+            m_hierarchyWindow.Project = project;
+            m_historyWindow.Project = project;
         }
 
         public void Update()
@@ -93,19 +102,8 @@ namespace ZigZag.Editor
             }
             ImGui.End();
 
-            List<string> toRemove = new List<string>();
-            foreach (var window in m_openWindows)
-            {
-                window.Value.Draw(activeStyle);
-                if (window.Value.WantsToClose)
-                {
-                    toRemove.Add(window.Key);
-                }
-            }
-            foreach (var window in toRemove)
-            {
-                m_openWindows.Remove(window);
-            }
+            if (m_hierarchyWindow.IsOpen) m_hierarchyWindow.Draw(activeStyle);
+            if (m_historyWindow.IsOpen) m_historyWindow.Draw(activeStyle);
 
             ImGui.ShowDemoWindow();
             
@@ -126,8 +124,12 @@ namespace ZigZag.Editor
 
         private NativeWindow m_nativeWindow;
         private IntPtr m_imguiContext;
-        private readonly Dictionary<string, DockableWindow> m_openWindows = new Dictionary<string, DockableWindow>();
+
+        private Project m_project;
+
         private MainMenu m_mainMenu;
+        private HierarchyWindow m_hierarchyWindow;
+        private HistoryWindow m_historyWindow;
 
         // Very hacky: 
         // 1 << 14 is the bit flag ImGuiDockNodeFlags_NoWindowMenuButton

@@ -9,6 +9,12 @@ namespace ZigZag.Editor.Ui.Windows
 
         }
 
+        public Core.Project Project
+        {
+            get;
+            set;
+        }
+
         protected override void DrawImplementation(Style style)
         {
 

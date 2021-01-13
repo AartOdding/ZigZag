@@ -11,7 +11,7 @@ namespace ZigZag.Editor.Ui
             Name = name;
             HasFocus = false;
             IsDocked = false;
-            WantsToClose = false;
+            IsOpen = true;
         }
 
         public string Name
@@ -31,10 +31,10 @@ namespace ZigZag.Editor.Ui
             private set;
         }
 
-        public bool WantsToClose
+        public bool IsOpen
         {
             get;
-            private set;
+            set;
         }
 
         public void Draw(Style style)
@@ -59,7 +59,7 @@ namespace ZigZag.Editor.Ui
                 
                 if (!wantsToStayOpen)
                 {
-                    WantsToClose = true;
+                    IsOpen = false;
                 }
             }
 

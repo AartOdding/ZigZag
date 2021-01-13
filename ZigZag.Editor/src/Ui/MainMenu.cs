@@ -1,15 +1,32 @@
-﻿using System.Collections.Generic;
-using ImGuiNET;
+﻿using ImGuiNET;
 
 
 namespace ZigZag.Editor.Ui
 {
     class MainMenu
     {
-        public MainMenu(Dictionary<string, DockableWindow> windows)
+        public MainMenu()
         {
-            m_windows = windows;
         }
+
+        public Core.Project Project
+        {
+            get;
+            set;
+        }
+
+        public Windows.HierarchyWindow HierarchyWindow
+        {
+            get;
+            set;
+        }
+
+        public Windows.HistoryWindow HistoryWindow
+        {
+            get;
+            set;
+        }
+
 
         public void Draw(Style style)
         {
@@ -35,28 +52,8 @@ namespace ZigZag.Editor.Ui
             }
             if (ImGui.BeginMenu("View"))
             {
-                if (ImGui.MenuItem("Node Hierarchy", "", m_windows.ContainsKey("Node Hierarchy")))
-                {
-                    if (m_windows.ContainsKey("Node Hierarchy"))
-                    {
-                        // take focus
-                    }
-                    else
-                    {
-                        m_windows.Add("Node Hierarchy", new Windows.HierarchyWindow("Node Hierarchy"));
-                    }
-                }
-                if (ImGui.MenuItem("History", "", m_windows.ContainsKey("History")))
-                {
-                    if (m_windows.ContainsKey("History"))
-                    {
-                        // take focus
-                    }
-                    else
-                    {
-                        m_windows.Add("History", new Windows.HistoryWindow("History"));
-                    }
-                }
+                WindowMenuItem("Node Hierarchy", HierarchyWindow);
+                WindowMenuItem("History", HistoryWindow);
                 ImGui.EndMenu();
             }
 
@@ -64,6 +61,20 @@ namespace ZigZag.Editor.Ui
             style.EndMainMenu(this);
         }
 
-        private Dictionary<string, DockableWindow> m_windows;
+        private void WindowMenuItem(string text, DockableWindow window)
+        {
+            if (ImGui.MenuItem(text, "", window.IsOpen))
+            {
+                if (window.IsOpen)
+                {
+                    ImGui.SetWindowFocus(window.Name);
+                }
+                else
+                {
+                    window.IsOpen = true;
+                }
+            }
+        }
+
     }
 }
