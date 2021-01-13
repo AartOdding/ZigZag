@@ -56,7 +56,6 @@ namespace ZigZag.Runtime
             if (editors.Count > 0)
             {
                 editor = (IEditor)Activator.CreateInstance(editors[0]);
-                editor.OpenEditor();
             }
 
 
@@ -102,7 +101,11 @@ namespace ZigZag.Runtime
             var n = JsonSerializer.Deserialize(jsonString, typeof(ZObject), options);
             objectRefSerializer.ResolveObjects(objectSerializer.CreatedObjects);
 
-            while(editor is not null && !editor.WantsToClose())
+
+            editor.OpenEditor();
+            editor.ProjectChanged(proj);
+
+            while (editor is not null && !editor.WantsToClose())
             {
                 editor.Update();
             }
