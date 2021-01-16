@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZigZag.Editor.Math
+namespace ZigZag.SceneGraph.Math
 {
     readonly struct Rectangle
     {
@@ -44,6 +44,11 @@ namespace ZigZag.Editor.Math
         public Vector2 BottomRight()
         {
             return new Vector2(X + Width, Y + Height);
+        }
+
+        public Vector2 Centre()
+        {
+            return new Vector2(X + 0.5f * Width, Y + 0.5f * Height);
         }
     }
 }

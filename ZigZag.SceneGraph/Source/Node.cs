@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZigZag.Editor.Math;
+using ZigZag.SceneGraph.Math;
 
-namespace ZigZag.Editor.SceneGraph
+
+namespace ZigZag.SceneGraph
 {
     abstract class Node
     {
@@ -50,7 +51,6 @@ namespace ZigZag.Editor.SceneGraph
         }
 
         
-
         private Node m_parent;
         private readonly List<Node> m_children = new List<Node>();
     }

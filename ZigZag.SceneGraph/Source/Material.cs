@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZigZag.Editor.SceneGraph
+namespace ZigZag.SceneGraph
 {
     class Material
     {
+
     }
 }

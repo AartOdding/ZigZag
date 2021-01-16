@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ZigZag.Editor.Math;
+using ZigZag.SceneGraph.Math;
 
 
-namespace ZigZag.Editor.SceneGraph
+namespace ZigZag.SceneGraph
 {
     readonly struct Vertex2
     {

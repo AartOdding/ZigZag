@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Print", "ZigZag.StandardLib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag.Runtime", "ZigZag.Runtime\ZigZag.Runtime.csproj", "{4D46B1C9-E116-4F81-9C8E-BA5A6C015E1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZigZag.Editor", "ZigZag.Editor\ZigZag.Editor.csproj", "{8B6A3EBD-65AA-465B-AA9C-FD1CEAD120BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZigZag.Editor", "ZigZag.Editor\ZigZag.Editor.csproj", "{8B6A3EBD-65AA-465B-AA9C-FD1CEAD120BE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZigZag.SceneGraph", "ZigZag.SceneGraph\ZigZag.SceneGraph.csproj", "{541AF11D-B7D0-4289-BF83-C6FE297DB50F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,6 +51,10 @@ Global
 		{8B6A3EBD-65AA-465B-AA9C-FD1CEAD120BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B6A3EBD-65AA-465B-AA9C-FD1CEAD120BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B6A3EBD-65AA-465B-AA9C-FD1CEAD120BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{541AF11D-B7D0-4289-BF83-C6FE297DB50F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{541AF11D-B7D0-4289-BF83-C6FE297DB50F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{541AF11D-B7D0-4289-BF83-C6FE297DB50F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{541AF11D-B7D0-4289-BF83-C6FE297DB50F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
