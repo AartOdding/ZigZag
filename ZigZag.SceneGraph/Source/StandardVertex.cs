@@ -8,7 +8,7 @@ using ZigZag.SceneGraph.Math;
 
 namespace ZigZag.SceneGraph
 {
-    readonly struct Vertex2
+    public readonly struct Vertex2
     {
         public Vertex2(Vector2 pos, uint color)
         {

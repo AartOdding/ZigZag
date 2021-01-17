@@ -2,7 +2,7 @@
 
 namespace ZigZag.SceneGraph
 {
-    enum LinePlacement
+    public enum LinePlacement
     {
         Centered,
         Outside,

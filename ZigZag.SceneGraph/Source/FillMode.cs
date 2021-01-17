@@ -2,7 +2,7 @@
 
 namespace ZigZag.SceneGraph
 {
-    enum FillMode
+    public enum FillMode
     {
         Filled,
         Outline

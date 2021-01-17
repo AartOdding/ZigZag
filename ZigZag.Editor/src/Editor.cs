@@ -56,6 +56,11 @@ namespace ZigZag.Editor
             m_historyWindow = new HistoryWindow("History");
             m_mainMenu.HierarchyWindow = m_hierarchyWindow;
             m_mainMenu.HistoryWindow = m_historyWindow;
+
+            ZigZag.SceneGraph.GeometryBuilder builder = new ZigZag.SceneGraph.GeometryBuilder();
+            builder.AddRectangle(new ZigZag.SceneGraph.Math.Rectangle(10, 10, 30, 30));
+            builder.AddEllipse(new ZigZag.SceneGraph.Math.Vector2(20, 20), 10, 10);
+            var geom = builder.Build();
         }
 
         public void CloseEditor()

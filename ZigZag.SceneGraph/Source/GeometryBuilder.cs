@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Text;
 using System.Threading.Tasks;
 using ZigZag.SceneGraph.Math;
@@ -7,7 +8,7 @@ using ZigZag.SceneGraph.Math;
 
 namespace ZigZag.SceneGraph
 {
-    class GeometryBuilder
+    public class GeometryBuilder
     {
         public Color Color { get; set; } = new Color(1, 1, 1, 1);
         public FillMode FillMode { get; set; } = FillMode.Filled;
@@ -50,6 +51,14 @@ namespace ZigZag.SceneGraph
         public void AddRoundedRectangle(Rectangle rect, float roundingRadius)
         {
 
+        }
+
+        public Geometry Build()
+        {
+            return new Geometry(
+                m_vertices.ToImmutableArray(),
+                m_indices.ToImmutableArray(),
+                m_vertexCounts.ToImmutableArray());
         }
 
         private void AddRectangleFilled(Rectangle rect)
@@ -113,10 +122,8 @@ namespace ZigZag.SceneGraph
             m_indices.Add(c);
         }
 
-        internal Node m_node;
-
-        private List<Vertex2> m_vertices = new List<Vertex2>();
-        private List<int> m_indices = new List<int>();
-        private List<int> m_vertexCounts = new List<int>();
+        private readonly List<Vertex2> m_vertices = new List<Vertex2>();
+        private readonly List<int> m_indices = new List<int>();
+        private readonly List<int> m_vertexCounts = new List<int>();
     }
 }

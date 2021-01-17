@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using ZigZag.SceneGraph.Math;
 
 
 namespace ZigZag.SceneGraph
 {
-    abstract class Node
+    public class Node
     {
         public Node() { }
 
@@ -44,13 +40,12 @@ namespace ZigZag.SceneGraph
             set;
         }
 
-        public Rectangle BoundingBox
+        public Geometry Geometry
         {
             get;
             set;
         }
 
-        
         private Node m_parent;
         private readonly List<Node> m_children = new List<Node>();
     }

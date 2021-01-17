@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ZigZag.SceneGraph.Math
 {
-    readonly struct Rectangle
+    public readonly struct Rectangle
     {
         public Rectangle(float x, float y, float width, float height)
         {

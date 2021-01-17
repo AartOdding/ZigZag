@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZigZag.Core\ZigZag.Core.csproj" />
+    <ProjectReference Include="..\ZigZag.SceneGraph\ZigZag.SceneGraph.csproj" />
   </ItemGroup>
 
 </Project>

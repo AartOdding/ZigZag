@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Runtime.Loader;
 using System.Text.Json;
@@ -17,34 +18,34 @@ namespace ZigZag.Runtime
 
         static void Main(string[] args)
         {
-            AssemblyResolver assemblyResolver = new AssemblyResolver(AssemblyLoadContext.Default);
-            assemblyResolver.AddAssemblySearchFolder("D:/ZigZag/ZigZag/Dependencies/bin/Release/net5.0");
+            //AssemblyResolver assemblyResolver = new AssemblyResolver(AssemblyLoadContext.Default);
+            //assemblyResolver.AddAssemblySearchFolder("D:/ZigZag/ZigZag/Dependencies/bin/Release/net5.0");
 
-            PackageLoader.AddLocalRepository("C:/Users/aart_/AppData/Roaming/ZigZag/LocalPackages");
+            //PackageLoader.AddLocalRepository("C:/Users/aart_/AppData/Roaming/ZigZag/LocalPackages");
+
 
             bool forceLoadFromDevPath = true;
             List<Type> editors = new List<Type>();
 
             if (forceLoadFromDevPath)
             {
-                string devLibPath = "D:/ZigZag/ZigZag/ZigZag.StandardLibrary";
-                string devEditorPath = "D:/ZigZag/ZigZag/ZigZag.Editor";
+                var ZigZagRootDir = Path.GetFullPath(Path.Combine(Directory.GetCurrentDirectory(), "../../../.."));
 
                 TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject),
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                        devLibPath + "/Text/TextData/bin/Debug/net5.0/TextData.dll")));
+                        ZigZagRootDir + "/ZigZag.StandardLibrary/Text/TextData/bin/Debug/net5.0/TextData.dll")));
 
                 TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject),
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                        devLibPath + "/Text/LoremIpsum/bin/Debug/net5.0/LoremIpsum.dll")));
+                        ZigZagRootDir + "/ZigZag.StandardLibrary/Text/LoremIpsum/bin/Debug/net5.0/LoremIpsum.dll")));
 
                 TypeLibrary.AddTypes(AssemblyReader.GetAllSubclasses(typeof(ZObject),
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                        devLibPath + "/Text/Print/bin/Debug/net5.0/Print.dll")));
+                        ZigZagRootDir + "/ZigZag.StandardLibrary/Text/Print/bin/Debug/net5.0/Print.dll")));
 
                 editors = AssemblyReader.GetAllSubclasses(typeof(IEditor),
                     AssemblyLoadContext.Default.LoadFromAssemblyPath(
-                        devEditorPath + "/bin/Debug/net5.0/ZigZag.Editor.dll"));
+                        ZigZagRootDir + "/ZigZag.Editor/bin/Debug/net5.0/ZigZag.Editor.dll"));
             }
             else
             {
