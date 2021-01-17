@@ -9,37 +9,10 @@ namespace ZigZag.SceneGraph
 {
     class GeometryBuilder
     {
-        internal GeometryBuilder(Node node)
-        {
-            m_node = node;
-            FillMode = FillMode.Filled;
-            LinePlacement = LinePlacement.Centered;
-            LineWidth = 1;
-        }
-
-        public FillMode FillMode
-        {
-            get;
-            set;
-        }
-
-        public LinePlacement LinePlacement
-        {
-            get;
-            set;
-        }
-
-        public float LineWidth
-        {
-            get;
-            set;
-        }
-
-        public Color Color
-        {
-            get;
-            set;
-        }
+        public Color Color { get; set; } = new Color(1, 1, 1, 1);
+        public FillMode FillMode { get; set; } = FillMode.Filled;
+        public LinePlacement LinePlacement { get; set; } = LinePlacement.Centered;
+        public float LineWidth { get; set; } = 3;
 
         public void AddRectangle(Rectangle rect)
         {
@@ -120,28 +93,6 @@ namespace ZigZag.SceneGraph
             AddTriangleFromIndices(vcentre, vprev, vtop);
 
             m_vertexCounts.Add(m_vertices.Count - startCount);
-
-
-            var delta_angle = MathF.Tau / segments;
-            var angle = 0.0f;
-
-
-
-            var prev = top;
-
-            for (int i = 1; i < segments; ++i)
-            {
-                angle += delta_angle;
-
-            }
-
-            var tl = AddVertex(rect.TopLeft(), color);
-            var tr = AddVertex(rect.TopRight(), color);
-            var bl = AddVertex(rect.BottomLeft(), color);
-            var br = AddVertex(rect.BottomRight(), color);
-            m_vertexCounts.Add(4);
-            AddTriangleFromIndices(tl, tr, bl);
-            AddTriangleFromIndices(tr, br, bl);
         }
 
         private void AddEllipseOutline(Vector2 centre, float width, float height)
@@ -167,7 +118,5 @@ namespace ZigZag.SceneGraph
         private List<Vertex2> m_vertices = new List<Vertex2>();
         private List<int> m_indices = new List<int>();
         private List<int> m_vertexCounts = new List<int>();
-
-        private static readonly Dictionary<int, List<float>> m_cosineLookupTables = new Dictionary<int, List<float>>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +10,10 @@ namespace ZigZag.SceneGraph
 {
     public readonly struct Geometry
     {
-        public Geometry(List<int> l)
-        {
-            y = l;
-        }
+        readonly ImmutableArray<Vertex2> Vertices;
+        readonly ImmutableArray<int> Indices;
+        readonly ImmutableArray<int> VertexCounts;
+
 
         public Span<int> get()
         {

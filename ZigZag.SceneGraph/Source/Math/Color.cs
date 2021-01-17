@@ -8,6 +8,14 @@ namespace ZigZag.SceneGraph.Math
 {
     readonly struct Color
     {
+        public Color(float r, float g, float b, float a)
+        {
+            Red = r;
+            Green = g;
+            Blue = b;
+            Alpha = a;
+        }
+
         public readonly float Red;
         public readonly float Green;
         public readonly float Blue;
