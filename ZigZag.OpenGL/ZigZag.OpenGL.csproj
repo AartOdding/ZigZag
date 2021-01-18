@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+    <PackageReference Include="OpenTK" Version="4.4.0" />
   </ItemGroup>
 
 </Project>

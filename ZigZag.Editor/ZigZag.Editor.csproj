@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ZigZag.OpenGL\ZigZag.OpenGL.csproj" />
     <ProjectReference Include="..\ZigZag.Runtime\ZigZag.Runtime.csproj" />
     <ProjectReference Include="..\ZigZag.SceneGraph\ZigZag.SceneGraph.csproj" />
   </ItemGroup>
