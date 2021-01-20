@@ -4,13 +4,13 @@ using OpenTK.Graphics.OpenGL;
 
 namespace ZigZag.OpenGL
 {
-    public class VertexDataBinding
+    public class VertexArrayObject
     {
         public void Bind()
         {
             if (m_released)
             {
-                throw new Exception("Cannot bind released object.");
+                throw new Exception("Vertex array object has been released");
             }
             if (m_vertexArray == 0)
             {
@@ -18,7 +18,7 @@ namespace ZigZag.OpenGL
             }
             if (m_vertexArray == 0)
             {
-                throw new Exception("Failed to create Vertex Array Object");
+                throw new Exception("Failed to create vertex array object");
             }
             GL.BindVertexArray(m_vertexArray);
         }
@@ -27,7 +27,7 @@ namespace ZigZag.OpenGL
         {
             if (m_released)
             {
-                throw new Exception("Cannot release object twice");
+                throw new Exception("Vertex array object has been released already");
             }
             if (m_vertexArray != 0)
             {
@@ -40,7 +40,7 @@ namespace ZigZag.OpenGL
         public void AttributeFloat(
             int index,
             int componentCount,
-            Buffer buffer,
+            BufferObject buffer,
             VertexAttribPointerType bufferDataType,
             int strideInBytes = 0,
             int offsetInBufferInBytes = 0)
@@ -51,7 +51,7 @@ namespace ZigZag.OpenGL
         public void AttributeFloat(
             int index,
             int componentCount,
-            Buffer buffer,
+            BufferObject buffer,
             VertexAttribPointerType bufferDataType,
             bool normalize = false,
             int strideInBytes = 0,
@@ -70,7 +70,7 @@ namespace ZigZag.OpenGL
         public void AttributeInt(
             int index,
             int componentCount,
-            Buffer buffer,
+            BufferObject buffer,
             VertexAttribIntegerType bufferDataType,
             int strideInBytes = 0,
             int offsetInBufferInBytes = 0)

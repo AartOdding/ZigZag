@@ -5,9 +5,9 @@ using System.Runtime.InteropServices;
 
 namespace ZigZag.OpenGL
 {
-    public class Buffer
+    public class BufferObject
     {
-        public Buffer(
+        public BufferObject(
             BufferTarget target = BufferTarget.ArrayBuffer, 
             BufferUsageHint usage = BufferUsageHint.DynamicDraw)
         {
@@ -29,7 +29,7 @@ namespace ZigZag.OpenGL
         {
             if (m_released)
             {
-                throw new Exception("Cannot bind released object.");
+                throw new Exception("Buffer object has been released");
             }
             if (m_buffer == 0)
             {
@@ -37,7 +37,7 @@ namespace ZigZag.OpenGL
             }
             if (m_buffer == 0)
             {
-                throw new Exception("Failed to create Buffer Object");
+                throw new Exception("Failed to create buffer object");
             }
             GL.BindBuffer(Target, m_buffer);
         }
@@ -46,7 +46,7 @@ namespace ZigZag.OpenGL
         {
             if (m_released)
             {
-                throw new Exception("Cannot release object twice");
+                throw new Exception("Buffer object has been released already");
             }
             if (m_buffer != 0)
             {
@@ -63,18 +63,19 @@ namespace ZigZag.OpenGL
             m_bufferSizeBytes = sizeInBytes;
         }
 
-        // Important: dataCount is the amount of objects, not bytes
-        public void SetData<T>(ref T data, int dataCount) where T : struct
+        public void SetData<T>(ref T firstValue, int valueCount) where T : struct
         {
             Bind();
-            if (m_buffer == 0)
+            int totalSize = valueCount * Marshal.SizeOf(typeof(T));
+
+            if (m_bufferSizeBytes < totalSize)
             {
-                int sizeOfT = Marshal.SizeOf(typeof(T));
-                GL.BufferData(Target, dataCount * sizeOfT, ref data, Usage);
+                GL.BufferData(Target, totalSize, ref firstValue, Usage);
+                m_bufferSizeBytes = totalSize;
             }
             else
             {
-                throw new NotImplementedException();
+                GL.BufferSubData(Target, IntPtr.Zero, totalSize, ref firstValue);
             }
         }
 
