@@ -3,6 +3,7 @@ using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Mathematics;
 using System.Runtime.CompilerServices;
+using ZigZag.OpenGL;
 using System.IO;
 
 
@@ -12,34 +13,24 @@ namespace ZigZag.Editor
     {
         public static void Initialize()
         {
-            //string vertSource = File.ReadAllText(Resources.Shaders.ImGuiVertexShaderSource);
-            //string fragSource = File.ReadAllText("../../../Resources/Shaders/imgui.frag.txt");
-
             m_shader = new Shader(Resources.Shaders.ImGuiVertexShaderSource, Resources.Shaders.ImGuiFragmentShaderSource);
             m_shader.SetInt("active_texture", 0);
 
-            m_vertexArray = GL.GenVertexArray();
-            m_vertexBuffer = GL.GenBuffer();
-            m_indexBuffer = GL.GenBuffer();
+            m_vertexBuffer = new BufferObject(BufferTarget.ArrayBuffer, BufferUsageHint.StreamDraw);
+            m_indexBuffer = new BufferObject(BufferTarget.ElementArrayBuffer, BufferUsageHint.StreamDraw);
 
-            GL.BindVertexArray(m_vertexArray);
-            GL.BindBuffer(BufferTarget.ArrayBuffer, m_vertexBuffer);
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, m_indexBuffer);
-
-            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float,        false, 20, 0);
-            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float,        false, 20, 8);
-            GL.VertexAttribPointer(2, 4, VertexAttribPointerType.UnsignedByte, true,  20, 16);
-
-            GL.EnableVertexAttribArray(0);
-            GL.EnableVertexAttribArray(1);
-            GL.EnableVertexAttribArray(2);
-
-            GL.BindVertexArray(0);
+            m_vertexArray = new VertexArrayObject();
+            m_vertexArray.SetFloatAttribute(0, 2, m_vertexBuffer, VertexAttribPointerType.Float, 20, 0);
+            m_vertexArray.SetFloatAttribute(1, 2, m_vertexBuffer, VertexAttribPointerType.Float, 20, 8);
+            m_vertexArray.SetFloatAttribute(2, 4, m_vertexBuffer, VertexAttribPointerType.UnsignedByte, true, 20, 16);
+            m_vertexArray.SetIndexBuffer(m_indexBuffer);
         }
 
         public static void Shutdown()
         {
-
+            m_vertexArray.Release();
+            m_vertexBuffer.Release();
+            m_indexBuffer.Release();
         }
 
         public static void Render(ImDrawDataPtr drawData, int w, int h)
@@ -56,21 +47,14 @@ namespace ZigZag.Editor
             m_shader.SetVector2("viewport_min", new Vector2(0, 0));
             m_shader.SetVector2("viewport_max", new Vector2(w, h));
 
-            GL.BindVertexArray(m_vertexArray);
+            m_vertexArray.Bind();
 
             for (int i = 0; i < drawData.CmdListsCount; ++i)
             {
                 var cmdList = drawData.CmdListsRange[i];
 
-                GL.BindBuffer(BufferTarget.ArrayBuffer, m_vertexBuffer);
-                GL.BufferData(BufferTarget.ArrayBuffer, 
-                    cmdList.VtxBuffer.Size * Unsafe.SizeOf<ImDrawVert>(),
-                    cmdList.VtxBuffer.Data, BufferUsageHint.DynamicDraw);
-
-                GL.BindBuffer(BufferTarget.ElementArrayBuffer, m_indexBuffer);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, 
-                    cmdList.IdxBuffer.Size * sizeof(ushort),
-                    cmdList.IdxBuffer.Data, BufferUsageHint.DynamicDraw);
+                m_vertexBuffer.SetData<ImDrawVert>(cmdList.VtxBuffer.Data, cmdList.VtxBuffer.Size);
+                m_indexBuffer.SetData<ushort>(cmdList.IdxBuffer.Data, cmdList.IdxBuffer.Size);
 
                 for (int j = 0; j < cmdList.CmdBuffer.Size; ++j)
                 {
@@ -80,14 +64,6 @@ namespace ZigZag.Editor
                     int offset = (int)cmd.IdxOffset;
                     GL.DrawElements(PrimitiveType.Triangles, elemCount, DrawElementsType.UnsignedShort, offset * sizeof(ushort));
                 }
-
-                //cmdList.VtxBuffer.Size
-
-
-
-                //var d = drawList.VtxBuffer
-
-                //drawList.VtxBuffer[0].
             }
         }
 
@@ -121,9 +97,9 @@ namespace ZigZag.Editor
         }
 
         private static Shader m_shader;
+        private static VertexArrayObject m_vertexArray;
+        private static BufferObject m_vertexBuffer;
+        private static BufferObject m_indexBuffer;
         private static int m_fontsTextureHandle = 0;
-        private static int m_vertexArray = 0;
-        private static int m_vertexBuffer = 0;
-        private static int m_indexBuffer = 0;
     }
 }

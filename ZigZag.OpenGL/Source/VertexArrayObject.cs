@@ -6,38 +6,36 @@ namespace ZigZag.OpenGL
 {
     public class VertexArrayObject
     {
+        public VertexArrayObject()
+        {
+            m_vertexArray = GL.GenVertexArray();
+
+            if (m_vertexArray == 0)
+            {
+                throw new Exception("Failed to create vertex array object.");
+            }
+        }
+
         public void Bind()
         {
-            if (m_released)
-            {
-                throw new Exception("Vertex array object has been released");
-            }
             if (m_vertexArray == 0)
             {
-                m_vertexArray = GL.GenVertexArray();
-            }
-            if (m_vertexArray == 0)
-            {
-                throw new Exception("Failed to create vertex array object");
+                throw new Exception("Vertex array object was not succesfully allocated, or has already been released.");
             }
             GL.BindVertexArray(m_vertexArray);
         }
 
         public void Release()
         {
-            if (m_released)
+            if (m_vertexArray == 0)
             {
-                throw new Exception("Vertex array object has been released already");
+                throw new Exception("Vertex array object was not succesfully allocated, or has already been released.");
             }
-            if (m_vertexArray != 0)
-            {
-                GL.DeleteVertexArray(m_vertexArray);
-                m_vertexArray = 0;
-                m_released = true;
-            }
+            GL.DeleteVertexArray(m_vertexArray);
+            m_vertexArray = 0;
         }
 
-        public void AttributeFloat(
+        public void SetFloatAttribute(
             int index,
             int componentCount,
             BufferObject buffer,
@@ -45,10 +43,10 @@ namespace ZigZag.OpenGL
             int strideInBytes = 0,
             int offsetInBufferInBytes = 0)
         {
-            AttributeFloat(index, componentCount, buffer, bufferDataType, strideInBytes, offsetInBufferInBytes);
+            SetFloatAttribute(index, componentCount, buffer, bufferDataType, false, strideInBytes, offsetInBufferInBytes);
         }
 
-        public void AttributeFloat(
+        public void SetFloatAttribute(
             int index,
             int componentCount,
             BufferObject buffer,
@@ -57,9 +55,9 @@ namespace ZigZag.OpenGL
             int strideInBytes = 0,
             int offsetInBufferInBytes = 0)
         {
-            if (buffer is null || buffer.Target != BufferTarget.ArrayBuffer)
+            if (buffer.Target != BufferTarget.ArrayBuffer)
             {
-                throw new ArgumentException("Invalid buffer.");
+                throw new ArgumentException("Invalid buffer target.");
             }
             Bind();
             buffer.Bind();
@@ -75,9 +73,9 @@ namespace ZigZag.OpenGL
             int strideInBytes = 0,
             int offsetInBufferInBytes = 0)
         {
-            if (buffer is null || buffer.Target != BufferTarget.ArrayBuffer)
+            if (buffer.Target != BufferTarget.ArrayBuffer)
             {
-                throw new ArgumentException("Invalid buffer.");
+                throw new ArgumentException("Invalid buffer target.");
             }
             Bind();
             buffer.Bind();
@@ -85,7 +83,16 @@ namespace ZigZag.OpenGL
             GL.EnableVertexAttribArray(index);
         }
 
-        private int m_vertexArray;
-        private bool m_released = false;
+        public void SetIndexBuffer(BufferObject buffer)
+        {
+            if (buffer.Target != BufferTarget.ElementArrayBuffer)
+            {
+                throw new ArgumentException("Invalid buffer target.");
+            }
+            Bind();
+            buffer.Bind();
+        }
+
+        private int m_vertexArray = 0;
     }
 }

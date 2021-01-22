@@ -13,6 +13,13 @@ namespace ZigZag.OpenGL
         {
             Target = target;
             Usage = usage;
+
+            m_buffer = GL.GenBuffer();
+
+            if (m_buffer == 0)
+            {
+                throw new Exception("Failed to create buffer object.");
+            }
         }
 
         public BufferTarget Target
@@ -27,33 +34,21 @@ namespace ZigZag.OpenGL
 
         public void Bind()
         {
-            if (m_released)
-            {
-                throw new Exception("Buffer object has been released");
-            }
             if (m_buffer == 0)
             {
-                m_buffer = GL.GenBuffer();
-            }
-            if (m_buffer == 0)
-            {
-                throw new Exception("Failed to create buffer object");
+                throw new Exception("Buffer object was not succesfully allocated, or has already been released.");
             }
             GL.BindBuffer(Target, m_buffer);
         }
 
         public void Release()
         {
-            if (m_released)
+            if (m_buffer == 0)
             {
-                throw new Exception("Buffer object has been released already");
+                throw new Exception("Buffer object was not succesfully allocated, or has already been released.");
             }
-            if (m_buffer != 0)
-            {
-                GL.DeleteBuffer(m_buffer);
-                m_buffer = 0;
-                m_released = true;
-            }
+            GL.DeleteBuffer(m_buffer);
+            m_buffer = 0;
         }
 
         public void Allocate(int sizeInBytes)
@@ -79,8 +74,38 @@ namespace ZigZag.OpenGL
             }
         }
 
+        public void SetData<T>(IntPtr address, int valueCount) where T : struct
+        {
+            Bind();
+            int totalSize = valueCount * Marshal.SizeOf(typeof(T));
+
+            if (m_bufferSizeBytes < totalSize)
+            {
+                GL.BufferData(Target, totalSize, address, Usage);
+                m_bufferSizeBytes = totalSize;
+            }
+            else
+            {
+                GL.BufferSubData(Target, IntPtr.Zero, totalSize, address);
+            }
+        }
+
+        public void SetData(IntPtr address, int sizeInBytes)
+        {
+            Bind();
+
+            if (m_bufferSizeBytes < sizeInBytes)
+            {
+                GL.BufferData(Target, sizeInBytes, address, Usage);
+                m_bufferSizeBytes = sizeInBytes;
+            }
+            else
+            {
+                GL.BufferSubData(Target, IntPtr.Zero, sizeInBytes, address);
+            }
+        }
+
         private int m_buffer = 0;
         private int m_bufferSizeBytes = 0;
-        private bool m_released = false;
     }
 }
