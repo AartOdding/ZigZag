@@ -56,9 +56,9 @@ namespace ZigZag.SceneGraph
         public Geometry Build()
         {
             return new Geometry(
-                m_vertices.ToImmutableArray(),
-                m_indices.ToImmutableArray(),
-                m_vertexCounts.ToImmutableArray());
+                m_vertices,
+                m_indices,
+                m_vertexCounts);
         }
 
         private void AddRectangleFilled(Rectangle rect)
@@ -71,7 +71,7 @@ namespace ZigZag.SceneGraph
             var br = AddVertex(rect.BottomRight(), color);
             AddTriangleFromIndices(tl, tr, bl);
             AddTriangleFromIndices(tr, br, bl);
-            m_vertexCounts.Add(m_vertices.Count - startCount);
+            m_vertexCounts.Add((uint)(m_vertices.Count - startCount));
         }
 
         private void AddRectangleOutline(Rectangle rect)
@@ -95,13 +95,13 @@ namespace ZigZag.SceneGraph
 
             for (int i = 1; i < segments; ++i)
             {
-                var vcurr = AddVertex(new Vector2(cos[i] * widthOverTwo, sin[i] * heightOverTwo), color);
+                var vcurr = AddVertex(new Vector2(cos[i] * widthOverTwo + centre.X, sin[i] * heightOverTwo + centre.Y), color);
                 AddTriangleFromIndices(vcentre, vprev, vcurr);
                 vprev = vcurr;
             }
             AddTriangleFromIndices(vcentre, vprev, vtop);
 
-            m_vertexCounts.Add(m_vertices.Count - startCount);
+            m_vertexCounts.Add((uint)(m_vertices.Count - startCount));
         }
 
         private void AddEllipseOutline(Vector2 centre, float width, float height)
@@ -109,13 +109,13 @@ namespace ZigZag.SceneGraph
             throw new NotImplementedException();
         }
 
-        private int AddVertex(Vector2 pos, uint color)
+        private uint AddVertex(Vector2 pos, uint color)
         {
             m_vertices.Add(new Vertex2(pos, color));
-            return m_vertices.Count - 1;
+            return (uint)(m_vertices.Count - 1);
         }
 
-        private void AddTriangleFromIndices(int a, int b, int c)
+        private void AddTriangleFromIndices(uint a, uint b, uint c)
         {
             m_indices.Add(a);
             m_indices.Add(b);
@@ -123,7 +123,7 @@ namespace ZigZag.SceneGraph
         }
 
         private readonly List<Vertex2> m_vertices = new List<Vertex2>();
-        private readonly List<int> m_indices = new List<int>();
-        private readonly List<int> m_vertexCounts = new List<int>();
+        private readonly List<uint> m_indices = new List<uint>();
+        private readonly List<uint> m_vertexCounts = new List<uint>();
     }
 }

@@ -10,6 +10,7 @@ using ZigZag.Core;
 using ZigZag.Editor.Ui.Windows;
 using ZigZag.Editor.Ui;
 using ZigZag.Runtime;
+using ZigZag.SceneGraph;
 
 
 namespace ZigZag.Editor
@@ -57,11 +58,16 @@ namespace ZigZag.Editor
             m_mainMenu.HierarchyWindow = m_hierarchyWindow;
             m_mainMenu.HistoryWindow = m_historyWindow;
 
-            ZigZag.SceneGraph.GeometryBuilder builder = new ZigZag.SceneGraph.GeometryBuilder();
-            builder.AddRectangle(new ZigZag.SceneGraph.Math.Rectangle(10, 10, 30, 30));
-            builder.AddEllipse(new ZigZag.SceneGraph.Math.Vector2(20, 20), 10, 10);
-            var geom = builder.Build();
+            GeometryBuilder builder = new GeometryBuilder();
+            builder.AddRectangle(new ZigZag.SceneGraph.Math.Rectangle(50, 50, 200, 200));
+            builder.AddEllipse(new ZigZag.SceneGraph.Math.Vector2(300, 300), 150, 150);
+            m_geometry = builder.Build();
+            m_drawer = new SceneGraph.GeometryDrawer();
+            m_drawer.AddGeometry(1, ref m_geometry, 500);
         }
+
+        Geometry m_geometry;
+        SceneGraph.GeometryDrawer m_drawer;
 
         public void CloseEditor()
         {
@@ -117,6 +123,8 @@ namespace ZigZag.Editor
 
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
+
+            m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
             m_nativeWindow.Context.SwapBuffers();
         }

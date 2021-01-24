@@ -63,6 +63,55 @@ namespace ZigZag.Editor.Resources {
         /// <summary>
         ///   Looks up a localized string similar to #version 330 core
         ///
+        ///in vec4 color;
+        ///
+        ///out vec4 fragment_color;
+        ///
+        ///void main()
+        ///{
+        ///    fragment_color = color;
+        ///}
+        ///.
+        /// </summary>
+        internal static string GeometryFragmentShaderSource {
+            get {
+                return ResourceManager.GetString("GeometryFragmentShaderSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #version 330 core
+        ///
+        ///layout(location = 0) in vec3 pos_in;
+        ///layout(location = 1) in vec4 color_in;
+        ///
+        ///out vec4 color;
+        ///
+        ///uniform vec2 viewport_min;
+        ///uniform vec2 viewport_max;
+        ///
+        ///vec2 map(vec2 value, vec2 fromMin, vec2 fromMax, vec2 toMin, vec2 toMax)
+        ///{
+        ///  return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
+        ///}
+        ///
+        ///void main()
+        ///{
+        ///    vec2 pos = map(pos_in.xy, viewport_min, viewport_max, vec2(-1, 1), vec2(1, -1));
+        ///    gl_Position = vec4(pos, pos_in.z, 1.0);
+        ///    color = color_in;
+        ///}
+        ///.
+        /// </summary>
+        internal static string GeometryVertexShaderSource {
+            get {
+                return ResourceManager.GetString("GeometryVertexShaderSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #version 330 core
+        ///
         ///uniform sampler2D active_texture;
         ///
         ///in vec2 uv;
@@ -72,8 +121,6 @@ namespace ZigZag.Editor.Resources {
         ///
         ///void main()
         ///{
-        ///    //fragment_color = texture(active_texture, uv);
-        ///    //color *
         ///    fragment_color = color * texture(active_texture, uv);
         ///}
         ///.
@@ -105,8 +152,7 @@ namespace ZigZag.Editor.Resources {
         ///void main(void)
         ///{
         ///    vec2 pos = map(pos_in, viewport_min, viewport_max, vec2(-1, 1), vec2(1, -1));
-        ///    gl_Position = vec4(pos, 0.0, 1.0);
-        ///   [rest of string was truncated]&quot;;.
+        ///    gl_Position = vec [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ImGuiVertexShaderSource {
             get {

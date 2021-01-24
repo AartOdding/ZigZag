@@ -20,9 +20,9 @@ namespace ZigZag.Editor
             m_indexBuffer = new BufferObject(BufferTarget.ElementArrayBuffer, BufferUsageHint.StreamDraw);
 
             m_vertexArray = new VertexArrayObject();
-            m_vertexArray.SetFloatAttribute(0, 2, m_vertexBuffer, VertexAttribPointerType.Float, 20, 0);
-            m_vertexArray.SetFloatAttribute(1, 2, m_vertexBuffer, VertexAttribPointerType.Float, 20, 8);
-            m_vertexArray.SetFloatAttribute(2, 4, m_vertexBuffer, VertexAttribPointerType.UnsignedByte, true, 20, 16);
+            m_vertexArray.SetAttribute(0, 2, AttributeMapping.FloatToFloat, m_vertexBuffer, 20, 0);
+            m_vertexArray.SetAttribute(1, 2, AttributeMapping.FloatToFloat, m_vertexBuffer, 20, 8);
+            m_vertexArray.SetAttribute(2, 4, AttributeMapping.UInt8ToFloatNormalized, m_vertexBuffer, 20, 16);
             m_vertexArray.SetIndexBuffer(m_indexBuffer);
         }
 

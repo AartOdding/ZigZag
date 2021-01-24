@@ -5,54 +5,65 @@ using System.Text;
 using System.Threading.Tasks;
 using ZigZag.SceneGraph;
 using ZigZag.SceneGraph.Math;
+using ZigZag.OpenGL;
 using OpenTK.Graphics.OpenGL;
 
 
 namespace ZigZag.Editor.SceneGraph
 {
-    class GeometryDrawData : IDisposable
+    class GeometryDrawData
     {
-        public GeometryDrawData(ref Geometry geometry, int zStart)
+        public GeometryDrawData(ref Geometry geometry, uint zStart)
         {
-            m_geometry = geometry;
-            m_vertexArray = GL.GenVertexArray();
-            m_vertexBuffer = GL.GenBuffer();
-            m_indexBuffer = GL.GenBuffer();
-            m_vertexDepthBuffer = GL.GenBuffer();
-        }
+            m_vertexArray = new VertexArrayObject();
+            m_vertexBuffer = new BufferObject(BufferTarget.ArrayBuffer);
+            m_indexBuffer = new BufferObject(BufferTarget.ElementArrayBuffer);
+            /*
+            List<Vertex3> vertices = new List<Vertex3>(geometry.Vertices.Count);
 
-        private Geometry m_geometry;
-        private int m_vertexArray;
-        private int m_vertexBuffer;
-        private int m_indexBuffer;
-        private int m_vertexDepthBuffer;
-
-        private bool disposedValue;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
+            if (geometry.VertexCounts.Count > 0)
             {
-                if (disposing)
+                uint currentGroup = 0;
+                uint groupEnd = geometry.VertexCounts[0];
+
+                for (int i = 0; i < geometry.Vertices.Count; ++i)
                 {
-                    // TODO: dispose managed state (managed objects)
+                    if (i >= groupEnd)
+                    {
+                        // increment groupEnd with the size of the new current group
+                        groupEnd += geometry.VertexCounts[(int)++currentGroup];
+                    }
+                    vertices.Add(new Vertex3(geometry.Vertices[i], zStart + currentGroup));
                 }
+            }*/
 
-                // TODO: free unmanaged resources (unmanaged objects) and override finalizer
-                // TODO: set large fields to null
-                disposedValue = true;
-            }
+            m_vertexBuffer.SetData(ref geometry.FirstVertex, geometry.Vertices.Count);
+            m_indexBuffer.SetData(ref geometry.FirstIndex, geometry.Indices.Count);
+            m_vertexArray.SetAttribute(0, 2, AttributeMapping.FloatToFloat, m_vertexBuffer, 12, 0);
+            m_vertexArray.SetAttribute(1, 4, AttributeMapping.UInt8ToFloatNormalized, m_vertexBuffer, 12, 8);
+            m_vertexArray.SetIndexBuffer(m_indexBuffer);
+
+            VertexCount = geometry.Vertices.Count;
+            IndexCount = geometry.Indices.Count;
         }
 
-        ~GeometryDrawData()
+        public void Bind()
         {
-            Dispose(false);
+            m_vertexArray.Bind();
         }
 
-        public void Dispose()
+        public void Release()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            m_vertexArray.Release();
+            m_vertexBuffer.Release();
+            m_indexBuffer.Release();
         }
+
+        public int VertexCount { get; }
+        public int IndexCount { get; }
+
+        private VertexArrayObject m_vertexArray;
+        private BufferObject m_vertexBuffer;
+        private BufferObject m_indexBuffer;
     }
 }

@@ -35,23 +35,11 @@ namespace ZigZag.OpenGL
             m_vertexArray = 0;
         }
 
-        public void SetFloatAttribute(
+        public void SetAttribute(
             int index,
             int componentCount,
+            AttributeMapping mapping,
             BufferObject buffer,
-            VertexAttribPointerType bufferDataType,
-            int strideInBytes = 0,
-            int offsetInBufferInBytes = 0)
-        {
-            SetFloatAttribute(index, componentCount, buffer, bufferDataType, false, strideInBytes, offsetInBufferInBytes);
-        }
-
-        public void SetFloatAttribute(
-            int index,
-            int componentCount,
-            BufferObject buffer,
-            VertexAttribPointerType bufferDataType,
-            bool normalize = false,
             int strideInBytes = 0,
             int offsetInBufferInBytes = 0)
         {
@@ -59,27 +47,18 @@ namespace ZigZag.OpenGL
             {
                 throw new ArgumentException("Invalid buffer target.");
             }
-            Bind();
-            buffer.Bind();
-            GL.VertexAttribPointer(index, componentCount, bufferDataType, normalize, strideInBytes, offsetInBufferInBytes);
-            GL.EnableVertexAttribArray(index);
-        }
 
-        public void AttributeInt(
-            int index,
-            int componentCount,
-            BufferObject buffer,
-            VertexAttribIntegerType bufferDataType,
-            int strideInBytes = 0,
-            int offsetInBufferInBytes = 0)
-        {
-            if (buffer.Target != BufferTarget.ArrayBuffer)
-            {
-                throw new ArgumentException("Invalid buffer target.");
-            }
             Bind();
             buffer.Bind();
-            GL.VertexAttribIPointer(index, componentCount, bufferDataType, strideInBytes, (IntPtr)offsetInBufferInBytes);
+
+            if (mapping.IsTargetFloat())
+            {
+                GL.VertexAttribPointer(index, componentCount, mapping.GetVertexAttribPointerType(), mapping.IsNormalized(), strideInBytes, offsetInBufferInBytes);
+            }
+            else
+            {
+                GL.VertexAttribIPointer(index, componentCount, mapping.GetVertexAttribIntegerType(), strideInBytes, (IntPtr)offsetInBufferInBytes);
+            }
             GL.EnableVertexAttribArray(index);
         }
 
