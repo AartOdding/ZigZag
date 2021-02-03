@@ -29,7 +29,8 @@ namespace ZigZag.Editor
             {
                 Size = new OpenTK.Mathematics.Vector2i(800, 600),
                 Title = "ZigZag Editor",
-                AutoLoadBindings = true
+                AutoLoadBindings = true,
+                NumberOfSamples = 8
             };
 
             m_nativeWindow = new NativeWindow(nativeWindowSettings);
