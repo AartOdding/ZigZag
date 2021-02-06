@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ZigZag.SceneGraph
 {
-    public readonly struct Text
+    public class Scene
     {
+
 
     }
 }

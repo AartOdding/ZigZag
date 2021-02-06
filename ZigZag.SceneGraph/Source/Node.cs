@@ -4,37 +4,25 @@ using ZigZag.SceneGraph.Math;
 
 namespace ZigZag.SceneGraph
 {
-    public class Node
+    public class Node : TreeNode<Node>
     {
-        public Node() { }
-
-        public Node(Node parent)
+        public Node()
         {
-            Parent = parent;
+            
         }
 
-        public Node Parent
+        public Node(Node parent) : base(parent)
         {
-            get
-            {
-                return m_parent;
-            }
-            set
-            {
-                if (m_parent is not null)
-                {
-                    m_parent.m_children.Remove(this);
-                }
-                m_parent = value;
-
-                if (m_parent is not null)
-                {
-                    m_parent.m_children.Add(this);
-                }
-            }
+            
         }
 
         public Vector2 Position
+        {
+            get;
+            set;
+        }
+
+        public Rectangle BoundingBox
         {
             get;
             set;
@@ -45,8 +33,5 @@ namespace ZigZag.SceneGraph
             get;
             set;
         }
-
-        private Node m_parent;
-        private readonly List<Node> m_children = new List<Node>();
     }
 }

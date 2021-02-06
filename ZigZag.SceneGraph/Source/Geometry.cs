@@ -16,21 +16,21 @@ namespace ZigZag.SceneGraph
             m_vertexCounts = vertexCounts.ToArray();
         }
 
-        public IReadOnlyList<Vertex2> Vertices
+        public readonly IReadOnlyList<Vertex2> Vertices
         {
             get
             {
                 return m_vertices;
             }
         }
-        public IReadOnlyList<uint> Indices
+        public readonly IReadOnlyList<uint> Indices
         {
             get
             {
                 return m_indices;
             }
         }
-        public IReadOnlyList<uint> VertexCounts
+        public readonly IReadOnlyList<uint> VertexCounts
         {
             get
             {
