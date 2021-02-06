@@ -37,6 +37,18 @@ namespace ZigZag.Editor.Ui
             set;
         }
 
+        public Vector2 ContentPos
+        {
+            get;
+            private set;
+        }
+
+        public Vector2 ContentSize
+        {
+            get;
+            private set;
+        }
+
         public void Draw(Style style)
         {
             bool wantsToStayOpen = true;
@@ -61,6 +73,9 @@ namespace ZigZag.Editor.Ui
                 {
                     IsOpen = false;
                 }
+
+                ContentPos = windowMin + new Vector2(padding + 3, 3);
+                ContentSize = (windowMax - new Vector2(padding + 3, padding + 3) - new Vector2(padding + 3, 3)) - windowMin;
             }
 
             HasFocus = ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);

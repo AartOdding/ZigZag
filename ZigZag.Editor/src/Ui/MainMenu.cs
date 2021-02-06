@@ -15,6 +15,12 @@ namespace ZigZag.Editor.Ui
             set;
         }
 
+        public Windows.NodeGraphWindow NodeGraphWindow
+        {
+            get;
+            set;
+        }
+
         public Windows.HierarchyWindow HierarchyWindow
         {
             get;
@@ -52,6 +58,7 @@ namespace ZigZag.Editor.Ui
             }
             if (ImGui.BeginMenu("View"))
             {
+                WindowMenuItem("Node Graph", NodeGraphWindow);
                 WindowMenuItem("Node Hierarchy", HierarchyWindow);
                 WindowMenuItem("History", HistoryWindow);
                 ImGui.EndMenu();

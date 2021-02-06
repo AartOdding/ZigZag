@@ -56,8 +56,10 @@ namespace ZigZag.Editor
             m_mainMenu = new MainMenu();
             m_hierarchyWindow = new HierarchyWindow("Hierarchy");
             m_historyWindow = new HistoryWindow("History");
+            m_nodeGraphWindow = new NodeGraphWindow("Node Graph");
             m_mainMenu.HierarchyWindow = m_hierarchyWindow;
             m_mainMenu.HistoryWindow = m_historyWindow;
+            m_mainMenu.NodeGraphWindow = m_nodeGraphWindow;
 
             GeometryBuilder builder = new GeometryBuilder();
             builder.AddRectangle(new ZigZag.SceneGraph.Math.Rectangle(50, 50, 200, 200));
@@ -116,6 +118,7 @@ namespace ZigZag.Editor
 
             if (m_hierarchyWindow.IsOpen) m_hierarchyWindow.Draw(activeStyle);
             if (m_historyWindow.IsOpen) m_historyWindow.Draw(activeStyle);
+            if (m_nodeGraphWindow.IsOpen) m_nodeGraphWindow.Draw(activeStyle);
 
             ImGui.ShowDemoWindow();
             
@@ -125,7 +128,7 @@ namespace ZigZag.Editor
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
-            m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
+            //m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
             m_nativeWindow.Context.SwapBuffers();
         }
@@ -144,6 +147,7 @@ namespace ZigZag.Editor
         private MainMenu m_mainMenu;
         private HierarchyWindow m_hierarchyWindow;
         private HistoryWindow m_historyWindow;
+        private NodeGraphWindow m_nodeGraphWindow;
 
         // Very hacky: 
         // 1 << 14 is the bit flag ImGuiDockNodeFlags_NoWindowMenuButton

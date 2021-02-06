@@ -21,6 +21,10 @@ namespace ZigZag.SceneGraph
 
         public void AddChild(T child)
         {
+            if (child is null)
+            {
+                throw new ArgumentNullException("Child was null.");
+            }
             if (child.m_parent is not null)
             {
                 throw new Exception("Child already has a parent.");
