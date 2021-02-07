@@ -1,9 +1,12 @@
 ﻿
 
-namespace ZigZag.SceneGraph.Math
+namespace ZigZag.Math
 {
     public readonly struct Vector2
     {
+        public readonly float X;
+        public readonly float Y;
+
         public Vector2(float x, float y)
         {
             X = x;
@@ -45,12 +48,9 @@ namespace ZigZag.SceneGraph.Math
             return new Vector2(X + dx, Y);
         }
 
-        public Vector2 AddY(float dx)
+        public Vector2 AddY(float dy)
         {
-            return new Vector2(X + dx, Y);
+            return new Vector2(X, Y + dy);
         }
-
-        public readonly float X;
-        public readonly float Y;
     }
 }

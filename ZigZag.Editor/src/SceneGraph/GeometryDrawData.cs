@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZigZag.SceneGraph;
-using ZigZag.SceneGraph.Math;
+using ZigZag.Math;
 using ZigZag.OpenGL;
 using OpenTK.Graphics.OpenGL;
 

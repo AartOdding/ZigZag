@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ZigZag.SceneGraph.Math
+namespace ZigZag.Math
 {
     public readonly struct Color
     {

@@ -1,30 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ZigZag.SceneGraph.Math
+
+namespace ZigZag.Math
 {
     public readonly struct Rectangle
     {
-        public Rectangle(float x, float y, float width, float height)
-        {
-            X = x;
-            Y = y;
-            Width = width;
-            Height = height;
-
-            if (Width < 0 || Height < 0)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-        }
-
         public readonly float X;
         public readonly float Y;
         public readonly float Width;
         public readonly float Height;
+
+        public Rectangle(float x, float y, float width, float height)
+        {
+            if (width < 0 || height < 0)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
 
         public bool Contains(Vector2 point)
         {

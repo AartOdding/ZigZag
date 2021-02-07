@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 using ZigZag.SceneGraph;
-using ZigZag.SceneGraph.Math;
+using ZigZag.Math;
 
 
 namespace ZigZag.Editor.Ui.Windows

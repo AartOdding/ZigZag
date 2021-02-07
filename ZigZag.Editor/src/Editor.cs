@@ -104,8 +104,8 @@ namespace ZigZag.Editor
             m_mainMenu.NodeGraphWindow = m_nodeGraphWindow;
 
             GeometryBuilder builder = new GeometryBuilder();
-            builder.AddRectangle(new ZigZag.SceneGraph.Math.Rectangle(50, 50, 200, 200));
-            builder.AddEllipse(new ZigZag.SceneGraph.Math.Vector2(300, 300), 150, 150);
+            builder.AddRectangle(new Math.Rectangle(50, 50, 200, 200));
+            builder.AddEllipse(new Math.Vector2(300, 300), 150, 150);
             m_geometry = builder.Build();
             m_drawer = new SceneGraph.GeometryDrawer();
             m_drawer.AddGeometry(1, ref m_geometry, 500);
