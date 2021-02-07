@@ -5,6 +5,7 @@ using System.Numerics;
 using OpenTK.Windowing.Desktop;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Windowing.Common;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using ZigZag.Core;
 using ZigZag.Editor.Ui.Windows;
@@ -36,6 +37,47 @@ namespace ZigZag.Editor
             m_nativeWindow = new NativeWindow(nativeWindowSettings);
             m_nativeWindow.Context.MakeCurrent();
             GLFW.SwapInterval(1);
+
+            m_nativeWindow.MouseDown += args =>
+            {
+                Console.WriteLine($"Pressed: {args.Button}");
+
+                switch (args.Button)
+                {
+                    case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
+                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Left, true);
+                        break;
+                    case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
+                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Middle, true);
+                        break;
+                    case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
+                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Right, true);
+                        break;
+                }
+            };
+
+            m_nativeWindow.MouseUp += args =>
+            {
+                Console.WriteLine($"Released: {args.Button}");
+
+                switch (args.Button)
+                {
+                    case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
+                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Left, false);
+                        break;
+                    case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
+                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Middle, false);
+                        break;
+                    case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
+                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Right, false);
+                        break;
+                }
+            };
+
+            m_nativeWindow.MouseMove += args =>
+            {
+                m_nodeGraphWindow.m_scene.SetMousePosition(args.X - m_nodeGraphWindow.ContentPos.X, args.Y - m_nodeGraphWindow.ContentPos.Y);
+            };
 
             m_imguiContext = ImGui.CreateContext();
             ImGui.SetCurrentContext(m_imguiContext);

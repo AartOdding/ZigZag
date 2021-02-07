@@ -26,6 +26,12 @@ namespace ZigZag.SceneGraph.Math
         public readonly float Width;
         public readonly float Height;
 
+        public bool Contains(Vector2 point)
+        {
+            return point.X >= X && point.X <= X + Width
+                && point.Y >= Y && point.Y <= Y + Height;
+        }
+
         public Vector2 TopLeft()
         {
             return new Vector2(X, Y);

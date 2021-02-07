@@ -14,8 +14,10 @@ namespace ZigZag.Editor.Ui.Windows
     {
         public NodeGraphWindow(string name) : base(name)
         {
+            m_scene = new Scene();
             m_rootNode = new Node();
             m_rootNode.BoundingBox = new Rectangle(0, 0, 300, 300);
+            m_scene.RootNode = m_rootNode;
 
             for (int i = 0; i < 5; ++i)
             {
@@ -49,5 +51,6 @@ namespace ZigZag.Editor.Ui.Windows
         }
 
         private Node m_rootNode;
+        internal Scene m_scene;
     }
 }
