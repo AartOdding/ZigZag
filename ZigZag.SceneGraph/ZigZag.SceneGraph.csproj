@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZigZag.Math\ZigZag.Math.csproj" />
+    <ProjectReference Include="..\ZigZag.Mathematics\ZigZag.Mathematics.csproj" />
   </ItemGroup>
 
 </Project>

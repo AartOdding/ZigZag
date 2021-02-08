@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using OpenTK.Windowing.Desktop;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
@@ -12,6 +11,7 @@ using ZigZag.Editor.Ui.Windows;
 using ZigZag.Editor.Ui;
 using ZigZag.Runtime;
 using ZigZag.SceneGraph;
+using ZigZag.Mathematics;
 
 
 namespace ZigZag.Editor
@@ -104,8 +104,8 @@ namespace ZigZag.Editor
             m_mainMenu.NodeGraphWindow = m_nodeGraphWindow;
 
             GeometryBuilder builder = new GeometryBuilder();
-            builder.AddRectangle(new Math.Rectangle(50, 50, 200, 200));
-            builder.AddEllipse(new Math.Vector2(300, 300), 150, 150);
+            builder.AddRectangle(new Mathematics.Rectangle(50, 50, 200, 200));
+            builder.AddEllipse(new Mathematics.Vector2(300, 300), 150, 150);
             m_geometry = builder.Build();
             m_drawer = new SceneGraph.GeometryDrawer();
             m_drawer.AddGeometry(1, ref m_geometry, 500);
@@ -153,8 +153,8 @@ namespace ZigZag.Editor
             {
                 Drawing.DrawVariableThicknessRectangle(ImGui.GetWindowDrawList(), mainWindowPos,
                     mainWindowPos + mainWindowSize, 5, 5, 5, 5, ((FlatStyle)ActiveStyle).ApplicationBackgroundColor);
-                ImGui.SetCursorPos(new Vector2(5, 5));
-                ImGui.DockSpace(123, mainWindowSize - new Vector2(10, 10), (ImGuiDockNodeFlags)dockNodeFlags);
+                ImGui.SetCursorPos(new System.Numerics.Vector2(5, 5));
+                ImGui.DockSpace(123, mainWindowSize - new System.Numerics.Vector2(10, 10), (ImGuiDockNodeFlags)dockNodeFlags);
             }
             ImGui.End();
 

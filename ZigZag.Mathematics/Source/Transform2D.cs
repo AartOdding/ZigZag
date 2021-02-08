@@ -1,6 +1,6 @@
 ﻿
 
-namespace ZigZag.Math
+namespace ZigZag.Mathematics
 {
     public readonly struct Transform2D
     {

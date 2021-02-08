@@ -1,7 +1,6 @@
-﻿using System;
+﻿
 
-
-namespace ZigZag.Math
+namespace ZigZag.Mathematics
 {
     public readonly struct Rectangle
     {
@@ -14,7 +13,7 @@ namespace ZigZag.Math
         {
             if (width < 0 || height < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new System.ArgumentOutOfRangeException();
             }
 
             X = x;

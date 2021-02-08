@@ -1,4 +1,4 @@
-﻿using ZigZag.Math;
+﻿using ZigZag.Mathematics;
 
 
 namespace ZigZag.SceneGraph

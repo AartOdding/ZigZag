@@ -1,5 +1,5 @@
-using System.Collections.Generic;
-using ZigZag.Math;
+﻿using System.Collections.Generic;
+using ZigZag.Mathematics;
 
 
 namespace ZigZag.SceneGraph
@@ -18,6 +18,12 @@ namespace ZigZag.SceneGraph
         public Node(Node parent) : base(parent)
         {
             
+        }
+
+        public Transform2D Transform
+        {
+            get;
+            set;
         }
 
         public Vector2 Position

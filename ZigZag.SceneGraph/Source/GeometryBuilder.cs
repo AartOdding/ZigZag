@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
 using System.Threading.Tasks;
-using ZigZag.Math;
+using ZigZag.Mathematics;
 
 
 namespace ZigZag.SceneGraph
