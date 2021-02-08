@@ -38,10 +38,22 @@ namespace ZigZag.SceneGraph
             set;
         }
 
+        // point given in local coordinates
         public virtual bool Contains(Vector2 point)
         {
-            return BoundingBox.Contains(point - Position);
+            return BoundingBox.Contains(point);
         }
+
+        protected virtual bool MousePressEvent(MousePressEvent e)
+        {
+            return false;
+        }
+
+        protected virtual void MouseDragEvent(MouseDragEvent e)
+        { }
+
+        protected virtual void MouseReleaseEvent(MouseReleaseEvent e)
+        { }
 
         public MousePressedDelegate OnMousePressed;
         public MouseDraggedDelegate OnMouseDragged;
