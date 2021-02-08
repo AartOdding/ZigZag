@@ -4,67 +4,73 @@ namespace ZigZag.Math
 {
     public readonly struct Vector3
     {
-        public readonly float X;
-        public readonly float Y;
-        public readonly float Z;
+        public float X
+        {
+            get
+            {
+                return m_value.X;
+            }
+        }
+        public float Y
+        {
+            get
+            {
+                return m_value.Y;
+            }
+        }
+        public float Z
+        {
+            get
+            {
+                return m_value.Z;
+            }
+        }
 
         public Vector3(float x, float y, float z)
         {
-            X = x;
-            Y = y;
-            Z = z;
+            m_value = new System.Numerics.Vector3(x, y, z);
         }
 
-        public Vector3(Vector2 vec)
+        public Vector3(Vector2 v)
         {
-            X = vec.X;
-            Y = vec.Y;
-            Z = 0;
+            m_value = new System.Numerics.Vector3(v.X, v.Y, 0);
         }
 
         public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
         {
-            return new Vector3(lhs.X + rhs.X, lhs.Y + rhs.Y, lhs.Z + rhs.Z);
+            return new Vector3(lhs.m_value + rhs.m_value);
         }
 
         public static Vector3 operator -(Vector3 lhs, Vector3 rhs)
         {
-            return new Vector3(lhs.X - rhs.X, lhs.Y - rhs.Y, lhs.Z - rhs.Z);
+            return new Vector3(lhs.m_value - rhs.m_value);
         }
 
         public static Vector3 operator *(Vector3 lhs, float rhs)
         {
-            return new Vector3(lhs.X * rhs, lhs.Y * rhs, lhs.Z * rhs);
+            return new Vector3(lhs.m_value * rhs);
         }
 
         public static Vector3 operator *(float lhs, Vector3 rhs)
         {
-            return new Vector3(lhs * rhs.X, lhs * rhs.Y, lhs * rhs.Z);
+            return new Vector3(lhs * rhs.m_value);
         }
 
         public static Vector3 operator /(Vector3 lhs, float rhs)
         {
-            return new Vector3(lhs.X / rhs, lhs.Y / rhs, lhs.Z / rhs);
+            return new Vector3(lhs.m_value / rhs);
         }
 
-        public Vector3 Add(float dx, float dy, float dz)
+        public override string ToString()
         {
-            return new Vector3(X + dx, Y + dy, Z + dz);
+            return $"({X}, {Y}, {Z})";
         }
 
-        public Vector3 AddX(float dx)
-        {
-            return new Vector3(X + dx, Y, Z);
-        }
+        internal readonly System.Numerics.Vector3 m_value;
 
-        public Vector3 AddY(float dy)
+        internal Vector3(System.Numerics.Vector3 value)
         {
-            return new Vector3(X, Y + dy, Z);
-        }
-
-        public Vector3 AddZ(float dz)
-        {
-            return new Vector3(X, Y, Z + dz);
+            m_value = value;
         }
     }
 }

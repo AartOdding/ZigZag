@@ -4,53 +4,61 @@ namespace ZigZag.Math
 {
     public readonly struct Vector2
     {
-        public readonly float X;
-        public readonly float Y;
+        public float X
+        {
+            get
+            {
+                return m_value.X;
+            }
+        }
+        public float Y
+        {
+            get
+            {
+                return m_value.Y;
+            }
+        }
 
         public Vector2(float x, float y)
         {
-            X = x;
-            Y = y;
+            m_value = new System.Numerics.Vector2(x, y);
         }
 
         public static Vector2 operator +(Vector2 lhs, Vector2 rhs)
         {
-            return new Vector2(lhs.X + rhs.X, lhs.Y + rhs.Y);
+            return new Vector2(lhs.m_value + rhs.m_value);
         }
 
         public static Vector2 operator -(Vector2 lhs, Vector2 rhs)
         {
-            return new Vector2(lhs.X - rhs.X, lhs.Y - rhs.Y);
+            return new Vector2(lhs.m_value - rhs.m_value);
         }
 
         public static Vector2 operator *(Vector2 lhs, float rhs)
         {
-            return new Vector2(lhs.X * rhs, lhs.Y * rhs);
+            return new Vector2(lhs.m_value * rhs);
         }
 
         public static Vector2 operator *(float lhs, Vector2 rhs)
         {
-            return new Vector2(lhs * rhs.X, lhs * rhs.Y);
+            return new Vector2(lhs * rhs.m_value);
         }
 
         public static Vector2 operator /(Vector2 lhs, float rhs)
         {
-            return new Vector2(lhs.X / rhs, lhs.Y / rhs);
+            return new Vector2(lhs.m_value / rhs);
         }
 
-        public Vector2 Add(float dx, float dy)
+        public override string ToString()
         {
-            return new Vector2(X + dx, Y + dy);
+            return $"({X}, {Y})";
         }
 
-        public Vector2 AddX(float dx)
-        {
-            return new Vector2(X + dx, Y);
-        }
+        internal readonly System.Numerics.Vector2 m_value;
 
-        public Vector2 AddY(float dy)
+        internal Vector2(System.Numerics.Vector2 value)
         {
-            return new Vector2(X, Y + dy);
+            m_value = value;
         }
     }
 }
