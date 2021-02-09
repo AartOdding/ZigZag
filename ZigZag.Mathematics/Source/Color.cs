@@ -35,12 +35,39 @@ namespace ZigZag.Mathematics
             return red | green | blue | alpha;
         }
 
+        public override bool Equals(object other)
+        {
+            if ((other == null) || !other.GetType().Equals(typeof(Color)))
+            {
+                return false;
+            }
+            else
+            {
+                return Equals((Color)other);
+            }
+        }
+
         public bool Equals(Color other)
         {
             return Red == other.Red
                 && Green == other.Green
                 && Blue == other.Blue
                 && Alpha == other.Alpha;
+        }
+
+        public override int GetHashCode()
+        {
+            return Tuple.Create(Red, Green, Blue, Alpha).GetHashCode();
+        }
+
+        public static bool operator ==(Color lhs, Color rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(Color lhs, Color rhs)
+        {
+            return !lhs.Equals(rhs);
         }
     }
 }

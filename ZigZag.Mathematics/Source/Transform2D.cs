@@ -84,9 +84,36 @@ namespace ZigZag.Mathematics
             return new Vector2(System.Numerics.Vector2.Transform(vector.m_value, transform.m_value));
         }
 
+        public override bool Equals(object other)
+        {
+            if ((other == null) || !other.GetType().Equals(typeof(Transform2D)))
+            {
+                return false;
+            }
+            else
+            {
+                return m_value.Equals(((Transform2D)other).m_value);
+            }
+        }
+
         public bool Equals(Transform2D other)
         {
-            return m_value == other.m_value;
+            return m_value.Equals(other.m_value);
+        }
+
+        public override int GetHashCode()
+        {
+            return m_value.GetHashCode();
+        }
+
+        public static bool operator ==(Transform2D lhs, Transform2D rhs)
+        {
+            return lhs.m_value.Equals(rhs.m_value);
+        }
+
+        public static bool operator !=(Transform2D lhs, Transform2D rhs)
+        {
+            return !lhs.m_value.Equals(rhs.m_value);
         }
 
         internal Transform2D(System.Numerics.Matrix3x2 value)

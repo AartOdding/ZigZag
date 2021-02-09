@@ -62,14 +62,41 @@ namespace ZigZag.Mathematics
             return new Vector3(lhs.m_value / rhs);
         }
 
+        public override bool Equals(object other)
+        {
+            if ((other == null) || !other.GetType().Equals(typeof(Vector3)))
+            {
+                return false;
+            }
+            else
+            {
+                return m_value.Equals(((Vector3)other).m_value);
+            }
+        }
+
         public bool Equals(Vector3 other)
         {
             return m_value == other.m_value;
         }
 
+        public override int GetHashCode()
+        {
+            return m_value.GetHashCode();
+        }
+
         public override string ToString()
         {
-            return $"({X}, {Y}, {Z})";
+            return $"ZigZag.Mathematics.Vector3 ({X}, {Y}, {Z})";
+        }
+
+        public static bool operator ==(Vector3 lhs, Vector3 rhs)
+        {
+            return lhs.m_value.Equals(rhs.m_value);
+        }
+
+        public static bool operator !=(Vector3 lhs, Vector3 rhs)
+        {
+            return !lhs.m_value.Equals(rhs.m_value);
         }
 
         internal Vector3(System.Numerics.Vector3 value)

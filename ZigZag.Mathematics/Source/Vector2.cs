@@ -50,14 +50,41 @@ namespace ZigZag.Mathematics
             return new Vector2(lhs.m_value / rhs);
         }
 
+        public override bool Equals(object other)
+        {
+            if ((other == null) || !other.GetType().Equals(typeof(Vector2)))
+            {
+                return false;
+            }
+            else
+            {
+                return m_value.Equals(((Vector2)other).m_value);
+            }
+        }
+
         public bool Equals(Vector2 other)
         {
             return m_value == other.m_value;
         }
 
+        public override int GetHashCode()
+        {
+            return m_value.GetHashCode();
+        }
+
         public override string ToString()
         {
-            return $"({X}, {Y})";
+            return $"ZigZag.Mathematics.Vector2 ({X}, {Y})";
+        }
+
+        public static bool operator ==(Vector2 lhs, Vector2 rhs)
+        {
+            return lhs.m_value.Equals(rhs.m_value);
+        }
+
+        public static bool operator !=(Vector2 lhs, Vector2 rhs)
+        {
+            return !lhs.m_value.Equals(rhs.m_value);
         }
 
         internal Vector2(System.Numerics.Vector2 value)

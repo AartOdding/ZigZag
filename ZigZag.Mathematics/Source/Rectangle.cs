@@ -54,12 +54,39 @@ namespace ZigZag.Mathematics
             return new Vector2(X + 0.5f * Width, Y + 0.5f * Height);
         }
 
+        public override bool Equals(object other)
+        {
+            if ((other == null) || !other.GetType().Equals(typeof(Rectangle)))
+            {
+                return false;
+            }
+            else
+            {
+                return Equals((Rectangle)other);
+            }
+        }
+
         public bool Equals(Rectangle other)
         {
             return X == other.X
                 && Y == other.Y
                 && Width == other.Width
                 && Height == other.Height;
+        }
+
+        public override int GetHashCode()
+        {
+            return Tuple.Create(X, Y, Width, Height).GetHashCode();
+        }
+
+        public static bool operator ==(Rectangle lhs, Rectangle rhs)
+        {
+            return lhs.Equals(rhs);
+        }
+
+        public static bool operator !=(Rectangle lhs, Rectangle rhs)
+        {
+            return !lhs.Equals(rhs);
         }
     }
 }
