@@ -1,8 +1,9 @@
-﻿
+﻿using System;
+
 
 namespace ZigZag.Mathematics
 {
-    public readonly struct Rectangle
+    public readonly struct Rectangle : IEquatable<Rectangle>
     {
         public readonly float X;
         public readonly float Y;
@@ -13,7 +14,7 @@ namespace ZigZag.Mathematics
         {
             if (width < 0 || height < 0)
             {
-                throw new System.ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException();
             }
 
             X = x;
@@ -51,6 +52,14 @@ namespace ZigZag.Mathematics
         public Vector2 Centre()
         {
             return new Vector2(X + 0.5f * Width, Y + 0.5f * Height);
+        }
+
+        public bool Equals(Rectangle other)
+        {
+            return X == other.X
+                && Y == other.Y
+                && Width == other.Width
+                && Height == other.Height;
         }
     }
 }

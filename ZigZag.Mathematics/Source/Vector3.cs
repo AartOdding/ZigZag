@@ -1,8 +1,9 @@
-﻿
+﻿using System;
+
 
 namespace ZigZag.Mathematics
 {
-    public readonly struct Vector3
+    public readonly struct Vector3 : IEquatable<Vector3>
     {
         public float X
         {
@@ -61,16 +62,21 @@ namespace ZigZag.Mathematics
             return new Vector3(lhs.m_value / rhs);
         }
 
+        public bool Equals(Vector3 other)
+        {
+            return m_value == other.m_value;
+        }
+
         public override string ToString()
         {
             return $"({X}, {Y}, {Z})";
         }
 
-        internal readonly System.Numerics.Vector3 m_value;
-
         internal Vector3(System.Numerics.Vector3 value)
         {
             m_value = value;
         }
+
+        internal readonly System.Numerics.Vector3 m_value;
     }
 }

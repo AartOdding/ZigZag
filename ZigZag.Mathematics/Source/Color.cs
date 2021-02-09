@@ -1,8 +1,9 @@
-﻿
+﻿using System;
+
 
 namespace ZigZag.Mathematics
 {
-    public readonly struct Color
+    public readonly struct Color : IEquatable<Color>
     {
         public Color(float r, float g, float b, float a)
         {
@@ -32,6 +33,14 @@ namespace ZigZag.Mathematics
             uint alpha = (a & mask) << 24;
 
             return red | green | blue | alpha;
+        }
+
+        public bool Equals(Color other)
+        {
+            return Red == other.Red
+                && Green == other.Green
+                && Blue == other.Blue
+                && Alpha == other.Alpha;
         }
     }
 }

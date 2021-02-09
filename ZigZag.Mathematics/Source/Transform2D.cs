@@ -1,8 +1,9 @@
-﻿
+﻿using System;
+
 
 namespace ZigZag.Mathematics
 {
-    public readonly struct Transform2D
+    public readonly struct Transform2D : IEquatable<Transform2D>
     {
         public static Transform2D Identity = new Transform2D(System.Numerics.Matrix3x2.Identity);
 
@@ -81,6 +82,11 @@ namespace ZigZag.Mathematics
         public static Vector2 operator *(Transform2D transform, Vector2 vector)
         {
             return new Vector2(System.Numerics.Vector2.Transform(vector.m_value, transform.m_value));
+        }
+
+        public bool Equals(Transform2D other)
+        {
+            return m_value == other.m_value;
         }
 
         internal Transform2D(System.Numerics.Matrix3x2 value)
