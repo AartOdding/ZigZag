@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 namespace ZigZag.SceneGraph
 {
+    public delegate void TreeNodeVisitor<T>(T node);
+
     public class TreeNode<T> where T : TreeNode<T>
     {
         public TreeNode()
@@ -86,6 +88,16 @@ namespace ZigZag.SceneGraph
                 }
             }
             return parent is null;
+        }
+
+        public void Visit(TreeNodeVisitor<T> visitor)
+        {
+            visitor((T)this);
+
+            foreach (var child in m_children)
+            {
+                child.Visit(visitor);
+            }
         }
 
         private T m_parent;
