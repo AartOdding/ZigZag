@@ -35,6 +35,11 @@ namespace ZigZag.Editor.SceneGraph
                     drawData.Bind();
                     GL.DrawElements(PrimitiveType.Triangles, drawData.IndexCount, DrawElementsType.UnsignedInt, 0);
                 }
+
+                foreach (GeometryDrawData drawData in drawDatas)
+                {
+                    drawData.Release();
+                }
             }
         }
 
