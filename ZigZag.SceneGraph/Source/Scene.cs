@@ -18,6 +18,11 @@ namespace ZigZag.SceneGraph
 
         private Vector2 m_mousePos;
 
+        public void BeginNewFrame()
+        {
+            RootNode.Visit(node => node.ChangedThisFrame = false);
+        }
+
         public void SetMousePosition(float x, float y)
         {
             m_mousePos = new Vector2(x, y);

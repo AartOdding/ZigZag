@@ -61,6 +61,13 @@ namespace ZigZag.SceneGraph
                 m_vertexCounts);
         }
 
+        public void Clear()
+        {
+            m_vertices.Clear();
+            m_indices.Clear();
+            m_vertexCounts.Clear();
+        }
+
         private void AddRectangleFilled(Rectangle rect)
         {
             var startCount = m_vertices.Count;

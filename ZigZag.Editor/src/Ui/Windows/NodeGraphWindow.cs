@@ -15,26 +15,44 @@ namespace ZigZag.Editor.Ui.Windows
         public NodeGraphWindow(string name) : base(name)
         {
             m_scene = new Scene();
-            m_rootNode = new Node();
-            m_rootNode.BoundingBox = new Rectangle(0, 0, 300, 300);
+            m_renderer = new SceneGraph.SceneRenderer(m_scene);
+
+            GeometryBuilder builder = new GeometryBuilder();
+            builder.Color = new Mathematics.Color(0.5f, 0.5f, 1, 0.5f);
+            builder.AddRectangle(new Rectangle(0, 0, 500, 500));
+
+            m_rootNode = new GeometryNode(builder.Build());
+            m_rootNode.BoundingBox = new Rectangle(0, 0, 500, 500);
+            m_rootNode.Position = new Vector2(10, 10);
             m_scene.RootNode = m_rootNode;
+
+            builder.Clear();
 
             for (int i = 0; i < 5; ++i)
             {
-                var n = new Node();
-                m_rootNode.AddChild(n);
-                n.BoundingBox = new Rectangle(0, 0, 20, 20);
-                n.Position = new Vector2(i * 20, i * 20);
+                var b = new GeometryBuilder();
+                b.Color = new Mathematics.Color(1.0f, 0.5f, 0.5f, 0.5f);
+                b.AddEllipse(new Vector2(i*80, i*80), 80, 80);
+                var n = new GeometryNode(b.Build(), m_rootNode);
+                n.BoundingBox = new Rectangle(0, 0, 80, 80);
+                n.Position = new Vector2(i * 80, i * 80);
             }
         }
 
         protected override void DrawImplementation(Style style)
         {
-            float x = ContentPos.X;
-            float y = ContentPos.Y;
-            m_rootNode.BoundingBox = new Rectangle(0, 0, ContentSize.X, ContentSize.Y);
+            //float x = ContentPos.X;
+            //float y = ContentPos.Y;
+            //m_rootNode.BoundingBox = new Rectangle(0, 0, ContentSize.X, ContentSize.Y);
 
-            DrawNode(m_rootNode, ImGui.GetWindowDrawList(), x, y);
+            //m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y));
+
+            //DrawNode(m_rootNode, ImGui.GetWindowDrawList(), x, y);
+        }
+
+        public void Render()
+        {
+            m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y));
         }
 
         private void DrawNode(Node node, ImDrawListPtr drawList, float tx, float ty)
@@ -52,5 +70,6 @@ namespace ZigZag.Editor.Ui.Windows
 
         private Node m_rootNode;
         internal Scene m_scene;
+        private SceneGraph.SceneRenderer m_renderer;
     }
 }

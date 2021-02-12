@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4;
-using OpenTK.Mathematics;
+using ZigZag.Mathematics;
 
 
 namespace ZigZag.OpenGL
@@ -81,23 +81,23 @@ namespace ZigZag.OpenGL
             Use();
             GL.Uniform1(m_uniformLocations[name], data);
         }
-
+        /*
         public void SetMatrix4(string name, Matrix4 data)
         {
             Use();
             GL.UniformMatrix4(m_uniformLocations[name], true, ref data);
-        }
+        }*/
 
         public void SetVector3(string name, Vector3 data)
         {
             Use();
-            GL.Uniform3(m_uniformLocations[name], data);
+            GL.Uniform3(m_uniformLocations[name], data.X, data.Y, data.Z);
         }
 
         public void SetVector2(string name, Vector2 data)
         {
             Use();
-            GL.Uniform2(m_uniformLocations[name], data);
+            GL.Uniform2(m_uniformLocations[name], data.X, data.Y);
         }
 
         private static void CompileShader(int shader)

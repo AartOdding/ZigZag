@@ -12,24 +12,47 @@ namespace ZigZag.SceneGraph
     {
         public Node()
         {
-            
+            Position = new Vector2(0, 0);
+            Transform = Transform2D.Identity;
         }
 
         public Node(Node parent) : base(parent)
         {
-            
+            Position = new Vector2(0, 0);
+            Transform = Transform2D.Identity;
         }
 
-        public Transform2D Transform
+        public bool ChangedThisFrame
         {
             get;
-            set;
+            internal set;
         }
 
         public Vector2 Position
         {
-            get;
-            set;
+            get
+            {
+                return m_position;
+            }
+            set
+            {
+                ChangedThisFrame |= (m_position != value);
+                m_position = value; 
+            }
+        }
+
+        public Transform2D Transform
+        {
+            get
+            {
+                return m_transform;
+            }
+            set
+            {
+                ChangedThisFrame |= (m_transform != value);
+                m_transform = value;
+                m_transformIsIdentity = m_transform.IsIdentity;
+            }
         }
 
         public Rectangle BoundingBox
@@ -38,10 +61,22 @@ namespace ZigZag.SceneGraph
             set;
         }
 
-        public Geometry Geometry
+        public Vector2 FromParentSpace(Vector2 point)
         {
-            get;
-            set;
+            if (m_transformIsIdentity)
+            {
+                return point - Position;
+            }
+            else
+            {
+                return (Transform * point) - Position;
+            }
+        }
+
+        public Vector2 ToParentSpace(Vector2 point)
+        {
+            // needs inverse
+            throw new System.NotImplementedException();
         }
 
         // point given in local coordinates
@@ -64,5 +99,9 @@ namespace ZigZag.SceneGraph
         public MousePressedDelegate OnMousePressed;
         public MouseDraggedDelegate OnMouseDragged;
         public MouseReleasedDelegate OnMouseReleased;
+
+        private Vector2 m_position;
+        private Transform2D m_transform;
+        private bool m_transformIsIdentity;
     }
 }

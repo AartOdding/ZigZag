@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZigZag.SceneGraph;
 using ZigZag.OpenGL;
-using OpenTK.Mathematics;
+using ZigZag.Mathematics;
 using OpenTK.Graphics.OpenGL;
 
 
@@ -24,7 +24,7 @@ namespace ZigZag.Editor.SceneGraph
 
         public void AddGeometry(int id, ref Geometry geometry, uint z)
         {
-            m_drawData.Add(id, new GeometryDrawData(ref geometry, z));
+            m_drawData.Add(id, new GeometryDrawData(ref geometry));
         }
 
         public void Draw(int w, int h)

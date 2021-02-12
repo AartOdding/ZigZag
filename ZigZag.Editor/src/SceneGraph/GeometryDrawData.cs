@@ -13,7 +13,7 @@ namespace ZigZag.Editor.SceneGraph
 {
     class GeometryDrawData
     {
-        public GeometryDrawData(ref Geometry geometry, uint zStart)
+        public GeometryDrawData(ref Geometry geometry)
         {
             m_vertexArray = new VertexArrayObject();
             m_vertexBuffer = new BufferObject(BufferTarget.ArrayBuffer);

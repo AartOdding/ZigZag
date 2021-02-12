@@ -44,8 +44,8 @@ namespace ZigZag.Editor
             GL.ActiveTexture(TextureUnit.Texture0);
             GL.BindTexture(TextureTarget.Texture2D, m_fontsTextureHandle);
 
-            m_shader.SetVector2("viewport_min", new Vector2(0, 0));
-            m_shader.SetVector2("viewport_max", new Vector2(w, h));
+            m_shader.SetVector2("viewport_min", new Mathematics.Vector2(0, 0));
+            m_shader.SetVector2("viewport_max", new Mathematics.Vector2(w, h));
 
             m_vertexArray.Bind();
 

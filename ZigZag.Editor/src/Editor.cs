@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using OpenTK.Windowing.Desktop;
@@ -26,6 +26,15 @@ namespace ZigZag.Editor
 
         public void OpenEditor()
         {
+            Vector2 v1 = new Vector2(1, 0);
+            Transform2D t1 = Transform2D.CreateTranslation(10, 15);
+            Transform2D t2 = Transform2D.CreateScale(1.5f, 1.5f);
+            Transform2D t3 = Transform2D.CreateRotation(1.55f);
+
+            Console.WriteLine(t1 * v1);
+            Console.WriteLine(t2 * v1);
+            Console.WriteLine(t3 * v1);
+
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new OpenTK.Mathematics.Vector2i(800, 600),
@@ -170,7 +179,8 @@ namespace ZigZag.Editor
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
-            //m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
+            //m_nodeGraphWindow.Render();
+            m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
             m_nativeWindow.Context.SwapBuffers();
         }
