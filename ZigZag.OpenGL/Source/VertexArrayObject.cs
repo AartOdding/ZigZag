@@ -16,6 +16,11 @@ namespace ZigZag.OpenGL
             }
         }
 
+        static public void BindZero()
+        {
+            GL.BindVertexArray(0);
+        }
+
         public void Bind()
         {
             if (m_vertexArray == 0)

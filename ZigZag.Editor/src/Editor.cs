@@ -113,6 +113,7 @@ namespace ZigZag.Editor
             m_mainMenu.NodeGraphWindow = m_nodeGraphWindow;
 
             GeometryBuilder builder = new GeometryBuilder();
+            builder.Color = new Mathematics.Color(0.5f, 0.5f, 0, 0.5f);
             builder.AddRectangle(new Mathematics.Rectangle(50, 50, 200, 200));
             builder.AddEllipse(new Mathematics.Vector2(300, 300), 150, 150);
             m_geometry = builder.Build();
@@ -179,7 +180,7 @@ namespace ZigZag.Editor
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
-            //m_nodeGraphWindow.Render();
+            m_nodeGraphWindow.Render();
             m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
             m_nativeWindow.Context.SwapBuffers();

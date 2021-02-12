@@ -32,7 +32,7 @@ namespace ZigZag.Editor.Ui.Windows
             {
                 var b = new GeometryBuilder();
                 b.Color = new Mathematics.Color(1.0f, 0.5f, 0.5f, 0.5f);
-                b.AddEllipse(new Vector2(i*80, i*80), 80, 80);
+                b.AddEllipse(new Vector2(0, 0), 80, 80);
                 var n = new GeometryNode(b.Build(), m_rootNode);
                 n.BoundingBox = new Rectangle(0, 0, 80, 80);
                 n.Position = new Vector2(i * 80, i * 80);

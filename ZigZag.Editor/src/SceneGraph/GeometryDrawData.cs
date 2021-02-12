@@ -15,36 +15,22 @@ namespace ZigZag.Editor.SceneGraph
     {
         public GeometryDrawData(ref Geometry geometry)
         {
-            m_vertexArray = new VertexArrayObject();
+            VertexArrayObject.BindZero();
+
             m_vertexBuffer = new BufferObject(BufferTarget.ArrayBuffer);
             m_indexBuffer = new BufferObject(BufferTarget.ElementArrayBuffer);
-            /*
-            List<Vertex3> vertices = new List<Vertex3>(geometry.Vertices.Count);
-
-            if (geometry.VertexCounts.Count > 0)
-            {
-                uint currentGroup = 0;
-                uint groupEnd = geometry.VertexCounts[0];
-
-                for (int i = 0; i < geometry.Vertices.Count; ++i)
-                {
-                    if (i >= groupEnd)
-                    {
-                        // increment groupEnd with the size of the new current group
-                        groupEnd += geometry.VertexCounts[(int)++currentGroup];
-                    }
-                    vertices.Add(new Vertex3(geometry.Vertices[i], zStart + currentGroup));
-                }
-            }*/
-
             m_vertexBuffer.SetData(ref geometry.FirstVertex, geometry.Vertices.Count);
             m_indexBuffer.SetData(ref geometry.FirstIndex, geometry.Indices.Count);
+
+            VertexCount = geometry.Vertices.Count;
+            IndexCount = geometry.Indices.Count;
+
+            m_vertexArray = new VertexArrayObject();
             m_vertexArray.SetAttribute(0, 2, AttributeMapping.FloatToFloat, m_vertexBuffer, 12, 0);
             m_vertexArray.SetAttribute(1, 4, AttributeMapping.UInt8ToFloatNormalized, m_vertexBuffer, 12, 8);
             m_vertexArray.SetIndexBuffer(m_indexBuffer);
 
-            VertexCount = geometry.Vertices.Count;
-            IndexCount = geometry.Indices.Count;
+            VertexArrayObject.BindZero();
         }
 
         public void Bind()

@@ -97,7 +97,7 @@ namespace ZigZag.SceneGraph
             var cos = TrigTable.Cos(segments);
 
             var vcentre = AddVertex(centre, color);
-            var vtop = AddVertex(centre + new Vector2(0, height / 2), color);
+            var vtop = AddVertex(centre + new Vector2(heightOverTwo, 0), color);
             var vprev = vtop;
 
             for (int i = 1; i < segments; ++i)
