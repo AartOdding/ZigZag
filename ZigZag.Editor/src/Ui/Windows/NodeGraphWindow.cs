@@ -15,7 +15,7 @@ namespace ZigZag.Editor.Ui.Windows
         public NodeGraphWindow(string name) : base(name)
         {
             m_scene = new Scene();
-            m_renderer = new SceneGraph.SceneRenderer(m_scene);
+            m_renderer = new SceneGraph.SceneRenderer(m_scene, true);
 
             GeometryBuilder builder = new GeometryBuilder();
             builder.Color = new Mathematics.Color(0.5f, 0.5f, 1, 0.5f);

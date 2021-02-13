@@ -11,6 +11,7 @@ namespace ZigZag.Editor.Ui
             Name = name;
             HasFocus = false;
             IsDocked = false;
+            IsVisible = true;
             IsOpen = true;
         }
 
@@ -26,6 +27,12 @@ namespace ZigZag.Editor.Ui
         }
 
         public bool IsDocked
+        {
+            get;
+            private set;
+        }
+
+        public bool IsVisible
         {
             get;
             private set;
@@ -61,14 +68,14 @@ namespace ZigZag.Editor.Ui
                 var windowMax = ImGui.GetWindowPos() + ImGui.GetWindowContentRegionMax() + ImGui.GetStyle().WindowPadding;
                 var tabColor = HasFocus ? ((FlatStyle)style).OpenTabWithFocusColor : ((FlatStyle)style).OpenTabWithoutFocusColor;
 
-                Drawing.DrawVariableThicknessRectangle(ImGui.GetWindowDrawList(), 
+                Drawing.DrawVariableThicknessRectangle(ImGui.GetWindowDrawList(),
                     windowMin, windowMax, 0, padding, padding, padding, ((FlatStyle)style).ApplicationBackgroundColor);
 
                 Drawing.DrawVariableThicknessRectangle(ImGui.GetWindowDrawList(),
                     windowMin + new Vector2(padding, 0), windowMax - new Vector2(padding, padding), 3, 3, tabColor);
 
                 DrawImplementation(style);
-                
+
                 if (!wantsToStayOpen)
                 {
                     IsOpen = false;
@@ -76,6 +83,12 @@ namespace ZigZag.Editor.Ui
 
                 ContentPos = windowMin + new Vector2(padding + 3, 3);
                 ContentSize = (windowMax - new Vector2(padding + 3, padding + 3) - new Vector2(padding + 3, 3)) - windowMin;
+
+                IsVisible = true;
+            }
+            else
+            {
+                IsVisible = false;
             }
 
             HasFocus = ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);

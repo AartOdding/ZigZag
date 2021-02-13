@@ -9,19 +9,26 @@ namespace ZigZag.Editor.SceneGraph
 {
     class SceneRenderer
     {
-        public SceneRenderer(Scene scene)
+        public SceneRenderer(Scene scene, bool scissor)
         {
             m_shader = new Shader(
                 Resources.Shaders.GeometryVertexShaderSource,
                 Resources.Shaders.GeometryFragmentShaderSource);
 
             m_scene = scene;
+            m_scissor = scissor;
         }
 
         public void Render(Rectangle area, float windowWidth, float windowHeight)
         {
             if (m_scene.RootNode is not null)
             {
+                if (m_scissor)
+                {
+                    GL.Enable(EnableCap.ScissorTest);
+                    GL.Scissor((int)area.X, (int)(windowHeight - area.BottomLeft().Y), (int)area.Width, (int)area.Height);
+                }
+
                 List<GeometryDrawData> drawDatas = new List<GeometryDrawData>();
 
                 CreateDrawDataRecursive(m_scene.RootNode, drawDatas);
@@ -50,6 +57,11 @@ namespace ZigZag.Editor.SceneGraph
                 {
                     drawData.Release();
                 }
+
+                if (m_scissor)
+                {
+                    GL.Disable(EnableCap.ScissorTest);
+                }
             }
         }
 
@@ -67,5 +79,6 @@ namespace ZigZag.Editor.SceneGraph
 
         private readonly Shader m_shader;
         private readonly Scene m_scene;
+        private bool m_scissor;
     }
 }

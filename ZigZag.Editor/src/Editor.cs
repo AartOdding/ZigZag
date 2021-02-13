@@ -26,15 +26,6 @@ namespace ZigZag.Editor
 
         public void OpenEditor()
         {
-            Vector2 v1 = new Vector2(1, 0);
-            Transform2D t1 = Transform2D.CreateTranslation(10, 15);
-            Transform2D t2 = Transform2D.CreateScale(1.5f, 1.5f);
-            Transform2D t3 = Transform2D.CreateRotation(1.55f);
-
-            Console.WriteLine(t1 * v1);
-            Console.WriteLine(t2 * v1);
-            Console.WriteLine(t3 * v1);
-
             var nativeWindowSettings = new NativeWindowSettings()
             {
                 Size = new OpenTK.Mathematics.Vector2i(800, 600),
@@ -111,18 +102,7 @@ namespace ZigZag.Editor
             m_mainMenu.HierarchyWindow = m_hierarchyWindow;
             m_mainMenu.HistoryWindow = m_historyWindow;
             m_mainMenu.NodeGraphWindow = m_nodeGraphWindow;
-
-            GeometryBuilder builder = new GeometryBuilder();
-            builder.Color = new Mathematics.Color(0.5f, 0.5f, 0, 0.5f);
-            builder.AddRectangle(new Mathematics.Rectangle(50, 50, 200, 200));
-            builder.AddEllipse(new Mathematics.Vector2(300, 300), 150, 150);
-            m_geometry = builder.Build();
-            m_drawer = new SceneGraph.GeometryDrawer();
-            m_drawer.AddGeometry(1, ref m_geometry, 500);
         }
-
-        Geometry m_geometry;
-        SceneGraph.GeometryDrawer m_drawer;
 
         public void CloseEditor()
         {
@@ -180,8 +160,10 @@ namespace ZigZag.Editor
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
-            m_nodeGraphWindow.Render(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
-            m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
+            if (m_nodeGraphWindow.IsOpen && m_nodeGraphWindow.IsVisible)
+            {
+                m_nodeGraphWindow.Render(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
+            }
 
             m_nativeWindow.Context.SwapBuffers();
         }
