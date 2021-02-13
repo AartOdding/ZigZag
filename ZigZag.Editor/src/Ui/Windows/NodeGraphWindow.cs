@@ -21,20 +21,18 @@ namespace ZigZag.Editor.Ui.Windows
             builder.Color = new Mathematics.Color(0.5f, 0.5f, 1, 0.5f);
             builder.AddRectangle(new Rectangle(10, 10, 500, 500));
 
-            m_rootNode = new GeometryNode(builder.Build());
-            m_rootNode.BoundingBox = new Rectangle(0, 0, 500, 500);
-            m_rootNode.Position = new Vector2(10, 10);
+            m_rootNode = new GeometryNode();
+            m_rootNode.Geometry = builder.Build();
+            m_rootNode.Position = new Vector2(30, 30);
             m_scene.RootNode = m_rootNode;
-
-            builder.Clear();
 
             for (int i = 0; i < 5; ++i)
             {
                 var b = new GeometryBuilder();
                 b.Color = new Mathematics.Color(1.0f, 0.5f, 0.5f, 0.5f);
-                b.AddEllipse(new Vector2(i * 80, i * 80), 80, 80);
-                var n = new GeometryNode(b.Build(), m_rootNode);
-                n.BoundingBox = new Rectangle(0, 0, 80, 80);
+                b.AddEllipse(new Vector2(0, 0), 80, 80);
+                var n = new GeometryNode(m_rootNode);
+                n.Geometry = b.Build();
                 n.Position = new Vector2(i * 80, i * 80);
             }
         }
@@ -58,7 +56,7 @@ namespace ZigZag.Editor.Ui.Windows
         private void DrawNode(Node node, ImDrawListPtr drawList, float tx, float ty)
         {
             var min = new System.Numerics.Vector2(tx + node.Position.X, ty + node.Position.Y);
-            var max = new System.Numerics.Vector2(min.X + node.BoundingBox.Width, min.Y + node.BoundingBox.Height);
+            var max = new System.Numerics.Vector2(min.X + node.GetBoundingBox().Width, min.Y + node.GetBoundingBox().Height);
 
             drawList.AddRect(min, max, Color.U32(30, 150, 30));
 
@@ -68,7 +66,7 @@ namespace ZigZag.Editor.Ui.Windows
             }
         }
 
-        private Node m_rootNode;
+        private GeometryNode m_rootNode;
         internal Scene m_scene;
         private SceneGraph.SceneRenderer m_renderer;
     }

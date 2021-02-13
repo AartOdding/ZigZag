@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ZigZag.Mathematics;
 
 
@@ -45,6 +42,7 @@ namespace ZigZag.SceneGraph
         public List<Node> GetNodesAt(Vector2 point)
         {
             List<Node> nodes = new List<Node>();
+            // map point?
             GetNodesAt(RootNode, point, nodes);
             return nodes;
         }
@@ -55,11 +53,10 @@ namespace ZigZag.SceneGraph
             {
                 nodes.Add(currentNode);
 
-                Vector2 pointInCurrentNode = point - currentNode.Position;
-
                 foreach (var child in currentNode.Children)
                 {
-                    GetNodesAt(child, pointInCurrentNode, nodes);
+                    Vector2 pointInChild = child.FromParentSpace(point);
+                    GetNodesAt(child, pointInChild, nodes);
                 }
             }
         }

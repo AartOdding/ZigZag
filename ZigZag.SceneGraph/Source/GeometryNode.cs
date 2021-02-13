@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZigZag.Mathematics;
 
 namespace ZigZag.SceneGraph
 {
     public class GeometryNode : Node
     {
-        public GeometryNode(Geometry geometry) : base()
+        public GeometryNode() : base()
         {
-            m_geometry = geometry;
         }
 
-        public GeometryNode(Geometry geometry, Node parent) : base(parent)
+        public GeometryNode(Node parent) : base(parent)
         {
-            m_geometry = geometry;
         }
 
         public Geometry Geometry
@@ -34,6 +33,11 @@ namespace ZigZag.SceneGraph
         public ref Geometry GeometryRef()
         {
             return ref m_geometry;
+        }
+
+        public override Rectangle GetBoundingBox()
+        {
+            return m_geometry.BoundingBox;
         }
 
         private Geometry m_geometry;

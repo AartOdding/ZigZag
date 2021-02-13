@@ -4,11 +4,11 @@ using ZigZag.Mathematics;
 
 namespace ZigZag.SceneGraph
 {
-    public delegate bool MousePressedDelegate(Vector2 mousePos, int button);
-    public delegate void MouseDraggedDelegate(Vector2 mousePos, int button);
-    public delegate void MouseReleasedDelegate(Vector2 mousePos, int button);
+    public delegate void MousePressedDelegate(MousePressEvent e, out bool consume, out bool subscribe);
+    public delegate void MouseDraggedDelegate(MouseDragEvent e);
+    public delegate void MouseReleasedDelegate(MouseReleaseEvent e);
 
-    public class Node : TreeNode<Node>
+    public abstract class Node : TreeNode<Node>
     {
         public Node()
         {
@@ -28,6 +28,7 @@ namespace ZigZag.SceneGraph
             internal set;
         }
 
+        // Position in the parent's coordinate space
         public Vector2 Position
         {
             get
@@ -41,6 +42,7 @@ namespace ZigZag.SceneGraph
             }
         }
 
+        // The transform to move from the parent's to this coordinate space.
         public Transform2D Transform
         {
             get
@@ -55,11 +57,8 @@ namespace ZigZag.SceneGraph
             }
         }
 
-        public Rectangle BoundingBox
-        {
-            get;
-            set;
-        }
+        // Should return the nodes Bounding Box in local space.
+        public abstract Rectangle GetBoundingBox();
 
         public Vector2 FromParentSpace(Vector2 point)
         {
@@ -69,7 +68,7 @@ namespace ZigZag.SceneGraph
             }
             else
             {
-                return (Transform * point) - Position;
+                return Transform * (point - Position);
             }
         }
 
@@ -82,19 +81,37 @@ namespace ZigZag.SceneGraph
         // point given in local coordinates
         public virtual bool Contains(Vector2 point)
         {
-            return BoundingBox.Contains(point);
+            return GetBoundingBox().Contains(point);
         }
 
-        protected virtual bool MousePressEvent(MousePressEvent e)
+        protected virtual void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
         {
-            return false;
+            if (OnMousePressed is not null)
+            {
+                OnMousePressed(e, out consume, out subscribe);
+            }
+            else
+            {
+                consume = false;
+                subscribe = false;
+            }
         }
 
         protected virtual void MouseDragEvent(MouseDragEvent e)
-        { }
+        {
+            if (OnMouseDragged is not null)
+            {
+                OnMouseDragged(e);
+            }
+        }
 
         protected virtual void MouseReleaseEvent(MouseReleaseEvent e)
-        { }
+        {
+            if (OnMouseReleased is not null)
+            {
+                OnMouseReleased(e);
+            }
+        }
 
         public MousePressedDelegate OnMousePressed;
         public MouseDraggedDelegate OnMouseDragged;

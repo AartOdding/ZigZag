@@ -97,7 +97,7 @@ namespace ZigZag.Runtime
             options.WriteIndented = true;
             
             jsonString = JsonSerializer.Serialize(loremNode, loremNode.GetType(), options);    
-            Console.WriteLine(jsonString);
+            //Console.WriteLine(jsonString);
 
             var n = JsonSerializer.Deserialize(jsonString, typeof(ZObject), options);
             objectRefSerializer.ResolveObjects(objectSerializer.CreatedObjects);

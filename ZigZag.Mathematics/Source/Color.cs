@@ -5,6 +5,14 @@ namespace ZigZag.Mathematics
 {
     public readonly struct Color : IEquatable<Color>
     {
+        public Color(byte r, byte g, byte b, byte a)
+        {
+            Red = r / 255.0f;
+            Green = g / 255.0f;
+            Blue = b / 255.0f;
+            Alpha = a / 255.0f;
+        }
+
         public Color(float r, float g, float b, float a)
         {
             Red = r;
