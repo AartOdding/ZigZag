@@ -180,7 +180,7 @@ namespace ZigZag.Editor
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
-            m_nodeGraphWindow.Render();
+            m_nodeGraphWindow.Render(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
             m_drawer.Draw(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
             m_nativeWindow.Context.SwapBuffers();

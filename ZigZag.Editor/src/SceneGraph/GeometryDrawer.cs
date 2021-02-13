@@ -31,6 +31,9 @@ namespace ZigZag.Editor.SceneGraph
         {
             m_shader.Use();
 
+            m_shader.SetVector2("opengl_viewport_min", new Vector2(-1, 1));
+            m_shader.SetVector2("opengl_viewport_max", new Vector2(1, -1));
+
             m_shader.SetVector2("viewport_min", new Vector2(0, 0));
             m_shader.SetVector2("viewport_max", new Vector2(w, h));
 

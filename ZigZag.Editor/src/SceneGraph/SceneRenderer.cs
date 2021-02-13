@@ -18,7 +18,7 @@ namespace ZigZag.Editor.SceneGraph
             m_scene = scene;
         }
 
-        public void Render(Rectangle area)
+        public void Render(Rectangle area, float windowWidth, float windowHeight)
         {
             if (m_scene.RootNode is not null)
             {
@@ -27,8 +27,18 @@ namespace ZigZag.Editor.SceneGraph
                 CreateDrawDataRecursive(m_scene.RootNode, drawDatas);
 
                 m_shader.Use();
-                m_shader.SetVector2("viewport_min", new Vector2(-100, -100));
-                m_shader.SetVector2("viewport_max", new Vector2(800, 800));
+
+                Vector2 zero = new Vector2(0, 0);
+                Vector2 max = new Vector2(windowWidth, windowHeight);
+
+                var gl_min = Utils.MapRange(area.TopLeft(), zero, max, new Vector2(-1, 1), new Vector2(1, -1));
+                var gl_max = Utils.MapRange(area.BottomRight(), zero, max, new Vector2(-1, 1), new Vector2(1, -1));
+
+                m_shader.SetVector2("opengl_viewport_min", gl_min);
+                m_shader.SetVector2("opengl_viewport_max", gl_max);
+
+                m_shader.SetVector2("viewport_min", new Vector2(0, 0));
+                m_shader.SetVector2("viewport_max", new Vector2(area.Width, area.Height));
 
                 foreach (GeometryDrawData drawData in drawDatas)
                 {

@@ -19,7 +19,7 @@ namespace ZigZag.Editor.Ui.Windows
 
             GeometryBuilder builder = new GeometryBuilder();
             builder.Color = new Mathematics.Color(0.5f, 0.5f, 1, 0.5f);
-            builder.AddRectangle(new Rectangle(0, 0, 500, 500));
+            builder.AddRectangle(new Rectangle(10, 10, 500, 500));
 
             m_rootNode = new GeometryNode(builder.Build());
             m_rootNode.BoundingBox = new Rectangle(0, 0, 500, 500);
@@ -32,7 +32,7 @@ namespace ZigZag.Editor.Ui.Windows
             {
                 var b = new GeometryBuilder();
                 b.Color = new Mathematics.Color(1.0f, 0.5f, 0.5f, 0.5f);
-                b.AddEllipse(new Vector2(0, 0), 80, 80);
+                b.AddEllipse(new Vector2(i * 80, i * 80), 80, 80);
                 var n = new GeometryNode(b.Build(), m_rootNode);
                 n.BoundingBox = new Rectangle(0, 0, 80, 80);
                 n.Position = new Vector2(i * 80, i * 80);
@@ -50,9 +50,9 @@ namespace ZigZag.Editor.Ui.Windows
             //DrawNode(m_rootNode, ImGui.GetWindowDrawList(), x, y);
         }
 
-        public void Render()
+        public void Render(float windowWidth, float windowHeight)
         {
-            m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y));
+            m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y), windowWidth, windowHeight);
         }
 
         private void DrawNode(Node node, ImDrawListPtr drawList, float tx, float ty)
