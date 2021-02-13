@@ -11,7 +11,6 @@ namespace ZigZag.Editor.Ui
             Name = name;
             HasFocus = false;
             IsDocked = false;
-            IsVisible = true;
             IsOpen = true;
         }
 
@@ -34,9 +33,13 @@ namespace ZigZag.Editor.Ui
 
         public bool IsVisible
         {
-            get;
-            private set;
+            get
+            {
+                return m_visibleLastRender && IsOpen;
+            }
         }
+
+        private bool m_visibleLastRender = false;
 
         public bool IsOpen
         {
@@ -84,11 +87,11 @@ namespace ZigZag.Editor.Ui
                 ContentPos = windowMin + new Vector2(padding + 3, 3);
                 ContentSize = (windowMax - new Vector2(padding + 3, padding + 3) - new Vector2(padding + 3, 3)) - windowMin;
 
-                IsVisible = true;
+                m_visibleLastRender = true;
             }
             else
             {
-                IsVisible = false;
+                m_visibleLastRender = false;
             }
 
             HasFocus = ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows);

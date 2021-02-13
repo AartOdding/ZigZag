@@ -160,7 +160,7 @@ namespace ZigZag.Editor
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
-            if (m_nodeGraphWindow.IsOpen && m_nodeGraphWindow.IsVisible)
+            if (m_nodeGraphWindow.IsVisible)
             {
                 m_nodeGraphWindow.Render(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
             }
