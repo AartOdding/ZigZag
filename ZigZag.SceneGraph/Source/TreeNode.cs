@@ -100,6 +100,43 @@ namespace ZigZag.SceneGraph
             }
         }
 
+        public T GetCommonAncestor(T other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            List<T> ancestors = GetAncestorList(true);
+            List<T> otherAncestors = other.GetAncestorList(true);
+
+            T commonAncestor = null;
+
+            while (ancestors.Count > 0 
+                && otherAncestors.Count > 0 
+                && ancestors[^1] == otherAncestors[^1])
+            {
+                commonAncestor = ancestors[^1];
+                ancestors.RemoveAt(ancestors.Count - 1);
+                otherAncestors.RemoveAt(otherAncestors.Count - 1);
+            }
+
+            return commonAncestor;
+        }
+
+        private List<T> GetAncestorList(bool includeThis)
+        {
+            List<T> list = new List<T>();
+            T current = includeThis ? (T)this : m_parent;
+
+            while (current is not null)
+            {
+                list.Add(current);
+                current = current.m_parent;
+            }
+            return list;
+        }
+
         private T m_parent;
         private readonly List<T> m_children = new List<T>();
     }
