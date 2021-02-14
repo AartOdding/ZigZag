@@ -31,6 +31,14 @@ namespace ZigZag.Editor.SceneGraph
             m_vertexArray.SetIndexBuffer(m_indexBuffer);
 
             VertexArrayObject.BindZero();
+
+            Transform = Transform2D.Identity;
+        }
+
+        public Transform2D Transform
+        {
+            get;
+            set;
         }
 
         public void Bind()

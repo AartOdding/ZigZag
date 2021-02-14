@@ -19,22 +19,21 @@ namespace ZigZag.Editor.Ui.Windows
 
             GeometryBuilder builder = new GeometryBuilder();
             builder.Color = new Mathematics.Color(0.5f, 0.5f, 1, 0.5f);
-            builder.AddRectangle(new Rectangle(10, 10, 500, 500));
+            builder.AddRectangle(new Rectangle(0, 0, 900, 900));
 
             m_rootNode = new GeometryNode();
             m_rootNode.Geometry = builder.Build();
-            m_rootNode.Position = new Vector2(30, 30);
+            m_rootNode.Position = new Vector2(10, 10);
             m_scene.RootNode = m_rootNode;
 
             for (int i = 0; i < 5; ++i)
             {
-                var b = new GeometryBuilder();
-                b.Color = new Mathematics.Color(1.0f, 0.5f, 0.5f, 0.5f);
-                b.AddEllipse(new Vector2(0, 0), 80, 80);
-                var n = new GeometryNode(m_rootNode);
-                n.Geometry = b.Build();
+                var n = new SceneGraph.CircleTestWidget(m_rootNode);
                 n.Position = new Vector2(i * 80, i * 80);
             }
+
+            m_squareNode = new SceneGraph.SquareTestWidget(m_rootNode);
+            m_squareNode.Position = new Vector2(300, 300);
         }
 
         protected override void DrawImplementation(Style style)
@@ -50,6 +49,8 @@ namespace ZigZag.Editor.Ui.Windows
 
         public void Render(float windowWidth, float windowHeight)
         {
+            rotation += 0.01f;
+            m_squareNode.Transform = Transform2D.CreateRotation(rotation);
             m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y), windowWidth, windowHeight);
         }
 
@@ -66,7 +67,9 @@ namespace ZigZag.Editor.Ui.Windows
             }
         }
 
+        private float rotation = 0;
         private GeometryNode m_rootNode;
+        private GeometryNode m_squareNode;
         internal Scene m_scene;
         private SceneGraph.SceneRenderer m_renderer;
     }

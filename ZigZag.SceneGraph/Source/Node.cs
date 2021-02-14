@@ -57,6 +57,11 @@ namespace ZigZag.SceneGraph
             }
         }
 
+        public Transform2D GetNodeTransform()
+        {
+            return Transform * Transform2D.CreateTranslation(Position);
+        }
+
         // Should return the nodes Bounding Box in local space.
         public abstract Rectangle GetBoundingBox();
 

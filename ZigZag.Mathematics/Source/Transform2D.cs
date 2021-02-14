@@ -84,6 +84,28 @@ namespace ZigZag.Mathematics
             return new Vector2(System.Numerics.Vector2.Transform(vector.m_value, transform.m_value));
         }
 
+        public static Transform2D operator *(Transform2D lhs, Transform2D rhs)
+        {
+            return new Transform2D(System.Numerics.Matrix3x2.Multiply(lhs.m_value, rhs.m_value));
+        }
+
+        public float[] ToFloatArray()
+        {
+            float[] result = new float[9];
+
+            result[0] = m_value.M11;
+            result[1] = m_value.M12;
+            result[2] = 0;
+            result[3] = m_value.M21;
+            result[4] = m_value.M22;
+            result[5] = 0;
+            result[6] = m_value.M31;
+            result[7] = m_value.M32;
+            result[8] = 1;
+
+            return result;
+        }
+
         public override bool Equals(object other)
         {
             if ((other == null) || !other.GetType().Equals(typeof(Transform2D)))

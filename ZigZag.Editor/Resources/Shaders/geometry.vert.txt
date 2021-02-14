@@ -5,6 +5,8 @@ layout(location = 1) in vec4 color_in;
 
 out vec4 color;
 
+uniform mat3 transform;
+
 uniform vec2 opengl_viewport_min;
 uniform vec2 opengl_viewport_max;
 
@@ -18,7 +20,8 @@ vec2 map(vec2 value, vec2 fromMin, vec2 fromMax, vec2 toMin, vec2 toMax)
 
 void main()
 {
-    vec2 pos = map(pos_in, viewport_min, viewport_max, opengl_viewport_min, opengl_viewport_max);
+    vec3 transformed_pos = transform * vec3(pos_in, 1);
+    vec2 pos = map(transformed_pos.xy, viewport_min, viewport_max, opengl_viewport_min, opengl_viewport_max);
     gl_Position = vec4(pos, 0, 1.0);
     color = color_in;
 }

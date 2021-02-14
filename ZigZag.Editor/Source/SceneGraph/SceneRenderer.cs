@@ -31,7 +31,7 @@ namespace ZigZag.Editor.SceneGraph
 
                 List<GeometryDrawData> drawDatas = new List<GeometryDrawData>();
 
-                CreateDrawDataRecursive(m_scene.RootNode, drawDatas);
+                CreateDrawDataRecursive(m_scene.RootNode, Transform2D.Identity, drawDatas);
 
                 m_shader.Use();
 
@@ -49,6 +49,8 @@ namespace ZigZag.Editor.SceneGraph
 
                 foreach (GeometryDrawData drawData in drawDatas)
                 {
+                    m_shader.SetMatrix3("transform", drawData.Transform);
+
                     drawData.Bind();
                     GL.DrawElements(PrimitiveType.Triangles, drawData.IndexCount, DrawElementsType.UnsignedInt, 0);
                 }
@@ -65,15 +67,19 @@ namespace ZigZag.Editor.SceneGraph
             }
         }
 
-        private void CreateDrawDataRecursive(Node node, List<GeometryDrawData> drawDatas)
+        private void CreateDrawDataRecursive(Node node, Transform2D accumulatedTransform, List<GeometryDrawData> drawDatas)
         {
+            Transform2D newAccumulatedTransform = node.GetNodeTransform() * accumulatedTransform;
+
             if (node is GeometryNode geometryNode)
             {
-                drawDatas.Add(new GeometryDrawData(ref geometryNode.GeometryRef()));
+                GeometryDrawData drawData = new GeometryDrawData(ref geometryNode.GeometryRef());
+                drawData.Transform = newAccumulatedTransform;
+                drawDatas.Add(drawData);
             }
             foreach (Node child in node.Children)
             {
-                CreateDrawDataRecursive(child, drawDatas);
+                CreateDrawDataRecursive(child, newAccumulatedTransform, drawDatas);
             }
         }
 

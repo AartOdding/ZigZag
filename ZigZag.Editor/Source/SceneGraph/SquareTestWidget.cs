@@ -5,19 +5,19 @@ using ZigZag.SceneGraph;
 
 namespace ZigZag.Editor.SceneGraph
 {
-    class CircleTestWidget : GeometryNode
+    class SquareTestWidget : GeometryNode
     {
-        public CircleTestWidget(Node parent) : base(parent)
+        public SquareTestWidget(Node parent) : base(parent)
         {
             GeometryBuilder builder = new GeometryBuilder();
             builder.Color = new Color(0, 200, 120, 120);
-            builder.AddEllipse(new Vector2(0, 0), 50, 50);
+            builder.AddRectangle(new Rectangle(-200, -200, 400, 400));
             Geometry = builder.Build();
         }
 
         protected override void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
         {
-            Console.WriteLine("CircleTestWidget: Mouse event accepted");
+            Console.WriteLine("SquareTestWidget: Mouse event accepted");
             consume = true;
             subscribe = true;
         }

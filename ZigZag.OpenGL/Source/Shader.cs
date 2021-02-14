@@ -88,6 +88,13 @@ namespace ZigZag.OpenGL
             GL.UniformMatrix4(m_uniformLocations[name], true, ref data);
         }*/
 
+        public void SetMatrix3(string name, Transform2D matrix)
+        {
+            Use();
+            var data = matrix.ToFloatArray();
+            GL.UniformMatrix3(m_uniformLocations[name], 1, false, ref data[0]);
+        }
+
         public void SetVector3(string name, Vector3 data)
         {
             Use();
