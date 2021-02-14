@@ -23,9 +23,17 @@ namespace ZigZag.SceneGraph
         public void SetMousePosition(float x, float y)
         {
             m_mousePos = new Vector2(x, y);
+
+            var intersectingNodes = GetNodesAt(m_mousePos);
+            foreach (var n in intersectingNodes)
+            {
+                Console.Write(n);
+                Console.Write("   ");
+            }
+            Console.WriteLine();
         }
 
-        public void SetMouseButton(MouseButton button, bool down)
+        public void SetMouseButtonState(MouseButton button, bool down)
         {
             if (down)
             {
@@ -43,7 +51,7 @@ namespace ZigZag.SceneGraph
         {
             List<Node> nodes = new List<Node>();
             // map point?
-            GetNodesAt(RootNode, point, nodes);
+            GetNodesAt(RootNode, RootNode.FromParentSpace(point), nodes);
             return nodes;
         }
 

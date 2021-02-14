@@ -45,13 +45,13 @@ namespace ZigZag.Editor
                 switch (args.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
-                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Left, true);
+                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, true);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
-                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Middle, true);
+                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, true);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
-                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Right, true);
+                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, true);
                         break;
                 }
             };
@@ -63,13 +63,13 @@ namespace ZigZag.Editor
                 switch (args.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
-                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Left, false);
+                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, false);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
-                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Middle, false);
+                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, false);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
-                        m_nodeGraphWindow.m_scene.SetMouseButton(ZigZag.SceneGraph.MouseButton.Right, false);
+                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, false);
                         break;
                 }
             };

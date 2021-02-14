@@ -89,6 +89,12 @@ namespace ZigZag.Mathematics
             return new Transform2D(System.Numerics.Matrix3x2.Multiply(lhs.m_value, rhs.m_value));
         }
 
+        public Transform2D Inverse()
+        {
+            System.Numerics.Matrix3x2.Invert(m_value, out System.Numerics.Matrix3x2 inverse);
+            return new Transform2D(inverse);
+        }
+
         public float[] ToFloatArray()
         {
             float[] result = new float[9];

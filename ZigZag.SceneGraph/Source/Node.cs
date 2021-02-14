@@ -53,7 +53,6 @@ namespace ZigZag.SceneGraph
             {
                 ChangedThisFrame |= (m_transform != value);
                 m_transform = value;
-                m_transformIsIdentity = m_transform.IsIdentity;
             }
         }
 
@@ -67,20 +66,12 @@ namespace ZigZag.SceneGraph
 
         public Vector2 FromParentSpace(Vector2 point)
         {
-            if (m_transformIsIdentity)
-            {
-                return point - Position;
-            }
-            else
-            {
-                return Transform * (point - Position);
-            }
+            return GetNodeTransform().Inverse() * point;
         }
 
         public Vector2 ToParentSpace(Vector2 point)
         {
-            // needs inverse
-            throw new System.NotImplementedException();
+            return GetNodeTransform() * point;
         }
 
         // point given in local coordinates
@@ -124,6 +115,5 @@ namespace ZigZag.SceneGraph
 
         private Vector2 m_position;
         private Transform2D m_transform;
-        private bool m_transformIsIdentity;
     }
 }
