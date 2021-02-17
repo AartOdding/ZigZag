@@ -100,15 +100,15 @@ namespace ZigZag.SceneGraph
             }
         }
 
-        public T GetCommonAncestor(T other)
+        public T GetCommonAncestorWith(T other)
         {
             if (other is null)
             {
                 throw new ArgumentNullException();
             }
 
-            List<T> ancestors = GetAncestorList(true);
-            List<T> otherAncestors = other.GetAncestorList(true);
+            List<T> ancestors = GetAncestors(true);
+            List<T> otherAncestors = other.GetAncestors(true);
 
             T commonAncestor = null;
 
@@ -124,10 +124,31 @@ namespace ZigZag.SceneGraph
             return commonAncestor;
         }
 
-        private List<T> GetAncestorList(bool includeThis)
+        public bool HasCommonAncestorWith(T other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            return GetRootNode() == other.GetRootNode();
+        }
+
+        public T GetRootNode()
+        {
+            T root = (T)this;
+
+            while (root.m_parent is not null)
+            {
+                root = root.m_parent;
+            }
+            return root;
+        }
+
+        public List<T> GetAncestors(bool startWithThis)
         {
             List<T> list = new List<T>();
-            T current = includeThis ? (T)this : m_parent;
+            T current = startWithThis ? (T)this : m_parent;
 
             while (current is not null)
             {

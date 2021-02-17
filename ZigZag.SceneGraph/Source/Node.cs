@@ -12,20 +12,12 @@ namespace ZigZag.SceneGraph
     {
         public Node()
         {
-            Position = new Vector2(0, 0);
             Transform = Transform2D.Identity;
         }
 
         public Node(Node parent) : base(parent)
         {
-            Position = new Vector2(0, 0);
             Transform = Transform2D.Identity;
-        }
-
-        public bool ChangedThisFrame
-        {
-            get;
-            internal set;
         }
 
         // Position in the parent's coordinate space
@@ -38,11 +30,11 @@ namespace ZigZag.SceneGraph
             set
             {
                 ChangedThisFrame |= (m_position != value);
-                m_position = value; 
+                m_position = value;
+                UpdateTransforms();
             }
         }
 
-        // The transform to move from the parent's to this coordinate space.
         public Transform2D Transform
         {
             get
@@ -53,25 +45,55 @@ namespace ZigZag.SceneGraph
             {
                 ChangedThisFrame |= (m_transform != value);
                 m_transform = value;
+                UpdateTransforms();
             }
+        }
+
+        public bool ChangedThisFrame
+        {
+            get;
+            internal set;
         }
 
         public Transform2D GetNodeTransform()
         {
-            return Transform * Transform2D.CreateTranslation(Position);
+            return m_toParentTransform;
         }
 
         // Should return the nodes Bounding Box in local space.
         public abstract Rectangle GetBoundingBox();
 
-        public Vector2 FromParentSpace(Vector2 point)
+        public Vector2 MapToParent(Vector2 point)
         {
-            return GetNodeTransform().Inverse() * point;
+            return m_toParentTransform * point;
         }
 
-        public Vector2 ToParentSpace(Vector2 point)
+        public Vector2 MapFromParent(Vector2 point)
         {
-            return GetNodeTransform() * point;
+            return m_fromParentTransform * point;
+        }
+
+        public Vector2 MapToScene(Vector2 point)
+        {
+            var node = this;
+
+            while (node is not null)
+            {
+                point = node.MapToParent(point);
+                node = node.Parent;
+            }
+            return point;
+        }
+
+        public Vector2 MapFromScene(Vector2 point)
+        {
+            var ancestors = GetAncestors(true);
+
+            for(int i = ancestors.Count - 1; i >= 0; --i)
+            {
+                point = ancestors[i].MapFromParent(point);
+            }
+            return point;
         }
 
         // point given in local coordinates
@@ -80,7 +102,22 @@ namespace ZigZag.SceneGraph
             return GetBoundingBox().Contains(point);
         }
 
-        protected virtual void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
+        // point given in local coordinates
+        public virtual List<Node> GetChildrenAt(Vector2 point)
+        {
+            List<Node> result = new List<Node>();
+
+            foreach (var child in Children)
+            {
+                if (child.Contains(child.MapFromParent(point)))
+                {
+                    result.Add(child);
+                }
+            }
+            return result;
+        }
+
+        protected internal virtual void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
         {
             if (OnMousePressed is not null)
             {
@@ -93,7 +130,7 @@ namespace ZigZag.SceneGraph
             }
         }
 
-        protected virtual void MouseDragEvent(MouseDragEvent e)
+        protected internal virtual void MouseDragEvent(MouseDragEvent e)
         {
             if (OnMouseDragged is not null)
             {
@@ -101,7 +138,7 @@ namespace ZigZag.SceneGraph
             }
         }
 
-        protected virtual void MouseReleaseEvent(MouseReleaseEvent e)
+        protected internal virtual void MouseReleaseEvent(MouseReleaseEvent e)
         {
             if (OnMouseReleased is not null)
             {
@@ -113,7 +150,15 @@ namespace ZigZag.SceneGraph
         public MouseDraggedDelegate OnMouseDragged;
         public MouseReleasedDelegate OnMouseReleased;
 
+        private void UpdateTransforms()
+        {
+            m_toParentTransform = m_transform * Transform2D.CreateTranslation(Position);
+            m_fromParentTransform = m_toParentTransform.Inverse();
+        }
+
         private Vector2 m_position;
         private Transform2D m_transform;
+        private Transform2D m_fromParentTransform;
+        private Transform2D m_toParentTransform;
     }
 }
