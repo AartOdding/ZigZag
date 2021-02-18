@@ -9,10 +9,10 @@ namespace ZigZag.SceneGraph
     {
         public Scene()
         {
-            m_mouseSubscriptions = new Dictionary<MouseButton, List<Node>>();
-            m_mouseSubscriptions.Add(MouseButton.Left, new List<Node>());
-            m_mouseSubscriptions.Add(MouseButton.Middle, new List<Node>());
-            m_mouseSubscriptions.Add(MouseButton.Right, new List<Node>());
+            m_mouseSubscriptions = new Dictionary<MouseButton, HashSet<Node>>();
+            m_mouseSubscriptions.Add(MouseButton.Left, new HashSet<Node>());
+            m_mouseSubscriptions.Add(MouseButton.Middle, new HashSet<Node>());
+            m_mouseSubscriptions.Add(MouseButton.Right, new HashSet<Node>());
         }
 
         public Node RootNode
@@ -29,14 +29,6 @@ namespace ZigZag.SceneGraph
         public void SetMousePosition(float x, float y)
         {
             m_mousePos = new Vector2(x, y);
-
-            var intersectingNodes = GetNodesAt(m_mousePos);
-            foreach (var n in intersectingNodes)
-            {
-                Console.Write(n);
-                Console.Write("   ");
-            }
-            Console.WriteLine();
         }
 
         public void SetMouseButtonState(MouseButton button, bool down)
@@ -46,7 +38,7 @@ namespace ZigZag.SceneGraph
                 var intersectingNodes = GetNodesAt(m_mousePos);
 
                 bool consumed = false;
-                
+
                 while (!consumed && intersectingNodes.Count > 0)
                 {
                     var node = intersectingNodes[^1];
@@ -57,16 +49,17 @@ namespace ZigZag.SceneGraph
                     {
                         m_mouseSubscriptions[button].Add(node);
                     }
+                    intersectingNodes.RemoveAt(intersectingNodes.Count - 1);
                 }
-
-                if (!consumed)
+            }
+            else
+            {
+                foreach (var node in m_mouseSubscriptions[button])
                 {
-                    Console.Write("Event not consumed");
+                    var e = new MouseReleaseEvent(node.MapFromScene(m_mousePos), button);
+                    node.MouseReleaseEvent(e);
                 }
-                else
-                {
-                    Console.WriteLine("Consumed!");
-                }
+                m_mouseSubscriptions[button].Clear();
             }
         }
 
@@ -95,6 +88,6 @@ namespace ZigZag.SceneGraph
         }
 
         private Vector2 m_mousePos;
-        private readonly Dictionary<MouseButton, List<Node>> m_mouseSubscriptions;
+        private readonly Dictionary<MouseButton, HashSet<Node>> m_mouseSubscriptions;
     }
 }

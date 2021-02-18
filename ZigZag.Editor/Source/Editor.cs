@@ -40,8 +40,6 @@ namespace ZigZag.Editor
 
             m_nativeWindow.MouseDown += args =>
             {
-                Console.WriteLine($"Pressed: {args.Button}");
-
                 switch (args.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
@@ -58,8 +56,6 @@ namespace ZigZag.Editor
 
             m_nativeWindow.MouseUp += args =>
             {
-                Console.WriteLine($"Released: {args.Button}");
-
                 switch (args.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:

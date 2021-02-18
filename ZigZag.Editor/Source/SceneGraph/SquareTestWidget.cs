@@ -15,9 +15,13 @@ namespace ZigZag.Editor.SceneGraph
             Geometry = builder.Build();
         }
 
+        private float m_rotation;
+
         protected override void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
         {
-            Console.WriteLine("SquareTestWidget: Mouse event accepted");
+            m_rotation += 0.3f;
+            Transform = Transform2D.CreateRotation(m_rotation);
+            Console.WriteLine($"Square press: {e.Position}");
             consume = true;
             subscribe = true;
         }
@@ -29,6 +33,7 @@ namespace ZigZag.Editor.SceneGraph
 
         protected override void MouseReleaseEvent(MouseReleaseEvent e)
         {
+            Console.WriteLine($"Square release: {e.Position}");
             base.MouseReleaseEvent(e);
         }
     }

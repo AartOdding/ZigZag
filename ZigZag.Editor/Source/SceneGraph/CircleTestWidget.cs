@@ -17,7 +17,7 @@ namespace ZigZag.Editor.SceneGraph
 
         protected override void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
         {
-            Console.WriteLine("CircleTestWidget: Mouse event accepted");
+            Console.WriteLine($"Circle press: {e.Position}");
             consume = true;
             subscribe = true;
         }
@@ -29,6 +29,7 @@ namespace ZigZag.Editor.SceneGraph
 
         protected override void MouseReleaseEvent(MouseReleaseEvent e)
         {
+            Console.WriteLine($"Circle release: {e.Position}");
             base.MouseReleaseEvent(e);
         }
     }

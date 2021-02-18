@@ -49,8 +49,6 @@ namespace ZigZag.Editor.Ui.Windows
 
         public void Render(float windowWidth, float windowHeight)
         {
-            rotation += 0.01f;
-            m_squareNode.Transform = Transform2D.CreateRotation(rotation);
             m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y), windowWidth, windowHeight);
         }
 
