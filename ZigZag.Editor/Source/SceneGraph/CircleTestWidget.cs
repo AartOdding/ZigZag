@@ -24,6 +24,7 @@ namespace ZigZag.Editor.SceneGraph
 
         protected override void MouseDragEvent(MouseDragEvent e)
         {
+            Console.WriteLine($"Circle drag: {e.Delta}");
             base.MouseDragEvent(e);
         }
 

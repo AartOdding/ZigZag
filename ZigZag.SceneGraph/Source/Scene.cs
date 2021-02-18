@@ -9,10 +9,19 @@ namespace ZigZag.SceneGraph
     {
         public Scene()
         {
-            m_mouseSubscriptions = new Dictionary<MouseButton, HashSet<Node>>();
-            m_mouseSubscriptions.Add(MouseButton.Left, new HashSet<Node>());
-            m_mouseSubscriptions.Add(MouseButton.Middle, new HashSet<Node>());
-            m_mouseSubscriptions.Add(MouseButton.Right, new HashSet<Node>());
+            m_mouseSubscriptions = new Dictionary<MouseButton, HashSet<Node>>
+            {
+                { MouseButton.Left, new HashSet<Node>() },
+                { MouseButton.Middle, new HashSet<Node>() },
+                { MouseButton.Right, new HashSet<Node>() }
+            };
+
+            m_mouseButtonsDown = new Dictionary<MouseButton, bool>
+            {
+                { MouseButton.Left, false },
+                { MouseButton.Middle, false },
+                { MouseButton.Right, false }
+            };
         }
 
         public Node RootNode
@@ -28,11 +37,31 @@ namespace ZigZag.SceneGraph
 
         public void SetMousePosition(float x, float y)
         {
+            var previous = m_mousePos;
             m_mousePos = new Vector2(x, y);
+
+            foreach (var (button, subscribedNodes) in m_mouseSubscriptions)
+            {
+                foreach (var node in subscribedNodes)
+                {
+                    var prev = node.MapFromScene(previous);
+                    var pos = node.MapFromScene(m_mousePos);
+                    node.MouseDragEvent(new MouseDragEvent(pos, pos - prev, button));
+                }
+            }
+
         }
 
         public void SetMouseButtonState(MouseButton button, bool down)
         {
+            // If the mouse button was already in the given state, we ignore the event
+            // so that widgets will not receive the same event twice in a row.
+            if (m_mouseButtonsDown[button] == down)
+            {
+                return;
+            }
+            m_mouseButtonsDown[button] = down;
+
             if (down)
             {
                 var intersectingNodes = GetNodesAt(m_mousePos);
@@ -88,6 +117,7 @@ namespace ZigZag.SceneGraph
         }
 
         private Vector2 m_mousePos;
+        private readonly Dictionary<MouseButton, bool> m_mouseButtonsDown;
         private readonly Dictionary<MouseButton, HashSet<Node>> m_mouseSubscriptions;
     }
 }

@@ -31,13 +31,15 @@ namespace ZigZag.SceneGraph
 
     public readonly struct MouseDragEvent
     {
-        public MouseDragEvent(Vector2 position, MouseButton button)
+        public MouseDragEvent(Vector2 position, Vector2 delta, MouseButton button)
         {
             Position = position;
+            Delta = delta;
             Button = button;
         }
 
         public readonly Vector2 Position;
+        public readonly Vector2 Delta;
         public readonly MouseButton Button;
     }
 }
