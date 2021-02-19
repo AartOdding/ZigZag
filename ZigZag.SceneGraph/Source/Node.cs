@@ -10,14 +10,16 @@ namespace ZigZag.SceneGraph
 
     public abstract class Node : TreeNode<Node>
     {
-        public Node()
+        public Node(NodeHints nodeHints = NodeHints.None)
         {
             Transform = Transform2D.Identity;
+            NodeHints = nodeHints;
         }
 
-        public Node(Node parent) : base(parent)
+        public Node(Node parent, NodeHints nodeHints = NodeHints.None) : base(parent)
         {
             Transform = Transform2D.Identity;
+            NodeHints = nodeHints;
         }
 
         // Position in the parent's coordinate space
@@ -55,13 +57,15 @@ namespace ZigZag.SceneGraph
             internal set;
         }
 
+        public NodeHints NodeHints
+        {
+            get;
+        }
+
         public Transform2D GetNodeTransform()
         {
             return m_toParentTransform;
         }
-
-        // Should return the nodes Bounding Box in local space.
-        public abstract Rectangle GetBoundingBox();
 
         public Vector2 MapToParent(Vector2 point)
         {
@@ -95,6 +99,9 @@ namespace ZigZag.SceneGraph
             }
             return point;
         }
+
+        // Should return the nodes Bounding Box in local space.
+        public abstract Rectangle GetBoundingBox();
 
         // point given in local coordinates
         public virtual bool Contains(Vector2 point)
