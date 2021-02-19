@@ -4,7 +4,7 @@ using ZigZag.Mathematics;
 
 namespace ZigZag.SceneGraph
 {
-    public delegate void MousePressedDelegate(MousePressEvent e, out bool consume, out bool subscribe);
+    public delegate void MousePressedDelegate(MousePressEvent e);
     public delegate void MouseDraggedDelegate(MouseDragEvent e);
     public delegate void MouseReleasedDelegate(MouseReleaseEvent e);
 
@@ -117,16 +117,11 @@ namespace ZigZag.SceneGraph
             return result;
         }
 
-        protected internal virtual void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
+        protected internal virtual void MousePressEvent(MousePressEvent e)
         {
             if (OnMousePressed is not null)
             {
-                OnMousePressed(e, out consume, out subscribe);
-            }
-            else
-            {
-                consume = false;
-                subscribe = false;
+                OnMousePressed(e);
             }
         }
 

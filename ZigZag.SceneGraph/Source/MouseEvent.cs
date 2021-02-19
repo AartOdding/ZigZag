@@ -5,19 +5,24 @@ namespace ZigZag.SceneGraph
 {
     // Position should always be in local coordinates!
 
-    public readonly struct MousePressEvent
+    public class MousePressEvent
     {
         public MousePressEvent(Vector2 position, MouseButton button)
         {
             Position = position;
             Button = button;
+            Consume = true;
+            Subscribe = false;
         }
 
         public readonly Vector2 Position;
         public readonly MouseButton Button;
+
+        public bool Consume { get; set; }
+        public bool Subscribe { get; set; }
     }
 
-    public readonly struct MouseReleaseEvent
+    public class MouseReleaseEvent
     {
         public MouseReleaseEvent(Vector2 position, MouseButton button)
         {
@@ -29,7 +34,7 @@ namespace ZigZag.SceneGraph
         public readonly MouseButton Button;
     }
 
-    public readonly struct MouseDragEvent
+    public class MouseDragEvent
     {
         public MouseDragEvent(Vector2 position, Vector2 delta, MouseButton button)
         {

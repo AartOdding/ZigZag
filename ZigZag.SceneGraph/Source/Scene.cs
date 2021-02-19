@@ -72,9 +72,10 @@ namespace ZigZag.SceneGraph
                 {
                     var node = intersectingNodes[^1];
                     var e = new MousePressEvent(node.MapFromScene(m_mousePos), button);
-                    node.MousePressEvent(e, out consumed, out bool subscribe);
+                    node.MousePressEvent(e);
+                    consumed = e.Consume;
 
-                    if (subscribe)
+                    if (e.Subscribe)
                     {
                         m_mouseSubscriptions[button].Add(node);
                     }

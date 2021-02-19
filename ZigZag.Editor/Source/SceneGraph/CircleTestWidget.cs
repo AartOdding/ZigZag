@@ -15,23 +15,21 @@ namespace ZigZag.Editor.SceneGraph
             Geometry = builder.Build();
         }
 
-        protected override void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
+        protected override void MousePressEvent(MousePressEvent e)
         {
-            Console.WriteLine($"Circle press: {e.Position}");
-            consume = true;
-            subscribe = true;
+            if (e.Button == MouseButton.Left)
+            {
+                e.Subscribe = true;
+            }
         }
 
         protected override void MouseDragEvent(MouseDragEvent e)
         {
-            Console.WriteLine($"Circle drag: {e.Delta}");
-            base.MouseDragEvent(e);
+            Position += e.Delta;
         }
 
         protected override void MouseReleaseEvent(MouseReleaseEvent e)
         {
-            Console.WriteLine($"Circle release: {e.Position}");
-            base.MouseReleaseEvent(e);
         }
     }
 }

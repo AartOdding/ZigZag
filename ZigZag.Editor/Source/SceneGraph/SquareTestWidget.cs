@@ -17,24 +17,18 @@ namespace ZigZag.Editor.SceneGraph
 
         private float m_rotation;
 
-        protected override void MousePressEvent(MousePressEvent e, out bool consume, out bool subscribe)
+        protected override void MousePressEvent(MousePressEvent e)
         {
             m_rotation += 0.3f;
             Transform = Transform2D.CreateRotation(m_rotation);
-            Console.WriteLine($"Square press: {e.Position}");
-            consume = true;
-            subscribe = true;
         }
 
         protected override void MouseDragEvent(MouseDragEvent e)
         {
-            base.MouseDragEvent(e);
         }
 
         protected override void MouseReleaseEvent(MouseReleaseEvent e)
         {
-            Console.WriteLine($"Square release: {e.Position}");
-            base.MouseReleaseEvent(e);
         }
     }
 }

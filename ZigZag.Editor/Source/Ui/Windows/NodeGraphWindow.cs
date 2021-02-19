@@ -26,6 +26,9 @@ namespace ZigZag.Editor.Ui.Windows
             m_rootNode.Position = new Vector2(10, 10);
             m_scene.RootNode = m_rootNode;
 
+            m_rootNode.OnMousePressed = e => e.Subscribe = e.Button == MouseButton.Left;
+            m_rootNode.OnMouseDragged = e => m_rootNode.Position += e.Delta;
+
             for (int i = 0; i < 5; ++i)
             {
                 var n = new SceneGraph.CircleTestWidget(m_rootNode);
