@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ImGuiNET;
 using ZigZag.SceneGraph;
+using ZigZag.SceneGraph.Widgets;
 using ZigZag.Mathematics;
 
 
@@ -16,18 +17,8 @@ namespace ZigZag.Editor.Ui.Windows
         {
             m_scene = new Scene();
             m_renderer = new SceneGraph.SceneRenderer(m_scene, true);
-
-            GeometryBuilder builder = new GeometryBuilder();
-            builder.Color = new Mathematics.Color(0.5f, 0.5f, 1, 0.5f);
-            builder.AddRectangle(new Rectangle(0, 0, 900, 900));
-
-            m_rootNode = new GeometryNode();
-            m_rootNode.Geometry = builder.Build();
-            m_rootNode.Position = new Vector2(10, 10);
+            m_rootNode = new InfinitePlane();
             m_scene.RootNode = m_rootNode;
-
-            m_rootNode.OnMousePressed = e => e.Subscribe = e.Button == MouseButton.Left;
-            m_rootNode.OnMouseDragged = e => m_rootNode.Position += e.Delta;
 
             for (int i = 0; i < 5; ++i)
             {
@@ -48,7 +39,7 @@ namespace ZigZag.Editor.Ui.Windows
         }
 
         private float rotation = 0;
-        private GeometryNode m_rootNode;
+        private InfinitePlane m_rootNode;
         private GeometryNode m_squareNode;
         internal Scene m_scene;
         private SceneGraph.SceneRenderer m_renderer;
