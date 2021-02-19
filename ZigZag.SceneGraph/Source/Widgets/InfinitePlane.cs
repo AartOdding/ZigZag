@@ -39,5 +39,12 @@ namespace ZigZag.SceneGraph.Widgets
             Position += e.Delta;
             base.MouseDragEvent(e);
         }
+
+        protected internal override void MouseWheelEvent(MouseWheelEvent e)
+        {
+            Console.WriteLine(e.Delta);
+            e.Consume = true;
+            base.MouseWheelEvent(e);
+        }
     }
 }

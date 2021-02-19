@@ -47,4 +47,18 @@ namespace ZigZag.SceneGraph
         public readonly Vector2 Delta;
         public readonly MouseButton Button;
     }
+
+    public class MouseWheelEvent
+    {
+        public MouseWheelEvent(float delta, Vector2 position)
+        {
+            Delta = delta;
+            Position = position;
+        }
+
+        public readonly float Delta;
+        public readonly Vector2 Position;
+
+        public bool Consume { get; set; }
+    }
 }

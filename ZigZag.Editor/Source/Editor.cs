@@ -38,9 +38,9 @@ namespace ZigZag.Editor
             m_nativeWindow.Context.MakeCurrent();
             GLFW.SwapInterval(1);
 
-            m_nativeWindow.MouseDown += args =>
+            m_nativeWindow.MouseDown += mouseDownEvent =>
             {
-                switch (args.Button)
+                switch (mouseDownEvent.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
                         m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, true);
@@ -54,9 +54,9 @@ namespace ZigZag.Editor
                 }
             };
 
-            m_nativeWindow.MouseUp += args =>
+            m_nativeWindow.MouseUp += mouseUpEvent =>
             {
-                switch (args.Button)
+                switch (mouseUpEvent.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
                         m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, false);
@@ -70,9 +70,20 @@ namespace ZigZag.Editor
                 }
             };
 
-            m_nativeWindow.MouseMove += args =>
+            m_nativeWindow.MouseMove += mouseMoveEvent =>
             {
-                m_nodeGraphWindow.m_scene.SetMousePosition(args.X - m_nodeGraphWindow.ContentPos.X, args.Y - m_nodeGraphWindow.ContentPos.Y);
+                m_nodeGraphWindow.m_scene.SetMousePosition(
+                    mouseMoveEvent.X - m_nodeGraphWindow.ContentPos.X,
+                    mouseMoveEvent.Y - m_nodeGraphWindow.ContentPos.Y);
+            };
+
+            object previousMouseWheel = 0.0f;
+
+            m_nativeWindow.MouseWheel += mouseWheelEvent =>
+            {
+                var delta = mouseWheelEvent.Offset.Y - (float)previousMouseWheel;
+                m_nodeGraphWindow.m_scene.MouseWheel(delta);
+                previousMouseWheel = mouseWheelEvent.OffsetY;
             };
 
             m_imguiContext = ImGui.CreateContext();

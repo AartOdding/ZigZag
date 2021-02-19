@@ -93,6 +93,21 @@ namespace ZigZag.SceneGraph
             }
         }
 
+        public void MouseWheel(float delta)
+        {
+            var consumed = false;
+            var intersectingNodes = GetNodesAt(m_mousePos);
+
+            while (!consumed && intersectingNodes.Count > 0)
+            {
+                var node = intersectingNodes[^1];
+                var e = new MouseWheelEvent(delta, node.MapFromScene(m_mousePos));
+                node.MouseWheelEvent(e);
+                consumed = e.Consume;
+                intersectingNodes.RemoveAt(intersectingNodes.Count - 1);
+            }
+        }
+
         public List<Node> GetNodesAt(Vector2 point)
         {
             List<Node> nodes = new List<Node>();

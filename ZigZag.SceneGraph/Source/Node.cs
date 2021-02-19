@@ -7,6 +7,7 @@ namespace ZigZag.SceneGraph
     public delegate void MousePressedDelegate(MousePressEvent e);
     public delegate void MouseDraggedDelegate(MouseDragEvent e);
     public delegate void MouseReleasedDelegate(MouseReleaseEvent e);
+    public delegate void MouseWheelDelegate(MouseWheelEvent e);
 
     public abstract class Node : TreeNode<Node>
     {
@@ -135,9 +136,18 @@ namespace ZigZag.SceneGraph
             }
         }
 
+        protected internal virtual void MouseWheelEvent(MouseWheelEvent e)
+        {
+            if (OnMouseWheel is not null)
+            {
+                OnMouseWheel(e);
+            }
+        }
+
         public MousePressedDelegate OnMousePressed;
         public MouseDraggedDelegate OnMouseDragged;
         public MouseReleasedDelegate OnMouseReleased;
+        public MouseWheelDelegate OnMouseWheel;
 
         private void UpdateTransforms()
         {
