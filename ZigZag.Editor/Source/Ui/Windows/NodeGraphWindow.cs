@@ -40,32 +40,11 @@ namespace ZigZag.Editor.Ui.Windows
         }
 
         protected override void DrawImplementation(Style style)
-        {
-            //float x = ContentPos.X;
-            //float y = ContentPos.Y;
-            //m_rootNode.BoundingBox = new Rectangle(0, 0, ContentSize.X, ContentSize.Y);
-
-            //m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y));
-
-            //DrawNode(m_rootNode, ImGui.GetWindowDrawList(), x, y);
-        }
+        { }
 
         public void Render(float windowWidth, float windowHeight)
         {
             m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y), windowWidth, windowHeight);
-        }
-
-        private void DrawNode(Node node, ImDrawListPtr drawList, float tx, float ty)
-        {
-            var min = new System.Numerics.Vector2(tx + node.Position.X, ty + node.Position.Y);
-            var max = new System.Numerics.Vector2(min.X + node.GetBoundingBox().Width, min.Y + node.GetBoundingBox().Height);
-
-            drawList.AddRect(min, max, Color.U32(30, 150, 30));
-
-            foreach (var child in node.Children)
-            {
-                DrawNode(child, drawList, min.X, min.Y);
-            }
         }
 
         private float rotation = 0;

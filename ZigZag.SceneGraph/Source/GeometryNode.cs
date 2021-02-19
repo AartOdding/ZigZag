@@ -35,9 +35,14 @@ namespace ZigZag.SceneGraph
             return ref m_geometry;
         }
 
-        public override Rectangle GetBoundingBox()
+        public Rectangle GetBoundingBox()
         {
             return m_geometry.BoundingBox;
+        }
+
+        public override bool Contains(Vector2 point)
+        {
+            return m_geometry.BoundingBox.Contains(point);
         }
 
         private Geometry m_geometry;

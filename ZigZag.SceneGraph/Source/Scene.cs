@@ -96,24 +96,20 @@ namespace ZigZag.SceneGraph
         public List<Node> GetNodesAt(Vector2 point)
         {
             List<Node> nodes = new List<Node>();
-            var pointInRootNode = RootNode.MapFromParent(point);
-
-            if (RootNode.Contains(pointInRootNode))
-            {
-                nodes.Add(RootNode);
-                GetChildrenAt(RootNode, pointInRootNode, nodes);
-            }
+            GetChildrenAt(RootNode, RootNode.MapFromParent(point), nodes);
             return nodes;
         }
 
         private static void GetChildrenAt(Node node, Vector2 point, List<Node> nodes)
         {
-            var intersectingChildren = node.GetChildrenAt(point);
-
-            foreach(var child in intersectingChildren)
+            if (node.Contains(point))
             {
-                nodes.Add(child);
-                GetChildrenAt(child, child.MapFromParent(point), nodes);
+                nodes.Add(node);
+
+                foreach (var child in node.GetChildrenAt(point))
+                {
+                    GetChildrenAt(child, child.MapFromParent(point), nodes);
+                }
             }
         }
 
