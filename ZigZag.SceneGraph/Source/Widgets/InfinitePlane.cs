@@ -36,15 +36,25 @@ namespace ZigZag.SceneGraph.Widgets
 
         protected internal override void MouseDragEvent(MouseDragEvent e)
         {
-            Position += e.Delta;
+            Transform = Transform2D.CreateTranslation(e.Delta) * Transform;
             base.MouseDragEvent(e);
         }
 
         protected internal override void MouseWheelEvent(MouseWheelEvent e)
         {
-            Console.WriteLine(e.Delta);
+            float deltaScale = MathF.Pow(1.2f, e.Delta);
+            float appliedScale = m_scale * deltaScale;
+
+            if (appliedScale > 0.05 && appliedScale < 100)
+            {
+                m_scale = appliedScale;
+                Transform = Transform2D.CreateScale(deltaScale, e.Position) * Transform;
+            }
+
             e.Consume = true;
             base.MouseWheelEvent(e);
         }
+
+        private float m_scale = 1;
     }
 }

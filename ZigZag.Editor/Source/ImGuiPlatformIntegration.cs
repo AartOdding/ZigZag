@@ -1,4 +1,5 @@
-﻿using OpenTK.Windowing.GraphicsLibraryFramework;
+﻿using System;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using ImGuiNET;
 using OpenTK.Windowing.Desktop;
 

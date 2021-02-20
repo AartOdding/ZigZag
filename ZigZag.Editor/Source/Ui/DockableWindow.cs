@@ -59,6 +59,14 @@ namespace ZigZag.Editor.Ui
             private set;
         }
 
+        public Mathematics.Rectangle ContentArea
+        {
+            get
+            {
+                return new Mathematics.Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y);
+            }
+        }
+
         public void Draw(Style style)
         {
             bool wantsToStayOpen = true;
