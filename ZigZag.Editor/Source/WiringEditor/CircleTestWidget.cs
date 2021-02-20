@@ -1,30 +1,30 @@
-﻿using System;
-using ZigZag.Mathematics;
+﻿using ZigZag.Mathematics;
 using ZigZag.SceneGraph;
 
 
-namespace ZigZag.Editor.SceneGraph
+namespace ZigZag.Editor.WiringEditor
 {
-    class SquareTestWidget : GeometryNode
+    class CircleTestWidget : GeometryNode
     {
-        public SquareTestWidget(Node parent) : base(parent)
+        public CircleTestWidget(Node parent) : base(parent)
         {
             GeometryBuilder builder = new GeometryBuilder();
             builder.Color = new Color(0, 200, 120, 120);
-            builder.AddRectangle(new Rectangle(-200, -200, 400, 400));
+            builder.AddEllipse(new Vector2(0, 0), 50, 50);
             Geometry = builder.Build();
         }
 
-        private float m_rotation;
-
         protected override void MousePressEvent(MousePressEvent e)
         {
-            m_rotation += 0.3f;
-            Transform = Transform2D.CreateRotation(m_rotation);
+            if (e.Button == MouseButton.Left)
+            {
+                e.Subscribe = true;
+            }
         }
 
         protected override void MouseDragEvent(MouseDragEvent e)
         {
+            Position += e.Delta;
         }
 
         protected override void MouseReleaseEvent(MouseReleaseEvent e)

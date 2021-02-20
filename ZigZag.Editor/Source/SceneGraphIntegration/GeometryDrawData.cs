@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZigZag.SceneGraph;
+﻿using OpenTK.Graphics.OpenGL;
 using ZigZag.Mathematics;
 using ZigZag.OpenGL;
-using OpenTK.Graphics.OpenGL;
+using ZigZag.SceneGraph;
 
 
-namespace ZigZag.Editor.SceneGraph
+namespace ZigZag.Editor.SceneGraphIntegration
 {
     class GeometryDrawData
     {

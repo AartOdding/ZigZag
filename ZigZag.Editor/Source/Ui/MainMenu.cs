@@ -1,4 +1,7 @@
 ﻿using ImGuiNET;
+using ZigZag.Core;
+using ZigZag.Editor.WiringEditor;
+using ZigZag.Editor.Ui.Windows;
 
 
 namespace ZigZag.Editor.Ui
@@ -9,25 +12,25 @@ namespace ZigZag.Editor.Ui
         {
         }
 
-        public Core.Project Project
+        public Project Project
         {
             get;
             set;
         }
 
-        public Windows.NodeGraphWindow NodeGraphWindow
+        public WiringEditorWindow WiringWindow
         {
             get;
             set;
         }
 
-        public Windows.HierarchyWindow HierarchyWindow
+        public HierarchyWindow HierarchyWindow
         {
             get;
             set;
         }
 
-        public Windows.HistoryWindow HistoryWindow
+        public HistoryWindow HistoryWindow
         {
             get;
             set;
@@ -58,7 +61,7 @@ namespace ZigZag.Editor.Ui
             }
             if (ImGui.BeginMenu("View"))
             {
-                WindowMenuItem("Node Graph", NodeGraphWindow);
+                WindowMenuItem("Wiring", WiringWindow);
                 WindowMenuItem("Node Hierarchy", HierarchyWindow);
                 WindowMenuItem("History", HistoryWindow);
                 ImGui.EndMenu();

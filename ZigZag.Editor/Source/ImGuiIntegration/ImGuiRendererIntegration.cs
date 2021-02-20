@@ -1,13 +1,10 @@
 ﻿using System;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
-using System.Runtime.CompilerServices;
 using ZigZag.OpenGL;
-using System.IO;
 
 
-namespace ZigZag.Editor
+namespace ZigZag.Editor.ImGuiIntegration
 {
     public static class ImGuiRendererIntegration
     {

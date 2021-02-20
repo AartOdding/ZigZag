@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using ZigZag.SceneGraph;
-using ZigZag.OpenGL;
-using ZigZag.Mathematics;
-
 using OpenTK.Graphics.OpenGL;
+using ZigZag.Mathematics;
+using ZigZag.OpenGL;
+using ZigZag.SceneGraph;
 
-namespace ZigZag.Editor.SceneGraph
+
+namespace ZigZag.Editor.SceneGraphIntegration
 {
     class SceneRenderer
     {

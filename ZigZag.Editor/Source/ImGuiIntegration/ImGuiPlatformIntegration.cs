@@ -1,10 +1,9 @@
-﻿using System;
-using OpenTK.Windowing.GraphicsLibraryFramework;
-using ImGuiNET;
+﻿using ImGuiNET;
 using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 
-namespace ZigZag.Editor
+namespace ZigZag.Editor.ImGuiIntegration
 {
     public static class ImGuiPlatformIntegration
     {

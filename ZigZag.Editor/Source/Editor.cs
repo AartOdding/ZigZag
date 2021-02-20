@@ -1,17 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTK.Windowing.Desktop;
 using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using ZigZag.Core;
 using ZigZag.Editor.Ui.Windows;
 using ZigZag.Editor.Ui;
-using ZigZag.Runtime;
-using ZigZag.SceneGraph;
+using ZigZag.Editor.WiringEditor;
+using ZigZag.Editor.ImGuiIntegration;
 using ZigZag.Mathematics;
+using ZigZag.Runtime;
 
 
 namespace ZigZag.Editor
@@ -63,10 +62,10 @@ namespace ZigZag.Editor
             m_mainMenu = new MainMenu();
             m_hierarchyWindow = new HierarchyWindow("Hierarchy");
             m_historyWindow = new HistoryWindow("History");
-            m_nodeGraphWindow = new NodeGraphWindow("Node Graph");
+            m_wiringWindow = new WiringEditorWindow("Wiring");
             m_mainMenu.HierarchyWindow = m_hierarchyWindow;
             m_mainMenu.HistoryWindow = m_historyWindow;
-            m_mainMenu.NodeGraphWindow = m_nodeGraphWindow;
+            m_mainMenu.WiringWindow = m_wiringWindow;
         }
 
         public void CloseEditor()
@@ -115,7 +114,7 @@ namespace ZigZag.Editor
 
             if (m_hierarchyWindow.IsOpen) m_hierarchyWindow.Draw(activeStyle);
             if (m_historyWindow.IsOpen) m_historyWindow.Draw(activeStyle);
-            if (m_nodeGraphWindow.IsOpen) m_nodeGraphWindow.Draw(activeStyle);
+            if (m_wiringWindow.IsOpen) m_wiringWindow.Draw(activeStyle);
 
             ImGui.ShowDemoWindow();
             
@@ -125,9 +124,9 @@ namespace ZigZag.Editor
             ImGui.Render();
             ImGuiRendererIntegration.Render(ImGui.GetDrawData(), m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
 
-            if (m_nodeGraphWindow.IsVisible)
+            if (m_wiringWindow.IsVisible)
             {
-                m_nodeGraphWindow.Render(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
+                m_wiringWindow.Render(m_nativeWindow.Size.X, m_nativeWindow.Size.Y);
             }
 
             m_nativeWindow.Context.SwapBuffers();
@@ -140,18 +139,18 @@ namespace ZigZag.Editor
 
         public void handleMousePress(MouseButtonEventArgs mouseDownEvent)
         {
-            if (m_nodeGraphWindow.ContentArea.Contains(m_mousePosition))
+            if (m_wiringWindow.ContentArea.Contains(m_mousePosition))
             {
                 switch (mouseDownEvent.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
-                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, true);
+                        m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, true);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
-                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, true);
+                        m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, true);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
-                        m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, true);
+                        m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, true);
                         break;
                 }
             }
@@ -162,13 +161,13 @@ namespace ZigZag.Editor
             switch (mouseUpEvent.Button)
             {
                 case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
-                    m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, false);
+                    m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, false);
                     break;
                 case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
-                    m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, false);
+                    m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, false);
                     break;
                 case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
-                    m_nodeGraphWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, false);
+                    m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, false);
                     break;
             }
         }
@@ -176,16 +175,16 @@ namespace ZigZag.Editor
         public void handleMouseMove(MouseMoveEventArgs mouseMoveEvent)
         {
             m_mousePosition = new Vector2(mouseMoveEvent.X, mouseMoveEvent.Y);
-            m_nodeGraphWindow.m_scene.SetMousePosition(
-                mouseMoveEvent.X - m_nodeGraphWindow.ContentPos.X,
-                mouseMoveEvent.Y - m_nodeGraphWindow.ContentPos.Y);
+            m_wiringWindow.m_scene.SetMousePosition(
+                mouseMoveEvent.X - m_wiringWindow.ContentPos.X,
+                mouseMoveEvent.Y - m_wiringWindow.ContentPos.Y);
         }
 
         public void handleMouseWheel(MouseWheelEventArgs mouseWheelEvent)
         {
-            if (m_nodeGraphWindow.ContentArea.Contains(m_mousePosition))
+            if (m_wiringWindow.ContentArea.Contains(m_mousePosition))
             {
-                m_nodeGraphWindow.m_scene.MouseWheel(mouseWheelEvent.OffsetY - m_mouseWheel);
+                m_wiringWindow.m_scene.MouseWheel(mouseWheelEvent.OffsetY - m_mouseWheel);
                 m_mouseWheel = mouseWheelEvent.OffsetY;
             }
         }
@@ -198,7 +197,7 @@ namespace ZigZag.Editor
         private MainMenu m_mainMenu;
         private HierarchyWindow m_hierarchyWindow;
         private HistoryWindow m_historyWindow;
-        private NodeGraphWindow m_nodeGraphWindow;
+        private WiringEditorWindow m_wiringWindow;
 
         private float m_mouseWheel;
         private Vector2 m_mousePosition;
