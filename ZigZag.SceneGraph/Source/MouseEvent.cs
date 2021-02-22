@@ -1,30 +1,53 @@
-﻿using ZigZag.Mathematics;
+﻿using System;
+using ZigZag.Mathematics;
 
+/*
+ * Positions in all event classes should always be in the coordinate space
+ * of the node that the event is beign dispatched to.
+ */
 
 namespace ZigZag.SceneGraph
 {
-    // Position should always be in local coordinates!
-
-    public class MousePressEvent
+    internal enum EventState
     {
-        public MousePressEvent(Vector2 position, MouseButton button)
+        Accepted,
+        Declined,
+        ImplicitlyAccepted,
+        ImplicitlyDeclined
+    }
+
+    public class MouseButtonPressEvent : EventArgs
+    {
+        public MouseButtonPressEvent(Vector2 position, MouseButton button)
         {
             Position = position;
             Button = button;
-            Consume = true;
-            Subscribe = false;
+            State = EventState.ImplicitlyDeclined;
         }
 
         public readonly Vector2 Position;
         public readonly MouseButton Button;
 
-        public bool Consume { get; set; }
-        public bool Subscribe { get; set; }
+        internal EventState State
+        {
+            get;
+            set;
+        }
+
+        public void Accept()
+        {
+            State = EventState.Accepted;
+        }
+
+        public void Ignore()
+        {
+            State = EventState.Declined;
+        }
     }
 
-    public class MouseReleaseEvent
+    public class MouseButtonReleaseEvent : EventArgs
     {
-        public MouseReleaseEvent(Vector2 position, MouseButton button)
+        public MouseButtonReleaseEvent(Vector2 position, MouseButton button)
         {
             Position = position;
             Button = button;
@@ -34,9 +57,9 @@ namespace ZigZag.SceneGraph
         public readonly MouseButton Button;
     }
 
-    public class MouseDragEvent
+    public class MouseButtonDragEvent : EventArgs
     {
-        public MouseDragEvent(Vector2 position, Vector2 delta, MouseButton button)
+        public MouseButtonDragEvent(Vector2 position, Vector2 delta, MouseButton button)
         {
             Position = position;
             Delta = delta;
@@ -48,17 +71,32 @@ namespace ZigZag.SceneGraph
         public readonly MouseButton Button;
     }
 
-    public class MouseWheelEvent
+    public class MouseWheelEvent : EventArgs
     {
         public MouseWheelEvent(float delta, Vector2 position)
         {
             Delta = delta;
             Position = position;
+            State = EventState.ImplicitlyDeclined;
         }
 
         public readonly float Delta;
         public readonly Vector2 Position;
 
-        public bool Consume { get; set; }
+        internal EventState State
+        {
+            get;
+            set;
+        }
+
+        public void Accept()
+        {
+            State = EventState.Accepted;
+        }
+
+        public void Ignore()
+        {
+            State = EventState.Declined;
+        }
     }
 }

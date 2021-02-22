@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ZigZag.Mathematics;
 
 
 namespace ZigZag.SceneGraph
 {
-    public delegate void MousePressedDelegate(MousePressEvent e);
-    public delegate void MouseDraggedDelegate(MouseDragEvent e);
-    public delegate void MouseReleasedDelegate(MouseReleaseEvent e);
+    public delegate void MouseButtonPressDelegate(MouseButtonPressEvent e);
+    public delegate void MouseButtonDragDelegate(MouseButtonDragEvent e);
+    public delegate void MouseButtonReleaseDelegate(MouseButtonReleaseEvent e);
     public delegate void MouseWheelDelegate(MouseWheelEvent e);
+
 
     public abstract class Node : TreeNode<Node>
     {
@@ -112,42 +114,60 @@ namespace ZigZag.SceneGraph
             return result;
         }
 
-        protected internal virtual void MousePressEvent(MousePressEvent e)
+        internal void PerformMouseButtonPressEvent(MouseButtonPressEvent e)
         {
-            if (OnMousePressed is not null)
+            var handler = MouseButtonPressEvent;
+
+            if (handler is not null)
             {
-                OnMousePressed(e);
+                e.State = EventState.ImplicitlyAccepted;
+                handler(e);
+            }
+            else
+            {
+                e.State = EventState.ImplicitlyDeclined;
             }
         }
 
-        protected internal virtual void MouseDragEvent(MouseDragEvent e)
+        internal void PerformMouseButtonDragEvent(MouseButtonDragEvent e)
         {
-            if (OnMouseDragged is not null)
+            var handler = MouseButtonDragEvent;
+
+            if (handler is not null)
             {
-                OnMouseDragged(e);
+                handler(e);
             }
         }
 
-        protected internal virtual void MouseReleaseEvent(MouseReleaseEvent e)
+        internal void PerformMouseButtonReleaseEvent(MouseButtonReleaseEvent e)
         {
-            if (OnMouseReleased is not null)
+            var handler = MouseButtonReleaseEvent;
+
+            if (handler is not null)
             {
-                OnMouseReleased(e);
+                handler(e);
             }
         }
 
-        protected internal virtual void MouseWheelEvent(MouseWheelEvent e)
+        internal void PerformMouseWheelEvent(MouseWheelEvent e)
         {
-            if (OnMouseWheel is not null)
+            var handler = MouseWheelEvent;
+
+            if (handler is not null)
             {
-                OnMouseWheel(e);
+                e.State = EventState.ImplicitlyAccepted;
+                handler(e);
+            }
+            else
+            {
+                e.State = EventState.ImplicitlyDeclined;
             }
         }
 
-        public MousePressedDelegate OnMousePressed;
-        public MouseDraggedDelegate OnMouseDragged;
-        public MouseReleasedDelegate OnMouseReleased;
-        public MouseWheelDelegate OnMouseWheel;
+        public event MouseButtonPressDelegate MouseButtonPressEvent;
+        public event MouseButtonDragDelegate MouseButtonDragEvent;
+        public event MouseButtonReleaseDelegate MouseButtonReleaseEvent;
+        public event MouseWheelDelegate MouseWheelEvent;
 
         private void UpdateTransforms()
         {

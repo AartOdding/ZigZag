@@ -35,7 +35,7 @@ namespace ZigZag.SceneGraph
             RootNode.Visit(node => node.ChangedThisFrame = false);
         }
 
-        public void SetMousePosition(float x, float y)
+        public void MouseMovement(float x, float y)
         {
             var previous = m_mousePos;
             m_mousePos = new Vector2(x, y);
@@ -46,65 +46,65 @@ namespace ZigZag.SceneGraph
                 {
                     var prev = node.MapFromScene(previous);
                     var pos = node.MapFromScene(m_mousePos);
-                    node.MouseDragEvent(new MouseDragEvent(pos, pos - prev, button));
+                    node.PerformMouseButtonDragEvent(new MouseButtonDragEvent(pos, pos - prev, button));
                 }
             }
-
         }
 
-        public void SetMouseButtonState(MouseButton button, bool down)
+        public void MouseButtonPress(MouseButton button)
         {
-            // If the mouse button was already in the given state, we ignore the event
-            // so that widgets will not receive the same event twice in a row.
-            if (m_mouseButtonsDown[button] == down)
+            // If the mouse button was already in the press state, we ignore the 
+            // event so that widgets will not receive the same event twice in a row.
+            if (m_mouseButtonsDown[button]) return;
+            m_mouseButtonsDown[button] = true;
+
+            var intersectingNodes = GetNodesAt(m_mousePos);
+
+            for (int i = intersectingNodes.Count - 1; i >= 0; --i)
             {
-                return;
-            }
-            m_mouseButtonsDown[button] = down;
+                var node = intersectingNodes[i];
+                var e = new MouseButtonPressEvent(node.MapFromScene(m_mousePos), button);
+                node.PerformMouseButtonPressEvent(e);
 
-            if (down)
-            {
-                var intersectingNodes = GetNodesAt(m_mousePos);
-
-                bool consumed = false;
-
-                while (!consumed && intersectingNodes.Count > 0)
+                if (e.State == EventState.Accepted || e.State == EventState.ImplicitlyAccepted)
                 {
-                    var node = intersectingNodes[^1];
-                    var e = new MousePressEvent(node.MapFromScene(m_mousePos), button);
-                    node.MousePressEvent(e);
-                    consumed = e.Consume;
-
-                    if (e.Subscribe)
-                    {
-                        m_mouseSubscriptions[button].Add(node);
-                    }
-                    intersectingNodes.RemoveAt(intersectingNodes.Count - 1);
+                    m_mouseSubscriptions[button].Add(node);
+                    break;
                 }
             }
-            else
+
+            // check for double click
+        }
+
+        public void MouseButtonRelease(MouseButton button)
+        {
+            // If the mouse button was already in the released state, we ignore the 
+            // event so that widgets will not receive the same event twice in a row.
+            if (!m_mouseButtonsDown[button]) return;
+            m_mouseButtonsDown[button] = false;
+
+            foreach (var node in m_mouseSubscriptions[button])
             {
-                foreach (var node in m_mouseSubscriptions[button])
-                {
-                    var e = new MouseReleaseEvent(node.MapFromScene(m_mousePos), button);
-                    node.MouseReleaseEvent(e);
-                }
-                m_mouseSubscriptions[button].Clear();
+                var e = new MouseButtonReleaseEvent(node.MapFromScene(m_mousePos), button);
+                node.PerformMouseButtonReleaseEvent(e);
             }
+            m_mouseSubscriptions[button].Clear();
         }
 
         public void MouseWheel(float delta)
         {
-            var consumed = false;
             var intersectingNodes = GetNodesAt(m_mousePos);
 
-            while (!consumed && intersectingNodes.Count > 0)
+            for (int i = intersectingNodes.Count - 1; i >= 0; --i)
             {
-                var node = intersectingNodes[^1];
+                var node = intersectingNodes[i];
                 var e = new MouseWheelEvent(delta, node.MapFromScene(m_mousePos));
-                node.MouseWheelEvent(e);
-                consumed = e.Consume;
-                intersectingNodes.RemoveAt(intersectingNodes.Count - 1);
+                node.PerformMouseWheelEvent(e);
+
+                if (e.State == EventState.Accepted || e.State == EventState.ImplicitlyAccepted)
+                {
+                    break;
+                }
             }
         }
 

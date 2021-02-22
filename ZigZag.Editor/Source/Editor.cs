@@ -3,7 +3,6 @@ using ImGuiNET;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 using ZigZag.Core;
 using ZigZag.Editor.Ui.Windows;
 using ZigZag.Editor.Ui;
@@ -11,6 +10,7 @@ using ZigZag.Editor.WiringEditor;
 using ZigZag.Editor.ImGuiIntegration;
 using ZigZag.Mathematics;
 using ZigZag.Runtime;
+using GLFW = OpenTK.Windowing.GraphicsLibraryFramework.GLFW;
 
 
 namespace ZigZag.Editor
@@ -38,9 +38,9 @@ namespace ZigZag.Editor
             GLFW.SwapInterval(1);
 
             m_nativeWindow.MouseDown += handleMousePress;
-            m_nativeWindow.MouseUp += handleMouseRelease;
-            m_nativeWindow.MouseMove += handleMouseMove;
-            m_nativeWindow.MouseWheel += handleMouseWheel;
+            m_nativeWindow.MouseUp += HandleMouseRelease;
+            m_nativeWindow.MouseMove += HandleMouseMove;
+            m_nativeWindow.MouseWheel += HandleMouseWheel;
 
 
             m_imguiContext = ImGui.CreateContext();
@@ -144,43 +144,43 @@ namespace ZigZag.Editor
                 switch (mouseDownEvent.Button)
                 {
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
-                        m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, true);
+                        m_wiringWindow.m_scene.MouseButtonPress(SceneGraph.MouseButton.Left);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
-                        m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, true);
+                        m_wiringWindow.m_scene.MouseButtonPress(SceneGraph.MouseButton.Middle);
                         break;
                     case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
-                        m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, true);
+                        m_wiringWindow.m_scene.MouseButtonPress(SceneGraph.MouseButton.Right);
                         break;
                 }
             }
         }
 
-        public void handleMouseRelease(MouseButtonEventArgs mouseUpEvent)
+        public void HandleMouseRelease(MouseButtonEventArgs mouseUpEvent)
         {
             switch (mouseUpEvent.Button)
             {
                 case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Left:
-                    m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Left, false);
+                    m_wiringWindow.m_scene.MouseButtonRelease(SceneGraph.MouseButton.Left);
                     break;
                 case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Middle:
-                    m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Middle, false);
+                    m_wiringWindow.m_scene.MouseButtonRelease(SceneGraph.MouseButton.Middle);
                     break;
                 case OpenTK.Windowing.GraphicsLibraryFramework.MouseButton.Right:
-                    m_wiringWindow.m_scene.SetMouseButtonState(ZigZag.SceneGraph.MouseButton.Right, false);
+                    m_wiringWindow.m_scene.MouseButtonRelease(SceneGraph.MouseButton.Right);
                     break;
             }
         }
 
-        public void handleMouseMove(MouseMoveEventArgs mouseMoveEvent)
+        public void HandleMouseMove(MouseMoveEventArgs mouseMoveEvent)
         {
             m_mousePosition = new Vector2(mouseMoveEvent.X, mouseMoveEvent.Y);
-            m_wiringWindow.m_scene.SetMousePosition(
+            m_wiringWindow.m_scene.MouseMovement(
                 mouseMoveEvent.X - m_wiringWindow.ContentPos.X,
                 mouseMoveEvent.Y - m_wiringWindow.ContentPos.Y);
         }
 
-        public void handleMouseWheel(MouseWheelEventArgs mouseWheelEvent)
+        public void HandleMouseWheel(MouseWheelEventArgs mouseWheelEvent)
         {
             if (m_wiringWindow.ContentArea.Contains(m_mousePosition))
             {

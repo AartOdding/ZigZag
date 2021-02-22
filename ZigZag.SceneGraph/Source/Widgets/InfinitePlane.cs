@@ -11,7 +11,9 @@ namespace ZigZag.SceneGraph.Widgets
     {
         public InfinitePlane() : base()
         {
-
+            MouseButtonPressEvent += OnMousePressEvent;
+            MouseButtonDragEvent += OnMouseDragEvent;
+            MouseWheelEvent += OnMouseWheelEvent;
         }
 
         public InfinitePlane(Node parent) : base(parent)
@@ -24,23 +26,20 @@ namespace ZigZag.SceneGraph.Widgets
             return true;
         }
 
-        protected internal override void MousePressEvent(MousePressEvent e)
+        private void OnMousePressEvent(MouseButtonPressEvent e)
         {
             if (e.Button == MouseButton.Left)
             {
-                e.Subscribe = true;
-                e.Consume = true;
+                e.Accept();
             }
-            base.MousePressEvent(e);
         }
 
-        protected internal override void MouseDragEvent(MouseDragEvent e)
+        private void OnMouseDragEvent(MouseButtonDragEvent e)
         {
             Transform = Transform2D.CreateTranslation(e.Delta) * Transform;
-            base.MouseDragEvent(e);
         }
 
-        protected internal override void MouseWheelEvent(MouseWheelEvent e)
+        private void OnMouseWheelEvent(MouseWheelEvent e)
         {
             float deltaScale = MathF.Pow(1.2f, e.Delta);
             float appliedScale = m_scale * deltaScale;
@@ -51,8 +50,7 @@ namespace ZigZag.SceneGraph.Widgets
                 Transform = Transform2D.CreateScale(deltaScale, e.Position) * Transform;
             }
 
-            e.Consume = true;
-            base.MouseWheelEvent(e);
+            e.Accept();
         }
 
         private float m_scale = 1;

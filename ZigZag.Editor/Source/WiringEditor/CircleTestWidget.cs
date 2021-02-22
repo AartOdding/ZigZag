@@ -8,26 +8,34 @@ namespace ZigZag.Editor.WiringEditor
     {
         public CircleTestWidget(Node parent) : base(parent)
         {
+            MouseButtonPressEvent += OnMousePressEvent;
+            MouseButtonDragEvent += OnMouseDragEvent;
+            MouseButtonReleaseEvent += OnMouseReleaseEvent;
+
             GeometryBuilder builder = new GeometryBuilder();
             builder.Color = new Color(0, 200, 120, 120);
             builder.AddEllipse(new Vector2(0, 0), 50, 50);
             Geometry = builder.Build();
         }
 
-        protected override void MousePressEvent(MousePressEvent e)
+        private void OnMousePressEvent(MouseButtonPressEvent e)
         {
             if (e.Button == MouseButton.Left)
             {
-                e.Subscribe = true;
+                e.Accept();
+            }
+            else
+            {
+                e.Ignore();
             }
         }
 
-        protected override void MouseDragEvent(MouseDragEvent e)
+        private void OnMouseDragEvent(MouseButtonDragEvent e)
         {
             Position += e.Delta;
         }
 
-        protected override void MouseReleaseEvent(MouseReleaseEvent e)
+        private void OnMouseReleaseEvent(MouseButtonReleaseEvent e)
         {
         }
     }

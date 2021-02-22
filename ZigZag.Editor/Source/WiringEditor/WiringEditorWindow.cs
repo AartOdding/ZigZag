@@ -13,16 +13,16 @@ namespace ZigZag.Editor.WiringEditor
         {
             m_scene = new Scene();
             m_renderer = new SceneRenderer(m_scene, true);
-            m_rootNode = new InfinitePlane();
-            m_scene.RootNode = m_rootNode;
+            m_surface = new Surface();
+            m_scene.RootNode = m_surface;
 
             for (int i = 0; i < 5; ++i)
             {
-                var n = new CircleTestWidget(m_rootNode);
+                var n = new CircleTestWidget(m_surface);
                 n.Position = new Vector2(i * 80, i * 80);
             }
 
-            m_squareNode = new SquareTestWidget(m_rootNode);
+            m_squareNode = new SquareTestWidget(m_surface);
             m_squareNode.Position = new Vector2(300, 300);
         }
 
@@ -34,7 +34,7 @@ namespace ZigZag.Editor.WiringEditor
             m_renderer.Render(new Rectangle(ContentPos.X, ContentPos.Y, ContentSize.X, ContentSize.Y), windowWidth, windowHeight);
         }
 
-        private InfinitePlane m_rootNode;
+        private InfinitePlane m_surface;
         private GeometryNode m_squareNode;
         internal Scene m_scene;
         private SceneRenderer m_renderer;
