@@ -28,15 +28,15 @@ namespace ZigZag.SceneGraph.Widgets
 
         private void OnMousePressEvent(MouseButtonPressEvent e)
         {
-            if (e.Button == MouseButton.Left)
-            {
-                e.Accept();
-            }
+            e.SetAccepted(e.Button == MouseButton.Left);
         }
 
         private void OnMouseDragEvent(MouseButtonDragEvent e)
         {
-            Transform = Transform2D.CreateTranslation(e.Delta) * Transform;
+            if (e.Button == MouseButton.Left)
+            {
+                Transform = Transform2D.CreateTranslation(e.Delta) * Transform;
+            }
         }
 
         private void OnMouseWheelEvent(MouseWheelEvent e)

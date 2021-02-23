@@ -9,18 +9,11 @@ namespace ZigZag.SceneGraph
     {
         public Scene()
         {
-            m_mouseSubscriptions = new Dictionary<MouseButton, HashSet<Node>>
+            m_mouseButtons = new Dictionary<MouseButton, MouseButtonState>
             {
-                { MouseButton.Left, new HashSet<Node>() },
-                { MouseButton.Middle, new HashSet<Node>() },
-                { MouseButton.Right, new HashSet<Node>() }
-            };
-
-            m_mouseButtonsDown = new Dictionary<MouseButton, bool>
-            {
-                { MouseButton.Left, false },
-                { MouseButton.Middle, false },
-                { MouseButton.Right, false }
+                { MouseButton.Left, new MouseButtonState(MouseButton.Left) },
+                { MouseButton.Middle, new MouseButtonState(MouseButton.Middle) },
+                { MouseButton.Right, new MouseButtonState(MouseButton.Right) }
             };
         }
 
@@ -40,9 +33,10 @@ namespace ZigZag.SceneGraph
             var previous = m_mousePos;
             m_mousePos = new Vector2(x, y);
 
-            foreach (var (button, subscribedNodes) in m_mouseSubscriptions)
+            foreach (var (button, buttonState) in m_mouseButtons)
             {
-                foreach (var node in subscribedNodes)
+                var node = buttonState.SubscribedNode;
+                if (buttonState.IsPressed && node is not null)
                 {
                     var prev = node.MapFromScene(previous);
                     var pos = node.MapFromScene(m_mousePos);
@@ -55,8 +49,7 @@ namespace ZigZag.SceneGraph
         {
             // If the mouse button was already in the press state, we ignore the 
             // event so that widgets will not receive the same event twice in a row.
-            if (m_mouseButtonsDown[button]) return;
-            m_mouseButtonsDown[button] = true;
+            if (m_mouseButtons[button].IsPressed) return;
 
             var intersectingNodes = GetNodesAt(m_mousePos);
 
@@ -68,27 +61,34 @@ namespace ZigZag.SceneGraph
 
                 if (e.State == EventState.Accepted || e.State == EventState.ImplicitlyAccepted)
                 {
-                    m_mouseSubscriptions[button].Add(node);
-                    break;
+                    m_mouseButtons[button].Press(node, out bool doubleClick);
+
+                    if (doubleClick)
+                    {
+                        node.PerformMouseDoubleClickEvent(new MouseDoubleClickEvent(e.Position, e.Button));
+                    }
+                    return;
                 }
             }
 
-            // check for double click
+            // Only gets called if early return is missed.
+            m_mouseButtons[button].Press(null, out bool _);
         }
 
         public void MouseButtonRelease(MouseButton button)
         {
             // If the mouse button was already in the released state, we ignore the 
             // event so that widgets will not receive the same event twice in a row.
-            if (!m_mouseButtonsDown[button]) return;
-            m_mouseButtonsDown[button] = false;
+            if (!m_mouseButtons[button].IsPressed) return;
 
-            foreach (var node in m_mouseSubscriptions[button])
+            var node = m_mouseButtons[button].SubscribedNode;
+
+            if (node is not null)
             {
                 var e = new MouseButtonReleaseEvent(node.MapFromScene(m_mousePos), button);
                 node.PerformMouseButtonReleaseEvent(e);
             }
-            m_mouseSubscriptions[button].Clear();
+            m_mouseButtons[button].Release();
         }
 
         public void MouseWheel(float delta)
@@ -129,7 +129,6 @@ namespace ZigZag.SceneGraph
         }
 
         private Vector2 m_mousePos;
-        private readonly Dictionary<MouseButton, bool> m_mouseButtonsDown;
-        private readonly Dictionary<MouseButton, HashSet<Node>> m_mouseSubscriptions;
+        private readonly Dictionary<MouseButton, MouseButtonState> m_mouseButtons;
     }
 }

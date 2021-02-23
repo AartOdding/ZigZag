@@ -39,7 +39,12 @@ namespace ZigZag.SceneGraph
             State = EventState.Accepted;
         }
 
-        public void Ignore()
+        public void SetAccepted(bool accepted)
+        {
+            State = accepted ? EventState.Accepted : EventState.Declined;
+        }
+
+        public void Decline()
         {
             State = EventState.Declined;
         }
@@ -98,5 +103,17 @@ namespace ZigZag.SceneGraph
         {
             State = EventState.Declined;
         }
+    }
+
+    public class MouseDoubleClickEvent : EventArgs
+    {
+        public MouseDoubleClickEvent(Vector2 position, MouseButton button)
+        {
+            Position = position;
+            Button = button;
+        }
+
+        public readonly Vector2 Position;
+        public readonly MouseButton Button;
     }
 }

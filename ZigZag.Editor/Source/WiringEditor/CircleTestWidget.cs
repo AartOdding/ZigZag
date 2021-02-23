@@ -1,4 +1,5 @@
-﻿using ZigZag.Mathematics;
+﻿using System;
+using ZigZag.Mathematics;
 using ZigZag.SceneGraph;
 
 
@@ -11,9 +12,15 @@ namespace ZigZag.Editor.WiringEditor
             MouseButtonPressEvent += OnMousePressEvent;
             MouseButtonDragEvent += OnMouseDragEvent;
             MouseButtonReleaseEvent += OnMouseReleaseEvent;
+            MouseDoubleClickEvent += OnMouseDoubleClickEvent;
 
+            BuildGeometry(new Color(0, 200, 120, 120));
+        }
+
+        private void BuildGeometry(Color color)
+        {
             GeometryBuilder builder = new GeometryBuilder();
-            builder.Color = new Color(0, 200, 120, 120);
+            builder.Color = color;
             builder.AddEllipse(new Vector2(0, 0), 50, 50);
             Geometry = builder.Build();
         }
@@ -26,7 +33,7 @@ namespace ZigZag.Editor.WiringEditor
             }
             else
             {
-                e.Ignore();
+                e.Decline();
             }
         }
 
@@ -37,6 +44,12 @@ namespace ZigZag.Editor.WiringEditor
 
         private void OnMouseReleaseEvent(MouseButtonReleaseEvent e)
         {
+        }
+
+        private void OnMouseDoubleClickEvent(MouseDoubleClickEvent e)
+        {
+            Random rnd = new Random();
+            BuildGeometry(new Color(rnd.Next(255), rnd.Next(255), rnd.Next(255), 120));
         }
     }
 }
