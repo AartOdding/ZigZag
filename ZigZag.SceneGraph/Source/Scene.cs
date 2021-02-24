@@ -61,18 +61,22 @@ namespace ZigZag.SceneGraph
 
                 if (e.State == EventState.Accepted || e.State == EventState.ImplicitlyAccepted)
                 {
-                    m_mouseButtons[button].Press(node, out bool doubleClick);
+                    m_mouseButtons[button].Press(node);
 
-                    if (doubleClick)
+                    if (m_mouseButtons[button].ConsecutiveClickCount > 1)
                     {
-                        node.PerformMouseDoubleClickEvent(new MouseDoubleClickEvent(e.Position, e.Button));
+                        node.PerformConsecutiveClicksEvent(
+                            new ConsecutiveClicksEvent(
+                                e.Position, 
+                                e.Button, 
+                                m_mouseButtons[button].ConsecutiveClickCount));
                     }
                     return;
                 }
             }
 
             // Only gets called if early return is missed.
-            m_mouseButtons[button].Press(null, out bool _);
+            m_mouseButtons[button].Press(null);
         }
 
         public void MouseButtonRelease(MouseButton button)

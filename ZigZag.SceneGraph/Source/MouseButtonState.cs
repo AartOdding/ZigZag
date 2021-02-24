@@ -8,12 +8,13 @@ namespace ZigZag.SceneGraph
 {
     internal class MouseButtonState
     {
-        public const float DoubleClickIntervalSeconds = 0.5f;
+        public const float ConsecutiveClickInterval = 0.5f;
 
         public MouseButtonState(MouseButton button)
         {
             Button = button;
             IsPressed = false;
+            ConsecutiveClickCount = 0;
         }
 
         public MouseButton Button
@@ -23,6 +24,12 @@ namespace ZigZag.SceneGraph
         }
 
         public bool IsPressed
+        {
+            get;
+            private set;
+        }
+
+        public int ConsecutiveClickCount
         {
             get;
             private set;
@@ -41,7 +48,7 @@ namespace ZigZag.SceneGraph
         }
 
         // subscribingNode is allowed to be null if no node is subscribed
-        public void Press(Node subscribingNode, out bool isDoubleClick)
+        public void Press(Node subscribingNode)
         {
             var timeNow = DateTime.Now;
             var timeElapsed = (timeNow - m_lastPressTime).TotalSeconds;
@@ -51,7 +58,15 @@ namespace ZigZag.SceneGraph
             SubscribedNode = subscribingNode;
 
             IsPressed = true;
-            isDoubleClick = timeElapsed <= DoubleClickIntervalSeconds && SubscribedNode == PreviousSubscribedNode;
+
+            if (timeElapsed <= ConsecutiveClickInterval && SubscribedNode == PreviousSubscribedNode)
+            {
+                ++ConsecutiveClickCount;
+            }
+            else
+            {
+                ConsecutiveClickCount = 1;
+            }
         }
 
         public void Release()

@@ -12,7 +12,7 @@ namespace ZigZag.Editor.WiringEditor
             MouseButtonPressEvent += OnMousePressEvent;
             MouseButtonDragEvent += OnMouseDragEvent;
             MouseButtonReleaseEvent += OnMouseReleaseEvent;
-            MouseDoubleClickEvent += OnMouseDoubleClickEvent;
+            ConsecutiveClicksEvent += OnConsecutiveClicksEvent;
 
             BuildGeometry(new Color(0, 200, 120, 120));
         }
@@ -46,8 +46,9 @@ namespace ZigZag.Editor.WiringEditor
         {
         }
 
-        private void OnMouseDoubleClickEvent(MouseDoubleClickEvent e)
+        private void OnConsecutiveClicksEvent(ConsecutiveClicksEvent e)
         {
+            Console.WriteLine(e.ClickCount);
             Random rnd = new Random();
             BuildGeometry(new Color(rnd.Next(255), rnd.Next(255), rnd.Next(255), 120));
         }

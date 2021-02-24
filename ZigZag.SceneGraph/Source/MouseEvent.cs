@@ -105,15 +105,17 @@ namespace ZigZag.SceneGraph
         }
     }
 
-    public class MouseDoubleClickEvent : EventArgs
+    public class ConsecutiveClicksEvent : EventArgs
     {
-        public MouseDoubleClickEvent(Vector2 position, MouseButton button)
+        public ConsecutiveClicksEvent(Vector2 position, MouseButton button, int clickCount)
         {
             Position = position;
             Button = button;
+            ClickCount = clickCount;
         }
 
         public readonly Vector2 Position;
         public readonly MouseButton Button;
+        public readonly int ClickCount;
     }
 }

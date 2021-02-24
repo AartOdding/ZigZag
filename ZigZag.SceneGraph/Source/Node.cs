@@ -9,7 +9,7 @@ namespace ZigZag.SceneGraph
     public delegate void MouseButtonDragDelegate(MouseButtonDragEvent e);
     public delegate void MouseButtonReleaseDelegate(MouseButtonReleaseEvent e);
     public delegate void MouseWheelDelegate(MouseWheelEvent e);
-    public delegate void MouseDoubleClickDelegate(MouseDoubleClickEvent e);
+    public delegate void ConsecutiveClicksDelegate(ConsecutiveClicksEvent e);
 
 
     public abstract class Node : TreeNode<Node>
@@ -165,9 +165,9 @@ namespace ZigZag.SceneGraph
             }
         }
 
-        internal void PerformMouseDoubleClickEvent(MouseDoubleClickEvent e)
+        internal void PerformConsecutiveClicksEvent(ConsecutiveClicksEvent e)
         {
-            var handler = MouseDoubleClickEvent;
+            var handler = ConsecutiveClicksEvent;
 
             if (handler is not null)
             {
@@ -179,7 +179,7 @@ namespace ZigZag.SceneGraph
         public event MouseButtonDragDelegate MouseButtonDragEvent;
         public event MouseButtonReleaseDelegate MouseButtonReleaseEvent;
         public event MouseWheelDelegate MouseWheelEvent;
-        public event MouseDoubleClickDelegate MouseDoubleClickEvent;
+        public event ConsecutiveClicksDelegate ConsecutiveClicksEvent;
 
         private void UpdateTransforms()
         {
