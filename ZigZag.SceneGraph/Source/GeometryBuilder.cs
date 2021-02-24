@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
@@ -83,7 +83,62 @@ namespace ZigZag.SceneGraph
 
         private void AddRectangleOutline(Rectangle rect)
         {
-            throw new NotImplementedException();
+            if (LinePlacement == LinePlacement.Centered)
+            {
+                AddRectangleOutlineFromInner(rect.Shrink(0.5f * LineWidth));
+            }
+            else if (LinePlacement == LinePlacement.Outside)
+            {
+                AddRectangleOutlineFromInner(rect.Shrink(LineWidth));
+            }
+            else if (LinePlacement == LinePlacement.Inside)
+            {
+                AddRectangleOutlineFromInner(rect);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        private void AddRectangleOutlineFromInner(Rectangle rect)
+        {
+            var startCount = m_vertices.Count;
+            var color = Color.U32();
+
+            // Top:
+            var tl = AddVertex(rect.TopLeft() + new Vector2(-LineWidth, -LineWidth), color);
+            var tr = AddVertex(rect.TopRight() + new Vector2(LineWidth, -LineWidth), color);
+            var bl = AddVertex(rect.TopLeft(), color);
+            var br = AddVertex(rect.TopRight(), color);
+            AddTriangleFromIndices(tl, tr, bl);
+            AddTriangleFromIndices(tr, br, bl);
+
+            // Bottom:
+            tl = AddVertex(rect.BottomLeft(), color);
+            tr = AddVertex(rect.BottomRight(), color);
+            bl = AddVertex(rect.BottomLeft() + new Vector2(-LineWidth, LineWidth), color);
+            br = AddVertex(rect.BottomRight() + new Vector2(LineWidth, LineWidth), color);
+            AddTriangleFromIndices(tl, tr, bl);
+            AddTriangleFromIndices(tr, br, bl);
+
+            // Left:
+            tl = AddVertex(rect.TopLeft() + new Vector2(-LineWidth, -LineWidth), color);
+            tr = AddVertex(rect.TopLeft(), color);
+            bl = AddVertex(rect.BottomLeft() + new Vector2(-LineWidth, LineWidth), color);
+            br = AddVertex(rect.BottomLeft(), color);
+            AddTriangleFromIndices(tl, tr, bl);
+            AddTriangleFromIndices(tr, br, bl);
+
+            // Right:
+            tl = AddVertex(rect.TopRight(), color);
+            tr = AddVertex(rect.TopRight() + new Vector2(LineWidth, -LineWidth), color);
+            bl = AddVertex(rect.BottomRight(), color);
+            br = AddVertex(rect.BottomRight() + new Vector2(LineWidth, LineWidth), color);
+            AddTriangleFromIndices(tl, tr, bl);
+            AddTriangleFromIndices(tr, br, bl);
+
+            m_vertexCounts.Add((uint)(m_vertices.Count - startCount));
         }
 
         private void AddEllipseFilled(Vector2 centre, float width, float height, int segments)

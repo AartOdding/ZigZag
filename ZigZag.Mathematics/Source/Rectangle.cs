@@ -54,6 +54,12 @@ namespace ZigZag.Mathematics
             return new Vector2(X + 0.5f * Width, Y + 0.5f * Height);
         }
 
+        public Rectangle Shrink(float amount)
+        {
+            float doubleAmount = amount * 2;
+            return new Rectangle(X + amount, Y + amount, Width - doubleAmount, Height - doubleAmount);
+        }
+
         public override bool Equals(object other)
         {
             if ((other == null) || !other.GetType().Equals(typeof(Rectangle)))
