@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ZigZag.Mathematics;
+﻿using ZigZag.Mathematics;
+
 
 namespace ZigZag.SceneGraph
 {
