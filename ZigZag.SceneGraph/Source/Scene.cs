@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ZigZag.Mathematics;
 
 
@@ -14,6 +15,7 @@ namespace ZigZag.SceneGraph
                 { MouseButton.Middle, new MouseButtonState(MouseButton.Middle) },
                 { MouseButton.Right, new MouseButtonState(MouseButton.Right) }
             };
+            m_hoveredNodes = new HashSet<Node>();
         }
 
         public Node RootNode
@@ -42,6 +44,27 @@ namespace ZigZag.SceneGraph
                     node.PerformMouseButtonDragEvent(new MouseButtonDragEvent(pos, pos - prev, button));
                 }
             }
+
+            var hoveredNodes = new HashSet<Node>(GetNodesAt(m_mousePos));
+            var hoverEntered = new HashSet<Node>(hoveredNodes.Except(m_hoveredNodes));
+            var hoverLeft = new HashSet<Node>(m_hoveredNodes.Except(hoveredNodes));
+
+            foreach (var node in hoverLeft)
+            {
+                node.PerformHoverLeaveEvent(new HoverLeaveEvent());
+            }
+
+            foreach (var node in hoverEntered)
+            {
+                node.PerformHoverEnterEvent(new HoverEnterEvent());
+            }
+
+            foreach (var node in hoveredNodes)
+            {
+                node.PerformHoverMoveEvent(new HoverMoveEvent());
+            }
+
+            m_hoveredNodes = hoveredNodes;
         }
 
         public void MouseButtonPress(MouseButton button)
@@ -133,5 +156,6 @@ namespace ZigZag.SceneGraph
 
         private Vector2 m_mousePos;
         private readonly Dictionary<MouseButton, MouseButtonState> m_mouseButtons;
+        private HashSet<Node> m_hoveredNodes;
     }
 }

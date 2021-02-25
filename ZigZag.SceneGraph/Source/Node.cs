@@ -9,6 +9,9 @@ namespace ZigZag.SceneGraph
     public delegate void MouseButtonReleaseDelegate(MouseButtonReleaseEvent e);
     public delegate void MouseWheelDelegate(MouseWheelEvent e);
     public delegate void ConsecutiveClicksDelegate(ConsecutiveClicksEvent e);
+    public delegate void HoverEnterDelegate(HoverEnterEvent e);
+    public delegate void HoverMoveDelegate(HoverMoveEvent e);
+    public delegate void HoverLeaveDelegate(HoverLeaveEvent e);
 
 
     public abstract class Node : TreeNode<Node>
@@ -174,11 +177,44 @@ namespace ZigZag.SceneGraph
             }
         }
 
+        internal void PerformHoverEnterEvent(HoverEnterEvent e)
+        {
+            var handler = HoverEnterEvent;
+
+            if (handler is not null)
+            {
+                handler(e);
+            }
+        }
+
+        internal void PerformHoverMoveEvent(HoverMoveEvent e)
+        {
+            var handler = HoverMoveEvent;
+
+            if (handler is not null)
+            {
+                handler(e);
+            }
+        }
+
+        internal void PerformHoverLeaveEvent(HoverLeaveEvent e)
+        {
+            var handler = HoverLeaveEvent;
+
+            if (handler is not null)
+            {
+                handler(e);
+            }
+        }
+
         public event MouseButtonPressDelegate MouseButtonPressEvent;
         public event MouseButtonDragDelegate MouseButtonDragEvent;
         public event MouseButtonReleaseDelegate MouseButtonReleaseEvent;
         public event MouseWheelDelegate MouseWheelEvent;
         public event ConsecutiveClicksDelegate ConsecutiveClicksEvent;
+        public event HoverEnterDelegate HoverEnterEvent;
+        public event HoverMoveDelegate HoverMoveEvent;
+        public event HoverLeaveDelegate HoverLeaveEvent;
 
         private void UpdateTransforms()
         {

@@ -118,4 +118,25 @@ namespace ZigZag.SceneGraph
         public readonly MouseButton Button;
         public readonly int ClickCount;
     }
+
+    public class HoverEnterEvent : EventArgs
+    {
+        public HoverEnterEvent()
+        {
+        }
+    }
+
+    public class HoverMoveEvent : EventArgs
+    {
+        public HoverMoveEvent()
+        {
+        }
+    }
+
+    public class HoverLeaveEvent : EventArgs
+    {
+        public HoverLeaveEvent()
+        {
+        }
+    }
 }
