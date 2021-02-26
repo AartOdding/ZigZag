@@ -17,7 +17,7 @@ namespace ZigZag.Core
             if (node is not null)
             {
                 Node = node;
-                node.AddNodeParameter(this);
+                node.m_nodeParameters.Add(this);
             }
         }
 

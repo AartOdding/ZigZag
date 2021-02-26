@@ -20,7 +20,7 @@ namespace ZigZag.Core
             if (!(parent is null))
             {
                 ParentNode = parent;
-                parent.AddChildNode(this);
+                parent.m_childNodes.Add(this);
             }
         }
 
@@ -34,116 +34,32 @@ namespace ZigZag.Core
             get;
             internal set;
         }
-        public IEnumerable<Node> ChildNodes
+        public IReadOnlyList<Node> ChildNodes
         {
             get
             {
-                if (m_childNodes is null)
-                {
-                    return Enumerable.Empty<Node>();
-                }
-                else
-                {
-                    return m_childNodes;
-                }
+                return m_childNodes;
             }
         }
-        public int ChildNodeCount
+        public IReadOnlyList<NodeInput> NodeInputs
         {
             get
             {
-                if (m_childNodes is null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return m_childNodes.Count;
-                }
+                return m_nodeInputs;
             }
         }
-        public IEnumerable<NodeInput> NodeInputs
+        public IReadOnlyList<NodeOutput> NodeOutputs
         {
             get
             {
-                if (m_nodeInputs is null)
-                {
-                    return Enumerable.Empty<NodeInput>();
-                }
-                else
-                {
-                    return m_nodeInputs;
-                }
+                return m_nodeOutputs;
             }
         }
-        public int NodeInputCount
+        public IReadOnlyList<NodeParameter> NodeParameters
         {
             get
             {
-                if (m_nodeInputs is null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return m_nodeInputs.Count;
-                }
-            }
-        }
-        public IEnumerable<NodeOutput> NodeOutputs
-        {
-            get
-            {
-                if (m_nodeOutputs is null)
-                {
-                    return Enumerable.Empty<NodeOutput>();
-                }
-                else
-                {
-                    return m_nodeOutputs;
-                }
-            }
-        }
-        public int NodeOutputCount
-        {
-            get
-            {
-                if (m_nodeOutputs is null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return m_nodeOutputs.Count;
-                }
-            }
-        }
-        public IEnumerable<NodeParameter> NodeParameters
-        {
-            get
-            {
-                if (m_nodeParameters is null)
-                {
-                    return Enumerable.Empty<NodeParameter>();
-                }
-                else
-                {
-                    return m_nodeParameters;
-                }
-            }
-        }
-        public int NodeParameterCount
-        {
-            get
-            {
-                if (m_nodeParameters is null)
-                {
-                    return 0;
-                }
-                else
-                {
-                    return m_nodeParameters.Count;
-                }
+                return m_nodeParameters;
             }
         }
 
@@ -241,78 +157,9 @@ namespace ZigZag.Core
             }
         }
 
-        internal void AddChildNode(Node childNode)
-        {
-            Debug.Assert(!(childNode is null));
-            if (m_childNodes is null)
-            {
-                m_childNodes = new List<Node>();
-            }
-            m_childNodes.Add(childNode);
-        }
-        internal void AddNodeInput(NodeInput nodeInput)
-        {
-            Debug.Assert(!(nodeInput is null));
-            if (m_nodeInputs is null)
-            {
-                m_nodeInputs = new List<NodeInput>();
-            }
-            m_nodeInputs.Add(nodeInput);
-        }
-        internal void AddNodeOutput(NodeOutput nodeOutput)
-        {
-            Debug.Assert(!(nodeOutput is null));
-            if (m_nodeOutputs is null)
-            {
-                m_nodeOutputs = new List<NodeOutput>();
-            }
-            m_nodeOutputs.Add(nodeOutput);
-        }
-        internal void AddNodeParameter(NodeParameter nodeParameter)
-        {
-            Debug.Assert(!(nodeParameter is null));
-            if (m_nodeParameters is null)
-            {
-                m_nodeParameters = new List<NodeParameter>();
-            }
-            m_nodeParameters.Add(nodeParameter);
-        }
-        internal void RemoveChildNode(Node childNode)
-        {
-            m_childNodes.Remove(childNode);
-            if (m_childNodes.Count == 0)
-            {
-                m_childNodes = null;
-            }
-        }
-        internal void RemoveNodeInput(NodeInput nodeInput)
-        {
-            m_nodeInputs.Remove(nodeInput);
-            if (m_nodeInputs.Count == 0)
-            {
-                m_nodeInputs = null;
-            }
-        }
-        internal void RemoveNodeOutput(NodeOutput nodeOutput)
-        {
-            m_nodeOutputs.Remove(nodeOutput);
-            if (m_nodeOutputs.Count == 0)
-            {
-                m_nodeOutputs = null;
-            }
-        }
-        internal void RemoveNodeParameter(NodeParameter nodeParameter)
-        {
-            m_nodeParameters.Remove(nodeParameter);
-            if (m_nodeParameters.Count == 0)
-            {
-                m_nodeParameters = null;
-            }
-        }
-
-        private List<Node> m_childNodes;
-        private List<NodeInput> m_nodeInputs;
-        private List<NodeOutput> m_nodeOutputs;
-        private List<NodeParameter> m_nodeParameters;
+        internal List<Node> m_childNodes = new List<Node>();
+        internal List<NodeInput> m_nodeInputs = new List<NodeInput>();
+        internal List<NodeOutput> m_nodeOutputs = new List<NodeOutput>();
+        internal List<NodeParameter> m_nodeParameters = new List<NodeParameter>();
     }
 }

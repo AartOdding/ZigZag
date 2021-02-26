@@ -20,7 +20,7 @@ namespace ZigZag.Core.Commands
                 //!m_parentNode.m_childNodes.Contains(m_childNode) &&
                 !m_parentNode.IsIndirectChildOf(m_childNode))
             {
-                m_parentNode.AddChildNode(m_childNode);
+                m_parentNode.m_childNodes.Add(m_childNode);
                 m_childNode.ParentNode = m_parentNode;
             }
             else
@@ -31,7 +31,7 @@ namespace ZigZag.Core.Commands
 
         internal override void Undo()
         {
-            m_parentNode.RemoveChildNode(m_childNode);
+            m_parentNode.m_childNodes.Remove(m_childNode);
             m_childNode.ParentNode = null;
         }
 

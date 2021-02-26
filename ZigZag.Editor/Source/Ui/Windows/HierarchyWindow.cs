@@ -30,7 +30,7 @@ namespace ZigZag.Editor.Ui.Windows
             flags |= ImGuiTreeNodeFlags.SpanFullWidth;
             flags |= ImGuiTreeNodeFlags.AllowItemOverlap;
             //flags |= m_objectSelection.isSelected(object) ? ImGuiTreeNodeFlags_Selected : 0;
-            flags |= node.ChildNodeCount == 0 ? ImGuiTreeNodeFlags.Bullet : ImGuiTreeNodeFlags.Leaf;
+            flags |= node.ChildNodes.Count == 0 ? ImGuiTreeNodeFlags.Bullet : ImGuiTreeNodeFlags.Leaf;
 
             if(ImGui.TreeNodeEx(node.GetType().FullName))
             {

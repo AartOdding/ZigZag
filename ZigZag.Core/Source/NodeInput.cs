@@ -15,7 +15,7 @@ namespace ZigZag.Core
             if (node is not null)
             {
                 Node = node;
-                node.AddNodeInput(this);
+                node.m_nodeInputs.Add(this);
             }
         }
 
